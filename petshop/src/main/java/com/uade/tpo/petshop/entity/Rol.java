@@ -14,8 +14,8 @@ import lombok.Data;
 @Entity
 public class Rol {
 
-    public Rol(){
-
+    public Rol(RolEnum nombre) {
+        this.nombre = nombre;
     }
 
     @Id
