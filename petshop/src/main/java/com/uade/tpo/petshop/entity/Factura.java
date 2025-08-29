@@ -40,5 +40,5 @@ public class Factura {
     private double total;
     
     @Column
-    private metodoDePago metodoPago;
+    private metodoDePago metodoPago; // EFECTIVO, TARJETA_CREDITO, TARJETA_DEBITO, TRANSFERENCIA
 }

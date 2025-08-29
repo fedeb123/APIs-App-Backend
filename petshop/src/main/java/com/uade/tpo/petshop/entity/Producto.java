@@ -1,4 +1,5 @@
 package com.uade.tpo.petshop.entity;
+
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -48,4 +49,5 @@ public class Producto {
 
     @OneToMany(mappedBy="producto")
     List<DetallePedido> detallePedidos;
+
 }

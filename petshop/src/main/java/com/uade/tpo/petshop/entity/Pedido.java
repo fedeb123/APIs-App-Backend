@@ -44,4 +44,5 @@ public class Pedido {
 
     @OneToMany(mappedBy="pedido")
     List<Factura> facturas;
+
 }

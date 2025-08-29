@@ -10,7 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 
-
 @Data
 @Entity
 public class Categoria {
@@ -35,5 +34,5 @@ public class Categoria {
 
     @OneToMany(mappedBy="categoria")
     List<Producto> productos;
-}
 
+}
