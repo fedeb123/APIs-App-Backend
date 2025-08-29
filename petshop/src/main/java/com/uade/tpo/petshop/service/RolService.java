@@ -13,6 +13,8 @@ import com.uade.tpo.petshop.entity.exceptions.RolDuplicateException;
 import com.uade.tpo.petshop.repositories.interfaces.IRolRepository;
 import com.uade.tpo.petshop.service.interfaces.IRolService;
 
+import jakarta.transaction.Transactional;
+
 
 /*
  * los metodos del repository son los incluidos en el crud de JPA
@@ -39,6 +41,7 @@ public class RolService implements IRolService {
     }
 
     @Override
+    @Transactional
     public Rol createRol(RolDTO rol) throws RolDuplicateException {
         // Implementacion del metodo para crear un nuevo Rol
         List<Rol> roles = rolRepository.findByName(rol.getNombre());
