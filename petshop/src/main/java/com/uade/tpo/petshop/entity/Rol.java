@@ -25,7 +25,7 @@ public class Rol {
     @Column
     private RolEnum nombre;
 
-    private RolDTO toDTO(){
+    public RolDTO toDTO(){
         return new RolDTO(this.id, this.nombre);
     }
     
