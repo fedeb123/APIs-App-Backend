@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.petshop.entity.Producto;
-import com.uade.tpo.petshop.service.productoService;
+import com.uade.tpo.petshop.service.ProductoService;
 
 
 @RestController
 @RequestMapping("productos")
-public class productoController {
+public class ProductoController {
     // TODO : Hacer los controllers :)
     @Autowired
-    private productoService productoService;
+    private ProductoService productoService;
 
     @GetMapping
     public ResponseEntity<Page<Producto>> getAllProductos() {
