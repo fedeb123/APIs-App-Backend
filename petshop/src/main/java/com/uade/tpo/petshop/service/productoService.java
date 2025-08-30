@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 
 import com.uade.tpo.petshop.entity.Producto;
 
-public interface productoService {
+public interface ProductoService {
     // metodo que nos trae todas las productos
     public Page<Producto> getAllProductos();
     public Optional<Producto> getProductoById(UUID id);
