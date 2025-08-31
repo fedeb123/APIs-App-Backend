@@ -27,7 +27,7 @@ import com.uade.tpo.petshop.service.RolService;
  */
 
 @RestController
-@RequestMapping("roles")
+@RequestMapping("api/roles")
 public class RolController {
     @Autowired
     private RolService rolService;
