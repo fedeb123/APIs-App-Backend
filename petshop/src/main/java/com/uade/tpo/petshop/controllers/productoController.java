@@ -16,7 +16,7 @@ import com.uade.tpo.petshop.service.ProductoService;
 
 
 @RestController
-@RequestMapping("productos")
+@RequestMapping("api/productos")
 public class ProductoController {
     // TODO : Hacer los controllers :)
     @Autowired
