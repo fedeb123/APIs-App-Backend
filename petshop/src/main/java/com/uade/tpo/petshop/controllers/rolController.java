@@ -30,7 +30,11 @@ import com.uade.tpo.petshop.service.RolService;
 @RequestMapping("api/roles")
 public class RolController {
     @Autowired
-    private RolService rolService;
+    private final RolService rolService;
+
+    public RolController(RolService rolService){
+        this.rolService = rolService;
+    }
 
     @GetMapping
     public ResponseEntity<Page<Rol>> getAllRoles(@RequestParam(required = false) Integer page,@RequestParam(required = false) Integer size) {
