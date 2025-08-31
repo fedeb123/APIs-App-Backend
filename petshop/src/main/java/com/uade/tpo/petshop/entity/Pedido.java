@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.Data; 
 
 @Data
@@ -19,7 +20,7 @@ public class Pedido {
     public Pedido() {
     }
 
-    public Pedido(Cliente cliente, Date fechaPedido, Estado estado) {
+    public Pedido(Usuario cliente, Date fechaPedido, Estado estado) {
         this.cliente = cliente;
         this.fechaPedido = fechaPedido;
         this.estado = estado;
@@ -30,8 +31,8 @@ public class Pedido {
     private Long id;
 
     @ManyToOne()
-    @JoinColumn(name="cliente_id", nullable=false)
-    private Cliente cliente;
+    @JoinColumn(name="usuario_id", nullable=false)
+    private Usuario cliente;
 
     @Column
     private Date fechaPedido;
@@ -42,7 +43,7 @@ public class Pedido {
     @OneToMany(mappedBy="pedido")
     List<DetallePedido> detalles;
 
-    @OneToMany(mappedBy="pedido")
-    List<Factura> facturas;
+    @OneToOne(mappedBy="pedido")
+    Factura factura;
 
 }
