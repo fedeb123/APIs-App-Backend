@@ -40,6 +40,9 @@ public class Pedido {
     @Column
     private Estado estado; // PENDIENTE, ENVIADO, ENTREGADO, CANCELADO
 
+    @Column
+    private double precioTotal;
+
     @OneToMany(mappedBy="pedido")
     List<DetallePedido> detalles;
 
