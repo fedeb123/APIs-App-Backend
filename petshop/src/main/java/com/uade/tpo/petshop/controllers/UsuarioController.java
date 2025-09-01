@@ -49,9 +49,13 @@ public class UsuarioController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Object> createUsuario(@RequestBody UsuarioDTO usuario)
-			throws UsuarioDuplicateException {
+	public ResponseEntity<Object> createUsuario(@RequestBody UsuarioDTO usuario) throws UsuarioDuplicateException {
 		Usuario nuevoUsuario = usuarioService.createUsuario(usuario);
 		return ResponseEntity.created(URI.create("/usuarios/" + nuevoUsuario.getId())).body(nuevoUsuario);
-	}    
+	}
+
+	@PostMapping
+	public void deleteUsuario(@RequestBody UsuarioDTO usuario) {
+		usuarioService.deleteUsuarioById(usuario.getId());
+	}
 }
