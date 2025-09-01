@@ -56,6 +56,9 @@
 			<scope>test</scope>
 		</dependency>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a625de1 (Se agregaron dependencias)
 		
 		<dependency>
             <groupId>com.mysql</groupId>
@@ -66,9 +69,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+<<<<<<< HEAD
 =======
 
 >>>>>>> f4fe331 (se agregaron dependencias)
+=======
+>>>>>>> a625de1 (Se agregaron dependencias)
 	</dependencies>
 
 	<build>
