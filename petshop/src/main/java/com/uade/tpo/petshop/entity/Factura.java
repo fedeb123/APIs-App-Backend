@@ -8,7 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.Data;
 
 @Data
@@ -28,10 +28,6 @@ public class Factura {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne()
-    @JoinColumn(name="pedido_id", nullable=false)
-    private Pedido pedido;
     
     @Column
     private Date fechaEmision;
@@ -41,4 +37,8 @@ public class Factura {
     
     @Column
     private metodoDePago metodoPago; // EFECTIVO, TARJETA_CREDITO, TARJETA_DEBITO, TRANSFERENCIA
+
+    @OneToOne()
+    @JoinColumn(name="pedido_id", nullable=false)
+    private Pedido pedido;
 }

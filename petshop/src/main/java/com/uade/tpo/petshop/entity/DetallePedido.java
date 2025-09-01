@@ -14,29 +14,28 @@ public class DetallePedido {
     public DetallePedido() {
     }
 
-    public DetallePedido(Pedido pedido, Producto producto, int cantidad, double precioUnitario) {
+    public DetallePedido(Pedido pedido, Producto producto, int cantidad, double precioSubtotal) {
         this.pedido = pedido;
         this.producto = producto;
         this.cantidad = cantidad;
-        this.precioUnitario = precioUnitario;
+        this.precioSubtotal = precioSubtotal;
     }
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne()
-    @JoinColumn(name="pedido_id", nullable=false)
-    private Pedido pedido;
     
     @Column
     private int cantidad;
     
     @Column
-    private double precioUnitario;
+    private double precioSubtotal;
 
     @ManyToOne()
     @JoinColumn(name="producto_id", nullable=false)
     private Producto producto;
 
+    @ManyToOne()
+    @JoinColumn(name="pedido_id", nullable=false)
+    private Pedido pedido;
 }

@@ -27,7 +27,7 @@ public class Producto {
     }
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable=false, unique=true)
@@ -46,6 +46,10 @@ public class Producto {
     @ManyToOne()
     @JoinColumn(name="categoria_id", nullable=false)
     private Categoria categoria;
+
+    @ManyToOne()
+    @JoinColumn(name="usuario_id",nullable=false)
+    Usuario usuario_creador;
 
     @OneToMany(mappedBy="producto")
     List<DetallePedido> detallePedidos;
