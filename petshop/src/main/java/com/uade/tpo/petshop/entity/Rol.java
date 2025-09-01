@@ -1,5 +1,7 @@
 package com.uade.tpo.petshop.entity;
 
+import java.util.List;
+
 import com.uade.tpo.petshop.entity.dtos.RolDTO;
 import com.uade.tpo.petshop.entity.enums.RolEnum;
 
@@ -8,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 @Data
@@ -24,6 +27,9 @@ public class Rol {
 
     @Column
     private RolEnum nombre;
+
+    @OneToMany(mappedBy = "rol")
+    private List<Usuario> usuarios;
 
     public RolDTO toDTO(){
         return new RolDTO(this.id, this.nombre);

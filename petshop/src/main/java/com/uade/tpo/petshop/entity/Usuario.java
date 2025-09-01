@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 
@@ -45,8 +47,11 @@ public class Usuario {
 
     @OneToMany(mappedBy="usuario_creador")
     private List<Producto> productos_creados;
-
     
     @OneToMany(mappedBy="cliente")
     List<Pedido> pedidos;
+
+    @ManyToOne
+    @JoinColumn(name = "rol_id", nullable = false)
+    private Rol rol;
 }
