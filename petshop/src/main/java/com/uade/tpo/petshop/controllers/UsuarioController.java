@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,12 +20,14 @@ import com.uade.tpo.petshop.entity.Usuario;
 import com.uade.tpo.petshop.entity.dtos.UsuarioDTO;
 import com.uade.tpo.petshop.entity.exceptions.UsuarioDuplicateException;
 import com.uade.tpo.petshop.service.UsuarioService;
+import com.uade.tpo.petshop.service.interfaces.IUsuarioService;
 
 @RestController
 @RequestMapping("api/usuarios")
 public class UsuarioController {
+
 	@Autowired
-	private final UsuarioService usuarioService;
+	private final IUsuarioService usuarioService;
 
 	public UsuarioController(UsuarioService usuarioService){
 		this.usuarioService = usuarioService;
@@ -54,8 +57,8 @@ public class UsuarioController {
 		return ResponseEntity.created(URI.create("/usuarios/" + nuevoUsuario.getId())).body(nuevoUsuario);
 	}
 
-	@PostMapping
-	public void deleteUsuario(@RequestBody UsuarioDTO usuario) {
-		usuarioService.deleteUsuarioById(usuario.getId());
+	@DeleteMapping("/{usuarioId}")
+	public void deleteUsuario(@PathVariable Long usuarioId) {
+		usuarioService.deleteUsuarioById(usuarioId);
 	}
 }
