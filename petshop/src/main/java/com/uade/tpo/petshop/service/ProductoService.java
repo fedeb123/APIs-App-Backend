@@ -10,7 +10,6 @@ import com.uade.tpo.petshop.entity.dtos.ProductoDTO;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import java.util.UUID;
 import java.util.List;
 
 @Service
@@ -33,7 +32,7 @@ public class ProductoService implements IProductoService {
 
     @Override
     public Producto createProducto(ProductoDTO producto) {
-        List<Producto> productos = productoRepository.findByNombre(producto.getNombre());
+        List<Producto> productos = productoRepository.findByName(producto.getNombre());
         if(productos.isEmpty()){
             return productoRepository.save(
                 new Producto(
