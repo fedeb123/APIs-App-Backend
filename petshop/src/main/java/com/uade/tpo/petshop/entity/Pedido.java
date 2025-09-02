@@ -1,7 +1,11 @@
 package com.uade.tpo.petshop.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
+import com.uade.tpo.petshop.entity.dtos.DetallePedidoDTO;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,5 +52,13 @@ public class Pedido {
 
     @OneToOne(mappedBy="pedido")
     Factura factura;
+
+    // public PedidoDTO toDTO(){
+    //     List<DetallePedidoDTO> detallesDTO = new ArrayList<>();
+    //     for (DetallePedido d : this.detalles){
+    //         detallesDTO.add(d.toDTO());
+    //     }
+    //     return new PedidoDTO(this.id, this.cliente.toDTO(), this.fechaPedido, this.estado.toDTO(), this.precioTotal, this.detallesDTO, )
+    // }
 
 }

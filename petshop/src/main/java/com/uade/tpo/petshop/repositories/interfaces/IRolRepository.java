@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.uade.tpo.petshop.entity.Rol;
+import com.uade.tpo.petshop.entity.enums.RolEnum;
 
 
 /*
@@ -24,6 +25,6 @@ import com.uade.tpo.petshop.entity.Rol;
 public interface IRolRepository extends JpaRepository<Rol, Long> {
     
     @Query(value = "SELECT r FROM Rol r WHERE r.nombre =?1")
-    List<Rol> findByName(String name);
+    List<Rol> findByName(RolEnum name);
 
 }

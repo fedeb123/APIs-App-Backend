@@ -7,6 +7,8 @@ import com.uade.tpo.petshop.entity.enums.RolEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,15 +23,12 @@ public class Rol {
         this.nombre = nombre;
     }
 
-    public Rol(){
-        
-    }
-
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private RolEnum nombre;
 
     @OneToMany(mappedBy = "rol")

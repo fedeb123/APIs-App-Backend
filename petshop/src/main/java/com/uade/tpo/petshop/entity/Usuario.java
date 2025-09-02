@@ -30,7 +30,7 @@ public class Usuario {
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long id;
+        private Long id;
 
     @Column
     private String nombre;
@@ -58,7 +58,6 @@ public class Usuario {
     private Rol rol;
 
     public UsuarioDTO toDTO(){
-        //agregar toDTO a las entidades producto y pedido para luego ponerlos en este constructor.
         return new UsuarioDTO(this.id, this.nombre, this.apellido, this.telefono, this.email, this.direccion, null, null, this.rol.toDTO());
     }
 }

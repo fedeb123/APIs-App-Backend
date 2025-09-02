@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.petshop.entity.Usuario;
 import com.uade.tpo.petshop.entity.dtos.UsuarioDTO;
 import com.uade.tpo.petshop.entity.exceptions.UsuarioDuplicateException;
-import com.uade.tpo.petshop.service.UsuarioService;
 import com.uade.tpo.petshop.service.interfaces.IUsuarioService;
 
 @RestController
@@ -29,7 +28,7 @@ public class UsuarioController {
 	@Autowired
 	private final IUsuarioService usuarioService;
 
-	public UsuarioController(UsuarioService usuarioService){
+	public UsuarioController(IUsuarioService usuarioService){
 		this.usuarioService = usuarioService;
 	}
 
