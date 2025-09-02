@@ -15,12 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.petshop.entity.Pedido;
 import com.uade.tpo.petshop.service.impl.PedidoServiceImpl;
+import com.uade.tpo.petshop.service.interfaces.IPedidoService;
 
 @RestController
 @RequestMapping("/api/pedidos")
 public class PedidoController {
     @Autowired
-    private final PedidoServiceImpl pedidoService;
+    private final IPedidoService pedidoService;
 
     public PedidoController(PedidoServiceImpl pedidoService) {
         this.pedidoService = pedidoService;
@@ -31,7 +32,7 @@ public class PedidoController {
         return ResponseEntity.ok(pedidoService.findAll());
     }
 
-    @GetMapping("/{id}") //Muestro un pedido por id
+    @GetMapping("/{pedidoId}") //Muestro un pedido por id
     public ResponseEntity<Pedido> getById(@PathVariable Long id) {
         return pedidoService.findById(id)
                 .map(ResponseEntity::ok)
@@ -43,7 +44,7 @@ public class PedidoController {
         return ResponseEntity.ok(pedidoService.save(pedido));
     }
 
-    @PutMapping("/{id}") //Actualizo UN pedido por id
+    @PutMapping("/{pedidoId}") //Actualizo UN pedido por id
     public ResponseEntity<Pedido> update(@PathVariable Long id, @RequestBody Pedido pedido) {
         try {
             return ResponseEntity.ok(pedidoService.update(id, pedido));
@@ -52,7 +53,7 @@ public class PedidoController {
         }
     }
 
-    @DeleteMapping("/{id}") //Elimino UN pedido por id
+    @DeleteMapping("/{pedidoId}") //Elimino UN pedido por id
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
             pedidoService.delete(id);
