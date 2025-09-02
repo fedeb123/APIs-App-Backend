@@ -13,12 +13,12 @@ import com.uade.tpo.petshop.service.interfaces.ICategoriaService;
 
 
 @Service
-public class CategoriaServiceImpl implements ICategoriaService{
+public class CategoriaService implements ICategoriaService{
     
     
     private final ICategoriaRepository categoriaRepository;
 
-    public CategoriaServiceImpl(ICategoriaRepository categoriaRepository){
+    public CategoriaService(ICategoriaRepository categoriaRepository){
         this.categoriaRepository=categoriaRepository;
     }
     
