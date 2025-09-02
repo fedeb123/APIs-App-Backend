@@ -44,7 +44,7 @@ public class RolService implements IRolService {
     @Transactional
     public Rol createRol(RolDTO rol) throws RolDuplicateException {
         // Implementacion del metodo para crear un nuevo Rol
-        List<Rol> roles = rolRepository.findByName(rol.getNombre());
+        List<Rol> roles = rolRepository.findByName(rol.getNombre().toString());
         if(roles.isEmpty()){
             return rolRepository.save(new Rol(rol.getNombre()));
         } else {

@@ -1,6 +1,8 @@
 package com.uade.tpo.petshop.entity;
 import java.util.List;
 
+import com.uade.tpo.petshop.entity.dtos.UsuarioDTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -54,4 +56,9 @@ public class Usuario {
     @ManyToOne
     @JoinColumn(name = "rol_id", nullable = false)
     private Rol rol;
+
+    public UsuarioDTO toDTO(){
+        //agregar toDTO a las entidades producto y pedido para luego ponerlos en este constructor.
+        return new UsuarioDTO(this.id, this.nombre, this.apellido, this.telefono, this.email, this.direccion, null, null, this.rol.toDTO());
+    }
 }
