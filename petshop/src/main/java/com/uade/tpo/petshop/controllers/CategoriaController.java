@@ -45,12 +45,12 @@ public class CategoriaController {
     }
 
     @GetMapping("/{categoriaId}") /*Traigo una categoria segun su ID */
-    public ResponseEntity<Categoria> getCategoriaById(@PathVariable Long id) {
-        Optional<Categoria> categoria=categoriaService.getCategoriaById(id);
+    public ResponseEntity<Categoria> getCategoriaById(@PathVariable Long categoriaId) {
+        Optional<Categoria> categoria=categoriaService.getCategoriaById(categoriaId);
         return categoria.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
     
-    @GetMapping("/buscar") /*busco una categoria segun el nombre */
+    @GetMapping("/{nombre}") /*busco una categoria segun el nombre */
     public ResponseEntity<Categoria> getCategoriaByNombre(@RequestParam String nombre) {
         return categoriaService.getCategoriaByNombre(nombre)
                 .map(ResponseEntity::ok)
@@ -63,9 +63,9 @@ public class CategoriaController {
         return ResponseEntity.created(URI.create("/api/categorias/" + result.getId())).body(result);
     }
 
-    @DeleteMapping("/{id}") /*elimino una categoria segun el id */
-    public ResponseEntity<Void> deleteCategoria(@PathVariable Long id) {
-        categoriaService.deleteCategoriaById(id);
+    @DeleteMapping("/{categoriaId}") /*elimino una categoria segun el id */
+    public ResponseEntity<Void> deleteCategoria(@PathVariable Long categoriaId) {
+        categoriaService.deleteCategoriaById(categoriaId);
         return ResponseEntity.noContent().build();
     }
     
