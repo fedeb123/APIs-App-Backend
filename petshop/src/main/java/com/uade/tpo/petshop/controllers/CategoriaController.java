@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.petshop.entity.Categoria;
-import com.uade.tpo.petshop.entity.dto.CategoriaDTO;
+import com.uade.tpo.petshop.entity.dtos.CategoriaDTO;
+import com.uade.tpo.petshop.entity.exceptions.CategoriaDuplicateException;
 import com.uade.tpo.petshop.service.interfaces.ICategoriaService;
 
 
@@ -57,8 +58,8 @@ public class CategoriaController {
     }
 
     @PostMapping /*creo una nueva categoria */
-    public ResponseEntity<Object> createCategoria(@RequestBody CategoriaDTO categoriaRequest) throws Exception {
-        Categoria result = categoriaService.createCategoria(categoriaRequest);
+    public ResponseEntity<Object> createCategoria(@RequestBody CategoriaDTO categoriaDTO) throws CategoriaDuplicateException {
+        Categoria result = categoriaService.createCategoria(categoriaDTO);
         return ResponseEntity.created(URI.create("/api/categorias/" + result.getId())).body(result);
     }
 
