@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.domain.Page;
 
 @Repository
-public interface ProductoRepository extends JpaRepository<Producto, UUID> {
+public interface IProductoRepository extends JpaRepository<Producto, UUID> {
     
     @Query(value="SELECT p FROM Producto p WHERE p.nombre LIKE %:nombre%")
     List<Producto> findByNombre(String nombre);
