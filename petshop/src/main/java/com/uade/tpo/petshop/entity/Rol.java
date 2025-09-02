@@ -21,6 +21,10 @@ public class Rol {
         this.nombre = nombre;
     }
 
+    public Rol(){
+        
+    }
+
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
