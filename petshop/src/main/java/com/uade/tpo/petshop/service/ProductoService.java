@@ -23,7 +23,7 @@ public class ProductoService implements IProductoService {
     }
 
     @Override
-    public Page<Producto> getAllProductos() {
+    public List<Producto> getAllProductos() {
         return productoRepository.findAllProductos();
     }
 

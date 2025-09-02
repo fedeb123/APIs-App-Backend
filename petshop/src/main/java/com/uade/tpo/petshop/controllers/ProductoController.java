@@ -1,5 +1,6 @@
 package com.uade.tpo.petshop.controllers;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,8 +24,8 @@ public class ProductoController {
     private IProductoService productoService;
 
     @GetMapping
-    public ResponseEntity<Page<Producto>> getAllProductos() {
-        Page<Producto> productos = productoService.getAllProductos();
+    public ResponseEntity<List<Producto>> getAllProductos() {
+        List<Producto> productos = productoService.getAllProductos();
         return ResponseEntity.ok(productos);
     }
 

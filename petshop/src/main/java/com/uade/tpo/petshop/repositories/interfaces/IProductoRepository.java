@@ -7,6 +7,7 @@ import com.uade.tpo.petshop.entity.Producto;
 import java.util.UUID;
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.data.domain.Page;
 
 @Repository
@@ -19,6 +20,6 @@ public interface IProductoRepository extends JpaRepository<Producto, UUID> {
     Producto findProductoById(UUID id);
 
     @Query(value="SELECT p FROM Producto p")
-    Page<Producto> findAllProductos();
+    List<Producto> findAllProductos();
 
 }
