@@ -24,7 +24,7 @@ import com.uade.tpo.petshop.entity.enums.RolEnum;
 @Repository
 public interface IRolRepository extends JpaRepository<Rol, Long> {
     
-    @Query(value = "SELECT r FROM ROL r WHERE r.nombre =?1")
+    @Query(value = "SELECT r FROM Rol r WHERE r.nombre =?1")
     List<Rol> findByName(RolEnum name);
 
 }
