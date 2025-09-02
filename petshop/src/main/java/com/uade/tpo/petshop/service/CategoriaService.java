@@ -1,5 +1,6 @@
-package com.uade.tpo.petshop.service.impl;
+package com.uade.tpo.petshop.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -7,7 +8,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.petshop.entity.Categoria;
-import com.uade.tpo.petshop.entity.dto.CategoriaDTO;
+import com.uade.tpo.petshop.entity.dtos.CategoriaDTO;
+import com.uade.tpo.petshop.entity.exceptions.CategoriaDuplicateException;
 import com.uade.tpo.petshop.repositories.interfaces.ICategoriaRepository;
 import com.uade.tpo.petshop.service.interfaces.ICategoriaService;
 
@@ -33,17 +35,14 @@ public class CategoriaService implements ICategoriaService{
     }
 
     @Override
-    public Categoria createCategoria(CategoriaDTO categoriaDTO) throws Exception {
-        if (categoriaDTO.getNombreCategoria() == null || categoriaDTO.getNombreCategoria().isEmpty()) {
-            throw new Exception("El nombre de la categoría no puede estar vacío");
+    public Categoria createCategoria(CategoriaDTO categoriaDTO) throws CategoriaDuplicateException {
+        List<Categoria> categorias = categoriaRepository.findByNombreCategoria(categoriaDTO.getNombreCategoria());
+
+        if (categorias.isEmpty()){
+            Categoria nuevaCategoria = new Categoria(categoriaDTO.getNombreCategoria(), categoriaDTO.getDescripcion());
+            return categoriaRepository.save(nuevaCategoria);
         }
-
-        Categoria nuevaCategoria = new Categoria(
-            categoriaDTO.getNombreCategoria(),
-            categoriaDTO.getDescripcion()
-        );
-
-        return categoriaRepository.save(nuevaCategoria);
+        throw new CategoriaDuplicateException();
     }
 
     @Override
