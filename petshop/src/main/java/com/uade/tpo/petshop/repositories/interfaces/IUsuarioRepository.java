@@ -11,6 +11,6 @@ import com.uade.tpo.petshop.entity.Usuario;
 @Repository
 public interface IUsuarioRepository extends JpaRepository<Usuario, Long> {
     
-    @Query(value="SELECT U FROM USUARIO U WHERE USUARIO.email = ?1")
+    @Query(value="SELECT u FROM USUARIO u WHERE u.email = ?1")
     List<Usuario> findByEmail(String email);
 }
