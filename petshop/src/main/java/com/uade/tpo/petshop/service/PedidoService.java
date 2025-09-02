@@ -1,19 +1,20 @@
-package com.uade.tpo.petshop.service.impl;
-
-import com.uade.tpo.petshop.entity.Pedido;
-import com.uade.tpo.petshop.repositories.PedidoRepository;
-import com.uade.tpo.petshop.service.interfaces.IPedidoService;
-import org.springframework.stereotype.Service;
+package com.uade.tpo.petshop.service;
 
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+
+import com.uade.tpo.petshop.entity.Pedido;
+import com.uade.tpo.petshop.repositories.interfaces.IPedidoRepository;
+import com.uade.tpo.petshop.service.interfaces.IPedidoService;
+
 @Service
-public class PedidoServiceImpl implements IPedidoService {
+public class PedidoService implements IPedidoService {
 
-    private final PedidoRepository pedidoRepository;
+    private final IPedidoRepository pedidoRepository;
 
-    public PedidoServiceImpl(PedidoRepository pedidoRepository) {
+    public PedidoService(IPedidoRepository pedidoRepository) {
         this.pedidoRepository = pedidoRepository;
     }
 
