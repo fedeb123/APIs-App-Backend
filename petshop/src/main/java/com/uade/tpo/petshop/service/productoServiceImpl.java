@@ -3,20 +3,18 @@ package com.uade.tpo.petshop.service;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.petshop.repository.ProductoRepository;
-import com.uade.tpo.petshop.entity.Producto;
 import java.util.Optional;
 import com.uade.tpo.petshop.entity.Producto;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import java.util.UUID;
 import java.util.List;
 import com.uade.tpo.petshop.entity.Categoria;
 
 @Service
-public class productoServiceImpl implements productoService {
+public class ProductoServiceImpl implements ProductoService {
     private final ProductoRepository productoRepository;
 
-    public productoServiceImpl(ProductoRepository productoRepository) {
+    public ProductoServiceImpl(ProductoRepository productoRepository) {
         this.productoRepository = productoRepository;
     }
 
