@@ -2,11 +2,9 @@ package com.uade.tpo.petshop.entity.dtos;
 
 import java.util.List;
 
-import jakarta.persistence.Entity;
 import lombok.Data;
 
 @Data
-@Entity
 public class UsuarioDTO {
 
     private Long id;
