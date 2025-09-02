@@ -1,4 +1,6 @@
 package com.uade.tpo.petshop.entity;
+import com.uade.tpo.petshop.entity.dtos.DetallePedidoDTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -38,4 +40,8 @@ public class DetallePedido {
     @ManyToOne()
     @JoinColumn(name="pedido_id", nullable=false)
     private Pedido pedido;
+
+    // public DetallePedidoDTO toDTO(){
+    //     return new DetallePedidoDTO(this.id, this.cantidad, this.precioSubtotal, this.producto.toDTO(), this.pedido.)
+    // }
 }

@@ -1,22 +1,18 @@
 package com.uade.tpo.petshop.entity.dtos;
 
-import com.uade.tpo.petshop.entity.Categoria;
-import com.uade.tpo.petshop.entity.Usuario;
 import lombok.Data;
 
 @Data
 public class ProductoDTO {
-
     private Long id;
     private String nombre;
     private String descripcion;
     private double precio;
     private int stock;
+    private CategoriaDTO categoria;
+    private UsuarioDTO usuarioCreador;
 
-    private Categoria categoria;
-    private Usuario usuarioCreador;
-
-    public ProductoDTO(Long id, String nombre, String descripcion, double precio, int stock, Categoria categoria, Usuario usuarioCreador) {
+    public ProductoDTO(Long id, String nombre, String descripcion, double precio, int stock, CategoriaDTO categoria, UsuarioDTO usuarioCreador) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -26,4 +22,6 @@ public class ProductoDTO {
         this.usuarioCreador = usuarioCreador;
     }
 
+    public ProductoDTO() {
+    }
 }

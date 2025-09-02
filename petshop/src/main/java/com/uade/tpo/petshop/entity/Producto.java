@@ -2,6 +2,8 @@ package com.uade.tpo.petshop.entity;
 
 import java.util.List;
 
+import com.uade.tpo.petshop.entity.dtos.ProductoDTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -53,5 +55,9 @@ public class Producto {
 
     @OneToMany(mappedBy="producto")
     List<DetallePedido> detallePedidos;
+
+    public ProductoDTO toDTO(){
+        return new ProductoDTO(this.id, this.nombre, this.descripcion, this.precio, this.stock, this.categoria.toDTO(), this.usuario_creador.toDTO());
+    }
 
 }

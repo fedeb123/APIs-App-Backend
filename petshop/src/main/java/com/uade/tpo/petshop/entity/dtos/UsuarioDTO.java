@@ -6,7 +6,6 @@ import lombok.Data;
 
 @Data
 public class UsuarioDTO {
-
     private Long id;
     private String nombre;
     private String apellido;
@@ -14,9 +13,9 @@ public class UsuarioDTO {
     private String email;
     private String direccion;
     private List<ProductoDTO> productos_creados;
-    List<PedidoDTO> pedidos;
+    private List<PedidoDTO> pedidos;
     private RolDTO rol;
-    
+
     public UsuarioDTO(Long id, String nombre, String apellido, String telefono, String email, String direccion, List<ProductoDTO> productos_creados, List<PedidoDTO> pedidos, RolDTO rol) {
         this.id = id;
         this.nombre = nombre;
@@ -27,5 +26,8 @@ public class UsuarioDTO {
         this.productos_creados = productos_creados;
         this.pedidos = pedidos;
         this.rol = rol;
+    }
+
+    public UsuarioDTO() {
     }
 }
