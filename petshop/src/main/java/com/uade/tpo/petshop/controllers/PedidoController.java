@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.petshop.entity.Pedido;
-import com.uade.tpo.petshop.service.impl.PedidoServiceImpl;
 import com.uade.tpo.petshop.service.interfaces.IPedidoService;
 
 @RestController
@@ -23,7 +22,7 @@ public class PedidoController {
     @Autowired
     private final IPedidoService pedidoService;
 
-    public PedidoController(PedidoServiceImpl pedidoService) {
+    public PedidoController(IPedidoService pedidoService) {
         this.pedidoService = pedidoService;
     }
 
