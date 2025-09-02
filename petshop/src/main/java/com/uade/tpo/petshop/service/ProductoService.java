@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import java.util.UUID;
 import java.util.List;
-import com.uade.tpo.petshop.entity.Categoria;
 
 @Service
 public class ProductoService implements IProductoService {
@@ -23,8 +22,8 @@ public class ProductoService implements IProductoService {
     }
 
     @Override
-    public List<Producto> getAllProductos() {
-        return productoRepository.findAllProductos();
+    public Page<Producto> getAllProductos(PageRequest pageable) {
+        return productoRepository.findAll(pageable);
     }
 
     @Override

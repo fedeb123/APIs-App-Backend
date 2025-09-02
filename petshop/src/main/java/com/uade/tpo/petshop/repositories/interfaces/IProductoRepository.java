@@ -18,8 +18,4 @@ public interface IProductoRepository extends JpaRepository<Producto, UUID> {
     
     @Query(value="SELECT p FROM Producto p WHERE p.id = :id")
     Producto findProductoById(UUID id);
-
-    @Query(value="SELECT p FROM Producto p")
-    List<Producto> findAllProductos();
-
 }
