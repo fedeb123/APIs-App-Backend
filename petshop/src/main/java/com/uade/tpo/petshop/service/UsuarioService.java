@@ -82,7 +82,7 @@ public class UsuarioService implements IUsuarioService {
     public Usuario createUsuario(UsuarioDTO usuario) throws UsuarioDuplicateException {
         List<Usuario> usuarios = usuarioRepository.findByEmail(usuario.getEmail());
         if(usuarios.isEmpty()) {
-            return usuarioRepository.save(new Usuario(usuario));
+            return usuarioRepository.save(new Usuario(usuario.getNombre(), usuario.getApellido(), usuario.getTelefono(), usuario.getEmail(), usuario.getDireccion()));
         } else {
             throw new UsuarioDuplicateException();
         }
