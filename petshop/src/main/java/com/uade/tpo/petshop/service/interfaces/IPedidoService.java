@@ -1,9 +1,14 @@
 package com.uade.tpo.petshop.service.interfaces;
 
-import com.uade.tpo.petshop.entity.Pedido;
-
 import java.util.List;
 import java.util.Optional;
+
+import com.uade.tpo.petshop.entity.Pedido;
+import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
+import com.uade.tpo.petshop.entity.exceptions.MissingPedidoException;
+import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
+import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
+import com.uade.tpo.petshop.entity.exceptions.PedidoDuplicateException;
 
 public interface IPedidoService {
 
@@ -11,9 +16,9 @@ public interface IPedidoService {
 
     Optional<Pedido> findById(Long id);
 
-    Pedido save(Pedido pedido);
+    Pedido crearPedido(PedidoDTO pedido) throws PedidoDuplicateException, MissingProductoException, MissingUserException;
 
-    Pedido update(Long id, Pedido pedido);
+    Pedido updatePedido(Long id, Pedido pedido) throws PedidoDuplicateException, MissingPedidoException;
 
-    void delete(Long id);
+    void delete(Long id) throws MissingPedidoException;
 }
