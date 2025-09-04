@@ -47,4 +47,22 @@ public class Categoria {
         return new CategoriaDTO(this.id, this.nombreCategoria, this.descripcion, productosDTO);
     }
 
+    public void updateFromDTO(CategoriaDTO categoriaDTO) {
+        if (categoriaDTO.getNombreCategoria() != null && !categoriaDTO.getNombreCategoria().isEmpty()) {
+            this.nombreCategoria = categoriaDTO.getNombreCategoria();
+        }
+
+        if (categoriaDTO.getDescripcion() != null && !categoriaDTO.getDescripcion().isEmpty()) {
+            this.descripcion = categoriaDTO.getDescripcion();
+        }
+
+        if (categoriaDTO.getProductos() != null) {
+            List<Producto> productosArr = new ArrayList<>();
+            for (ProductoDTO productoDTO : categoriaDTO.getProductos()) {
+                this.productos.add(new Producto(productoDTO.getNombre(), productoDTO.getDescripcion(), productoDTO.getPrecio(), productoDTO.getStock(), this));
+            }
+            this.productos = productosArr;
+        }
+    }
+
 }
