@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.petshop.entity.Categoria;
 import com.uade.tpo.petshop.entity.dtos.CategoriaDTO;
 import com.uade.tpo.petshop.entity.exceptions.CategoriaDuplicateException;
+import com.uade.tpo.petshop.entity.exceptions.MissingCategoriaException;
 import com.uade.tpo.petshop.service.interfaces.ICategoriaService;
 
 
@@ -64,7 +65,7 @@ public class CategoriaController {
     }
 
     @DeleteMapping("/{categoriaId}") /*elimino una categoria segun el id */
-    public ResponseEntity<Void> deleteCategoria(@PathVariable Long categoriaId) {
+    public ResponseEntity<Void> deleteCategoria(@PathVariable Long categoriaId) throws MissingCategoriaException {
         categoriaService.deleteCategoriaById(categoriaId);
         return ResponseEntity.noContent().build();
     }
