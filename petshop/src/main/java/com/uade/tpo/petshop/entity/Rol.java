@@ -40,6 +40,13 @@ public class Rol {
     public RolDTO toDTO(){
         return new RolDTO(this.id, this.nombre);
     }
-    
+
+    public void updateFromDTO(RolDTO rolDTO) {
+        if (rolDTO.getNombre() != null) {
+            this.setNombre(rolDTO.getNombre());
+        }
+        // De querer actualizar la lista de usuarios, meterlo aca.
+        // if (rolDTO.getUsuarios() != null) { ... }
+    }
 }
 
