@@ -1,5 +1,6 @@
 package com.uade.tpo.petshop.service.interfaces;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -13,5 +14,6 @@ import com.uade.tpo.petshop.entity.exceptions.ProductoDuplicateException;
 public interface IProductoService {
     public Page<Producto> getAllProductos(PageRequest pageable);
     public Optional<Producto> getProductoById(Long id);
+    public List<Producto> getProductoByName(String name);
     public Producto createProducto(ProductoDTO producto) throws MissingCategoriaException, ProductoDuplicateException;
 }
