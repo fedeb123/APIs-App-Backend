@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
 import com.uade.tpo.petshop.entity.dtos.ProductoDTO;
-import com.uade.tpo.petshop.entity.dtos.RolDTO;
 import com.uade.tpo.petshop.entity.dtos.UsuarioDTO;
 
 import jakarta.persistence.Column;
