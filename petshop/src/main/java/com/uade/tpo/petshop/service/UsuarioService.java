@@ -8,13 +8,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import com.uade.tpo.petshop.entity.Rol;
 import com.uade.tpo.petshop.entity.Usuario;
 import com.uade.tpo.petshop.entity.dtos.UsuarioDTO;
+import com.uade.tpo.petshop.entity.exceptions.MissingRolException;
+import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
 import com.uade.tpo.petshop.entity.exceptions.UsuarioDuplicateException;
-import com.uade.tpo.petshop.repositories.interfaces.IRolRepository;
 import com.uade.tpo.petshop.repositories.interfaces.IUsuarioRepository;
+import com.uade.tpo.petshop.service.interfaces.IRolService;
 import com.uade.tpo.petshop.service.interfaces.IUsuarioService;
-import com.uade.tpo.petshop.entity.Rol;
 
 import jakarta.transaction.Transactional;
 
@@ -22,10 +24,9 @@ import jakarta.transaction.Transactional;
 public class UsuarioService implements IUsuarioService {
     @Autowired
     private IUsuarioRepository usuarioRepository;
-    @Autowired
-    private IRolRepository rolRepository;
 
-    
+    @Autowired
+    private IRolService rolService;
 
     @Override
     public Page<Usuario> getAllUsuarios(PageRequest pageable) {
@@ -47,35 +48,30 @@ public class UsuarioService implements IUsuarioService {
         return usuarios.isEmpty() ? Optional.empty() : Optional.of(usuarios.get(0));
     }
 
-
     @Override
     @Transactional
-    public void deleteUsuarioById(Long id) {
+    public void deleteUsuarioById(Long id) throws MissingUserException {
+        this.getUsuarioById(id).orElseThrow(() -> new MissingUserException());
         usuarioRepository.deleteById(id);
     }
 
     @Override
     @Transactional
-    public Usuario updateUsuario(Long id, UsuarioDTO usuario) throws UsuarioDuplicateException {
-        Optional<Usuario> usuarioExistente = usuarioRepository.findById(id);
-        
-        if (usuarioExistente.isPresent()) {
-            Usuario userToUpdate = usuarioExistente.get();
-            
-            // Verificar si el nuevo email ya existe en otro usuario
-            if (!userToUpdate.getEmail().equals(usuario.getEmail())) {
-                List<Usuario> usuariosConEmail = usuarioRepository.findByEmail(usuario.getEmail());
-                if (!usuariosConEmail.isEmpty()) {
-                    throw new UsuarioDuplicateException();
-                }
+    public Usuario updateUsuario(Long id, UsuarioDTO usuario) throws UsuarioDuplicateException, MissingUserException {
+        Usuario usuarioExistente = usuarioRepository.findById(id).orElseThrow(() -> new MissingUserException());        
+
+        // Verificar si el nuevo email ya existe en otro usuario
+        if (!usuarioExistente.getEmail().equals(usuario.getEmail())) {
+            List<Usuario> usuariosConEmail = usuarioRepository.findByEmail(usuario.getEmail());
+            if (!usuariosConEmail.isEmpty()) {
+                throw new UsuarioDuplicateException();
             }
-            
-            // Actualizar los campos del usuario
-            userToUpdate.updateFromDTO(usuario);
-            return usuarioRepository.save(userToUpdate);
         }
         
-        return null;
+        // Actualizar los campos del usuario
+        usuarioExistente.updateFromDTO(usuario);
+        return usuarioRepository.save(usuarioExistente);
+        
     }
 
 
@@ -83,24 +79,14 @@ public class UsuarioService implements IUsuarioService {
 // by kiki
     @Override
     @Transactional // este transactional asegura que si algo falla, no se guarde nada en la base de datos.
-    public Usuario createUsuario(UsuarioDTO usuario) throws UsuarioDuplicateException {
-    List<Usuario> usuarios = usuarioRepository.findByEmail(usuario.getEmail());
-    Rol rol = rolRepository.findById(usuario.getRol().getId())
-        .orElseThrow(() -> new RuntimeException("Rol not found"));
-    usuario.setRol(rol.toDTO());
-    if (usuarios.isEmpty()) {
-        return usuarioRepository.save(
-            new Usuario(
-                usuario.getNombre(),
-                usuario.getApellido(),
-                usuario.getTelefono(),
-                usuario.getEmail(),
-                usuario.getDireccion(),
-                rol // <-- Aquí pasas el objeto persistido
-            )
-        );
-    } else {
-        throw new UsuarioDuplicateException();
+    public Usuario createUsuario(UsuarioDTO usuario) throws UsuarioDuplicateException, MissingRolException {
+        Rol rol = rolService.getRolById(usuario.getRol().getId()).orElseThrow(() -> new MissingRolException());
+        List<Usuario> usuarios = usuarioRepository.findByEmail(usuario.getEmail());
+        if (usuarios.isEmpty()) {
+            usuario.setRol(rol.toDTO());
+            return usuarioRepository.save(new Usuario(usuario.getNombre(), usuario.getApellido(), usuario.getTelefono(), usuario.getEmail(), usuario.getDireccion(), rol));
+        } else {
+            throw new UsuarioDuplicateException();
+        }
     }
-}
 }
