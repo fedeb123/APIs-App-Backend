@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
 import com.uade.tpo.petshop.entity.dtos.ProductoDTO;
+import com.uade.tpo.petshop.entity.dtos.RolDTO;
 import com.uade.tpo.petshop.entity.dtos.UsuarioDTO;
 
 import jakarta.persistence.Column;
@@ -29,6 +30,17 @@ public class Usuario {
         this.email = email;
         this.telefono = telefono;
         this.direccion = direccion;
+    }
+
+    public Usuario(String nombre, String apellido,String telefono, String email, String direccion, Rol rol) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.email = email;
+        this.telefono = telefono;
+        this.direccion = direccion;
+        this.pedidos = new ArrayList<>();
+        this.productos_creados = new ArrayList<>();
+        this.rol = rol;
     }
     
     @Id
