@@ -4,9 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.petshop.entity.Pedido;
+import com.uade.tpo.petshop.entity.Usuario;
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
@@ -37,47 +40,46 @@ public class PedidoService implements IPedidoService {
     }
 
     @Override
-    public List<Pedido> findAll() {
-        return pedidoRepository.findAll();
+    public Page<Pedido> getAllPedidos(PageRequest pageable) {
+        return pedidoRepository.findAll(pageable);
     }
 
     @Override
-    public Optional<Pedido> findById(Long id) {
+    public Optional<Pedido> getPedidoById(Long id) {
         return pedidoRepository.findById(id);
     }
 
     @Override
     @Transactional
     //completar
-    public Pedido save(PedidoDTO pedido) throws PedidoDuplicateException, MissingProductoException, MissingUserException {
-        List<Pedido> pedidos = pedidoRepository.findByClienteAndFechaPedido(pedido.getCliente().getEmail(), pedido.getFecha());
+    public Pedido crearPedido(PedidoDTO pedido) throws PedidoDuplicateException, MissingProductoException, MissingUserException {
+        List<Pedido> pedidos = pedidoRepository.findByClienteAndFechaPedido(pedido.getCliente().getEmail(), pedido.getFechaPedido());
         if (pedidos.isEmpty()){
             Usuario cliente = usuarioService.getUsuarioByEmail(pedido.getCliente().getEmail()).orElseThrow(() -> new MissingUserException());
-            
-            pedidoRepository.save(new Pedido())
+            return pedidoRepository.save(new Pedido(cliente, pedido.getFechaPedido(), pedido.getEstado()));
         }
         throw new PedidoDuplicateException();
     }
 
-    @Override
-    @Transactional
-    public Pedido update(Long id, Pedido pedido) {
-        return pedidoRepository.findById(id)
-                .map(p -> {
-                    p.setCliente(pedido.getCliente());
-                    p.setFechaPedido(pedido.getFechaPedido());
-                    p.setEstado(pedido.getEstado());
-                    return pedidoRepository.save(p);
-                })
-                .orElseThrow(() -> new RuntimeException("Pedido no encontrado con id " + id));
-    }
+    // @Override
+    // @Transactional
+    // public Pedido updatePedido(Long id, Pedido pedido) {
+    //     return pedidoRepository.findById(id)
+    //             .map(p -> {
+    //                 p.setCliente(pedido.getCliente());
+    //                 p.setFechaPedido(pedido.getFechaPedido());
+    //                 p.setEstado(pedido.getEstado());
+    //                 return pedidoRepository.save(p);
+    //             })
+    //             .orElseThrow(() -> new RuntimeException("Pedido no encontrado con id " + id));
+    // }
 
-    @Override
-    @Transactional
-    public void delete(Long id) {
-        if (!pedidoRepository.existsById(id)) {
-            throw new RuntimeException("Pedido no encontrado con id " + id);
-        }
-        pedidoRepository.deleteById(id);
-    }
+    // @Override
+    // @Transactional
+    // public void delete(Long id) {
+    //     if (!pedidoRepository.existsById(id)) {
+    //         throw new RuntimeException("Pedido no encontrado con id " + id);
+    //     }
+    //     pedidoRepository.deleteById(id);
+    // }
 }

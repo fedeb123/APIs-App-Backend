@@ -31,6 +31,18 @@ public class Pedido {
         this.cliente = cliente;
         this.fechaPedido = fechaPedido;
         this.estado = estado;
+        this.precioTotal = 0;
+        this.detalles = new ArrayList<>();
+        this.factura = null;
+    }
+
+    public Pedido(Usuario cliente, Date fechaPedido, EstadoEnum estado, float precioTotal,List<DetallePedido> detalles, Factura factura) {
+        this.cliente = cliente;
+        this.fechaPedido = fechaPedido;
+        this.estado = estado;
+        this.precioTotal = precioTotal;
+        this.detalles = detalles;
+        this.factura = factura;
     }
     
     @Id
@@ -64,5 +76,7 @@ public class Pedido {
         }
         return new PedidoDTO(this.id, this.cliente.toDTO(), this.fechaPedido, this.estado, this.precioTotal, detallesDTO, this.factura.toDTO());
     }
+
+    //calcular precio total del pedido
 
 }
