@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.petshop.entity.Pedido;
-import com.uade.tpo.petshop.service.impl.PedidoServiceImpl;
+import com.uade.tpo.petshop.entity.exceptions.MissingPedidoException;
 import com.uade.tpo.petshop.service.interfaces.IPedidoService;
 
 @RestController
@@ -23,7 +23,7 @@ public class PedidoController {
     @Autowired
     private final IPedidoService pedidoService;
 
-    public PedidoController(PedidoServiceImpl pedidoService) {
+    public PedidoController(IPedidoService pedidoService) {
         this.pedidoService = pedidoService;
     }
 
@@ -54,7 +54,7 @@ public class PedidoController {
     }
 
     @DeleteMapping("/{pedidoId}") //Elimino UN pedido por id
-    public ResponseEntity<Void> delete(@PathVariable Long pedidoId) {
+    public ResponseEntity<Void> delete(@PathVariable Long pedidoId) throws  MissingPedidoException {
         try {
             pedidoService.delete(pedidoId);
             return ResponseEntity.noContent().build();

@@ -41,7 +41,7 @@ public class DetallePedido {
     @JoinColumn(name="pedido_id", nullable=false)
     private Pedido pedido;
 
-    // public DetallePedidoDTO toDTO(){
-    //     return new DetallePedidoDTO(this.id, this.cantidad, this.precioSubtotal, this.producto.toDTO(), this.pedido.)
-    // }
+    public DetallePedidoDTO toDTO(){
+        return new DetallePedidoDTO(this.id, this.cantidad, this.precioSubtotal, this.producto.toDTO(), this.pedido.toDTO());
+    }
 }

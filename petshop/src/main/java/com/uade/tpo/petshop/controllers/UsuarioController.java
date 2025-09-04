@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.petshop.entity.Usuario;
 import com.uade.tpo.petshop.entity.dtos.UsuarioDTO;
+import com.uade.tpo.petshop.entity.exceptions.MissingRolException;
+import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
 import com.uade.tpo.petshop.entity.exceptions.UsuarioDuplicateException;
 import com.uade.tpo.petshop.service.interfaces.IUsuarioService;
 
@@ -51,13 +53,13 @@ public class UsuarioController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Object> createUsuario(@RequestBody UsuarioDTO usuario) throws UsuarioDuplicateException {
+	public ResponseEntity<Object> createUsuario(@RequestBody UsuarioDTO usuario) throws UsuarioDuplicateException, MissingRolException {
 		Usuario nuevoUsuario = usuarioService.createUsuario(usuario);
 		return ResponseEntity.created(URI.create("/usuarios/" + nuevoUsuario.getId())).body(nuevoUsuario);
 	}
 
 	@DeleteMapping("/{usuarioId}")
-	public void deleteUsuario(@PathVariable Long usuarioId) {
+	public void deleteUsuario(@PathVariable Long usuarioId) throws MissingUserException {
 		usuarioService.deleteUsuarioById(usuarioId);
 	}
 }

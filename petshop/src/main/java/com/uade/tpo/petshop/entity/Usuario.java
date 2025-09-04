@@ -1,6 +1,9 @@
 package com.uade.tpo.petshop.entity;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
+import com.uade.tpo.petshop.entity.dtos.ProductoDTO;
 import com.uade.tpo.petshop.entity.dtos.UsuarioDTO;
 
 import jakarta.persistence.Column;
@@ -26,6 +29,17 @@ public class Usuario {
         this.email = email;
         this.telefono = telefono;
         this.direccion = direccion;
+    }
+
+    public Usuario(String nombre, String apellido,String telefono, String email, String direccion, Rol rol) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.email = email;
+        this.telefono = telefono;
+        this.direccion = direccion;
+        this.pedidos = new ArrayList<>();
+        this.productos_creados = new ArrayList<>();
+        this.rol = rol;
     }
     
     @Id
@@ -58,6 +72,50 @@ public class Usuario {
     private Rol rol;
 
     public UsuarioDTO toDTO(){
-        return new UsuarioDTO(this.id, this.nombre, this.apellido, this.telefono, this.email, this.direccion, null, null, this.rol.toDTO());
+        List<PedidoDTO> pedidosDTOs = new ArrayList<>();
+        for (Pedido p : this.pedidos){
+            pedidosDTOs.add(p.toDTO());
+        }
+
+        List<ProductoDTO> productosDTOs = new ArrayList<>();
+        for (Producto pr : this.productos_creados){
+            productosDTOs.add(pr.toDTO());
+        }
+        return new UsuarioDTO(this.id, this.nombre, this.apellido, this.telefono, this.email, this.direccion, productosDTOs, pedidosDTOs, this.rol.toDTO());
+    }
+
+    public void updateFromDTO(UsuarioDTO usuario){
+        if (usuario.getNombre() != null && !usuario.getNombre().isEmpty()) {
+            this.setNombre(usuario.getNombre());
+        }
+        if (usuario.getApellido() != null && !usuario.getApellido().isEmpty()) {
+            this.setApellido(usuario.getApellido());
+        }
+        if (usuario.getTelefono() != null && !usuario.getTelefono().isEmpty()) {
+            this.setTelefono(usuario.getTelefono());
+        }
+        if (usuario.getEmail() != null && !usuario.getEmail().isEmpty()) {
+            this.setEmail(usuario.getEmail());
+        }
+        if (usuario.getDireccion() != null && !usuario.getDireccion().isEmpty()) {
+            this.setDireccion(usuario.getDireccion());
+        }
+        if (usuario.getRol() != null) {
+            this.setRol(new Rol(usuario.getRol().getNombre()));
+        }
+        if (usuario.getProductos_creados() != null) {
+            List<Producto> productos = new ArrayList<>();
+            for (ProductoDTO productoDTO : usuario.getProductos_creados()){
+                productos.add(new Producto(productoDTO.getNombre(), productoDTO.getDescripcion(), productoDTO.getPrecio(), productoDTO.getStock(), new Categoria(productoDTO.getCategoria().getNombreCategoria(), productoDTO.getCategoria().getDescripcion())));
+            }
+            this.setProductos_creados(productos);
+        }
+        if (usuario.getPedidos() != null) {
+            List<Pedido> pedidosU = new ArrayList<>();
+            for (PedidoDTO pedidoDTO : usuario.getPedidos()){
+                pedidosU.add(new Pedido(this, pedidoDTO.getFecha(), pedidoDTO.getEstado()));
+            }
+            this.setPedidos(pedidosU);
+        }
     }
 }

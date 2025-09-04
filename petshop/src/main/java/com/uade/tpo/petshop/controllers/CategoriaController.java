@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.petshop.entity.Categoria;
-import com.uade.tpo.petshop.entity.dto.CategoriaDTO;
+import com.uade.tpo.petshop.entity.dtos.CategoriaDTO;
+import com.uade.tpo.petshop.entity.exceptions.CategoriaDuplicateException;
+import com.uade.tpo.petshop.entity.exceptions.MissingCategoriaException;
 import com.uade.tpo.petshop.service.interfaces.ICategoriaService;
 
 
@@ -44,12 +46,12 @@ public class CategoriaController {
     }
 
     @GetMapping("/{categoriaId}") /*Traigo una categoria segun su ID */
-    public ResponseEntity<Categoria> getCategoriaById(@PathVariable Long id) {
-        Optional<Categoria> categoria=categoriaService.getCategoriaById(id);
+    public ResponseEntity<Categoria> getCategoriaById(@PathVariable Long categoriaId) {
+        Optional<Categoria> categoria=categoriaService.getCategoriaById(categoriaId);
         return categoria.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
     
-    @GetMapping("/buscar") /*busco una categoria segun el nombre */
+    @GetMapping("/{nombre}") /*busco una categoria segun el nombre */
     public ResponseEntity<Categoria> getCategoriaByNombre(@RequestParam String nombre) {
         return categoriaService.getCategoriaByNombre(nombre)
                 .map(ResponseEntity::ok)
@@ -57,14 +59,14 @@ public class CategoriaController {
     }
 
     @PostMapping /*creo una nueva categoria */
-    public ResponseEntity<Object> createCategoria(@RequestBody CategoriaDTO categoriaRequest) throws Exception {
-        Categoria result = categoriaService.createCategoria(categoriaRequest);
+    public ResponseEntity<Object> createCategoria(@RequestBody CategoriaDTO categoriaDTO) throws CategoriaDuplicateException {
+        Categoria result = categoriaService.createCategoria(categoriaDTO);
         return ResponseEntity.created(URI.create("/api/categorias/" + result.getId())).body(result);
     }
 
-    @DeleteMapping("/{id}") /*elimino una categoria segun el id */
-    public ResponseEntity<Void> deleteCategoria(@PathVariable Long id) {
-        categoriaService.deleteCategoriaById(id);
+    @DeleteMapping("/{categoriaId}") /*elimino una categoria segun el id */
+    public ResponseEntity<Void> deleteCategoria(@PathVariable Long categoriaId) throws MissingCategoriaException {
+        categoriaService.deleteCategoriaById(categoriaId);
         return ResponseEntity.noContent().build();
     }
     

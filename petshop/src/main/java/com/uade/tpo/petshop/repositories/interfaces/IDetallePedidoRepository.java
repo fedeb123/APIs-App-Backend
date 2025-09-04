@@ -6,12 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.uade.tpo.petshop.entity.Producto;
+import com.uade.tpo.petshop.entity.DetallePedido;
 
 @Repository
-public interface IProductoRepository extends JpaRepository<Producto, Long> {
+public interface IDetallePedidoRepository extends JpaRepository<DetallePedido, Long> {
     
-    @Query(value="SELECT p FROM Producto p WHERE p.nombre LIKE ?1")
-    List<Producto> findByName(String nombre);
-
+    @Query("SELECT d FROM DetallePedido d WHERE d.pedido.id = ?1")
+    List<DetallePedido> findByPedidoId(Long pedidoId);
 }

@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
 import com.uade.tpo.petshop.entity.dtos.DetallePedidoDTO;
+import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
+import com.uade.tpo.petshop.entity.enums.EstadoEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,7 +27,7 @@ public class Pedido {
     public Pedido() {
     }
 
-    public Pedido(Usuario cliente, Date fechaPedido, Estado estado) {
+    public Pedido(Usuario cliente, Date fechaPedido, EstadoEnum estado) {
         this.cliente = cliente;
         this.fechaPedido = fechaPedido;
         this.estado = estado;
@@ -42,7 +45,8 @@ public class Pedido {
     private Date fechaPedido;
     
     @Column
-    private Estado estado; // PENDIENTE, ENVIADO, ENTREGADO, CANCELADO
+    @Enumerated(EnumType.STRING)
+    private EstadoEnum estado; // PENDIENTE, ENVIADO, ENTREGADO, CANCELADO
 
     @Column
     private double precioTotal;
@@ -53,12 +57,12 @@ public class Pedido {
     @OneToOne(mappedBy="pedido")
     Factura factura;
 
-    // public PedidoDTO toDTO(){
-    //     List<DetallePedidoDTO> detallesDTO = new ArrayList<>();
-    //     for (DetallePedido d : this.detalles){
-    //         detallesDTO.add(d.toDTO());
-    //     }
-    //     return new PedidoDTO(this.id, this.cliente.toDTO(), this.fechaPedido, this.estado.toDTO(), this.precioTotal, this.detallesDTO, )
-    // }
+    public PedidoDTO toDTO(){
+        List<DetallePedidoDTO> detallesDTO = new ArrayList<>();
+        for (DetallePedido d : this.detalles){
+            detallesDTO.add(d.toDTO());
+        }
+        return new PedidoDTO(this.id, this.cliente.toDTO(), this.fechaPedido, this.estado, this.precioTotal, detallesDTO, this.factura.toDTO());
+    }
 
 }
