@@ -31,10 +31,11 @@ public class Usuario {
         this.direccion = direccion;
     }
 
-    public Usuario(String nombre, String apellido,String telefono, String email, String direccion, Rol rol) {
+    public Usuario(String nombre, String apellido, String telefono, String email, String password, String direccion, Rol rol) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
+        this.password = password;
         this.telefono = telefono;
         this.direccion = direccion;
         this.pedidos = new ArrayList<>();
@@ -57,6 +58,9 @@ public class Usuario {
 
     @Column
     private String email;
+
+    @Column
+    private String password;
     
     @Column
     private String direccion;
@@ -81,7 +85,7 @@ public class Usuario {
         for (Producto pr : this.productos_creados){
             productosDTOs.add(pr.toDTO());
         }
-        return new UsuarioDTO(this.id, this.nombre, this.apellido, this.telefono, this.email, this.direccion, productosDTOs, pedidosDTOs, this.rol.toDTO());
+        return new UsuarioDTO(this.id, this.nombre, this.apellido, this.telefono, this.email, this.password, this.direccion, productosDTOs, pedidosDTOs, this.rol.toDTO());
     }
 
     public void updateFromDTO(UsuarioDTO usuario){
