@@ -9,82 +9,53 @@ import javax.crypto.SecretKey;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
 
 import com.uade.tpo.petshop.service.interfaces.IAutenticacionService;
-
+import com.uade.tpo.petshop.entity.Usuario;
+import com.uade.tpo.petshop.entity.dtos.AutenticacionResponseDTO;
+import com.uade.tpo.petshop.entity.dtos.RegistroRequestDTO;
+import com.uade.tpo.petshop.entity.exceptions.MissingRolException;
+import com.uade.tpo.petshop.repositories.interfaces.IUsuarioRepository;
+import com.uade.tpo.petshop.service.interfaces.IJwtService;
+import com.uade.tpo.petshop.service.interfaces.IRolService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
 @Service
 public class AutenticacionService implements IAutenticacionService{
-    
-    @Value("${security.jwt.secret}")
-    private String secretKey;
+    private final PasswordEncoder passwordEncoder;
+    private final IJwtService jwtService;
+    private final AuthenticationManager authenticationManager;
+    private IUsuarioRepository usuarioRepository;
+    private final IRolService rolService;
 
-    @Value("${security.jwt.expiration:86400000}")
-    private Long expiracionPorDefecto;
+    public AutenticacionResponseDTO register(RegistroRequestDTO request) {
+    var user = Usuario.builder()
+        .nombre(request.getNombre())
+        .apellido(request.getApellido())
+        .email(request.getEmail())
+        .password(passwordEncoder.encode(request.getPassword()))
+        .direccion(request.getDireccion())
+        .telefono(request.getTelefono())
+        .rol(rolService.getRolById(request.getRolId())
+                .orElseThrow(() -> new MissingRolException()))
+        .build();
 
-    private SecretKey getJwtKey() {
-        byte[] keyBytes = Base64.getDecoder().decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
+    // guardo al usuario
+    usuarioRepository.save(user);
+
+    var jwtToken = jwtService.generarToken(user);
+    return AuthenticationResponse.builder()
+            .accessToken(jwtToken)
+            .build();
+}
+
+    public AuthenticationResponse autenticar(AuthenticationRequest request) {
+
     }
 
-    @Override
-    public String extraerUsuario(String token) {
-        try {
-            return Jwts.parser()
-                .verifyWith(getJwtKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getSubject();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    @Override
-    public boolean esValido(String token, UserDetails userDetails) {
-        final String username = extraerUsuario(token);
-        if (username == null || !username.equals(userDetails.getUsername())) {
-            return false;
-        }
-        try {
-            var claims = Jwts.parser()
-                .verifyWith(getJwtKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-            Date exp = claims.getExpiration();
-            return exp != null && exp.after(new Date());
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    @Override
-    public String generarToken(UserDetails userDetails){
-        return generarToken(userDetails, expiracionPorDefecto);
-    }
-
-    @Override
-    public String generarToken(UserDetails userDetails, long expiracionCustomMs) {
-        Date now = new Date();
-        Date exp = new Date(now.getTime() + expiracionCustomMs);
-
-        // Serializamos authorities como lista de strings (ROLE_*)
-        List<String> roles = userDetails.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .toList();
-
-        return Jwts.builder()
-                .subject(userDetails.getUsername())
-                .issuedAt(now)
-                .expiration(exp)
-                .claims(Map.of("roles", roles))
-                .signWith(getJwtKey(), Jwts.SIG.HS256)
-                .compact();
-    }
 }

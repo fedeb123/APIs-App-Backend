@@ -15,10 +15,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
+import lombok.Builder;
 
 @Data
 @Entity
-
 public class Usuario {
     public Usuario() {
     }
@@ -31,6 +31,7 @@ public class Usuario {
         this.direccion = direccion;
     }
 
+    @Builder
     public Usuario(String nombre, String apellido, String telefono, String email, String password, String direccion, Rol rol) {
         this.nombre = nombre;
         this.apellido = apellido;
