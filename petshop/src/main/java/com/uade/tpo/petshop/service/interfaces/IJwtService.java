@@ -12,5 +12,5 @@ public interface IJwtService {
     boolean esValido(String token, UserDetails UserDetails);
     boolean estaExpirado(String token);
     String generarToken(UserDetails UserDetails);
-    String generarToken(UserDetails userDetails, long expiracionCustomMs); // esto es por si nosotros le queremos meter el tiempo de expiracion del token
+    String construirToken(UserDetails userDetails, long expiracionCustomMs); // esto es por si nosotros le queremos meter el tiempo de expiracion del token
 }

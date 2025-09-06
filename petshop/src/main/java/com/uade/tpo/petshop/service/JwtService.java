@@ -39,7 +39,7 @@ public class JwtService implements IJwtService {
 
     @Override
     public String generarToken(UserDetails userDetails){
-        return generarToken(userDetails, expiracionPorDefecto);
+        return construirToken(userDetails, expiracionPorDefecto);
     }
 
     @Override
@@ -62,11 +62,10 @@ public class JwtService implements IJwtService {
     }
 
     @Override
-    public String generarToken(UserDetails userDetails, long expiracionCustomMs) {
+    public String construirToken(UserDetails userDetails, long expiracionCustomMs) {
         Date now = new Date();
         Date exp = new Date(now.getTime() + expiracionCustomMs);
 
-        // Serializamos authorities como lista de strings (ROLE_*)
         List<String> roles = userDetails.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
