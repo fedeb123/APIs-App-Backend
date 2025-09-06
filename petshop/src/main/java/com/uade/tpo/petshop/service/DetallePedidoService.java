@@ -1,11 +1,11 @@
 package com.uade.tpo.petshop.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
 import com.uade.tpo.petshop.entity.DetallePedido;
 import com.uade.tpo.petshop.entity.dtos.DetallePedidoDTO;
 import com.uade.tpo.petshop.repositories.interfaces.IDetallePedidoRepository;
@@ -19,8 +19,8 @@ public class DetallePedidoService implements IDetallePedidoService {
     private IDetallePedidoRepository detallePedidoRepository;
 
     @Override
-    public List<DetallePedido> findAll() {
-        return detallePedidoRepository.findAll();
+    public Page<DetallePedido> findAll(PageRequest pageRequest) {
+        return detallePedidoRepository.findAll(pageRequest);
     }
 
     @Override
