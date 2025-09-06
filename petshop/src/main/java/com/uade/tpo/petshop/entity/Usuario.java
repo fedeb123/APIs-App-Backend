@@ -113,7 +113,7 @@ public class Usuario {
         if (usuario.getPedidos() != null) {
             List<Pedido> pedidosU = new ArrayList<>();
             for (PedidoDTO pedidoDTO : usuario.getPedidos()){
-                pedidosU.add(new Pedido(this, pedidoDTO.getFecha(), pedidoDTO.getEstado()));
+                pedidosU.add(new Pedido(this, pedidoDTO.getFechaPedido(), pedidoDTO.getEstado()));
             }
             this.setPedidos(pedidosU);
         }
