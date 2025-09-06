@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.uade.tpo.petshop.entity.dtos.DetallePedidoDTO;
+import com.uade.tpo.petshop.entity.dtos.FacturaDTO;
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
 import com.uade.tpo.petshop.entity.enums.EstadoEnum;
 
@@ -75,6 +76,16 @@ public class Pedido {
             detallesDTO.add(d.toDTO());
         }
         return new PedidoDTO(this.id, this.cliente.toDTO(), this.fechaPedido, this.estado, this.precioTotal, detallesDTO, this.factura.toDTO());
+    }
+
+    public void agregarDetalle(Producto producto, int cantidad) {
+        DetallePedido detalle = new DetallePedido(this, producto, cantidad, producto.getPrecio() * cantidad);
+        this.detalles.add(detalle);
+        this.precioTotal += producto.getPrecio() * cantidad; // Actualizar el precio total
+    }
+
+    public void agregarFactura(FacturaDTO facturaDTO) {
+        this.factura = new Factura(this, facturaDTO.getFechaEmision(), facturaDTO.getTotal(), facturaDTO.getMetodoDePago());
     }
 
     //calcular precio total del pedido

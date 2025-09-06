@@ -21,12 +21,6 @@ public interface IPedidoService {
 
     public Pedido crearPedido(PedidoDTO pedido) throws PedidoDuplicateException, MissingProductoException, MissingUserException;
 
-    //Este metodo no deberia existir
-    //public Pedido updatePedido(Long id, Pedido pedido) throws PedidoDuplicateException, MissingPedidoException;
-
-    //Este metodo no deberia existir
-    //void delete(Long id) throws MissingPedidoException;
-
     public void agregarDetalleAPedido(DetallePedidoDTO detalle, Long id);
 
     public void agregarFacturaAPedido(FacturaDTO factura, Long id);

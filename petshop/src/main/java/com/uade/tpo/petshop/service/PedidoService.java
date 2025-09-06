@@ -9,7 +9,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.petshop.entity.Pedido;
+import com.uade.tpo.petshop.entity.Producto;
 import com.uade.tpo.petshop.entity.Usuario;
+import com.uade.tpo.petshop.entity.dtos.DetallePedidoDTO;
+import com.uade.tpo.petshop.entity.dtos.FacturaDTO;
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
@@ -18,6 +21,7 @@ import com.uade.tpo.petshop.repositories.interfaces.IPedidoRepository;
 import com.uade.tpo.petshop.service.interfaces.IPedidoService;
 import com.uade.tpo.petshop.service.interfaces.IProductoService;
 import com.uade.tpo.petshop.service.interfaces.IUsuarioService;
+import com.uade.tpo.petshop.entity.exceptions.PedidoNotFoundException;
 
 import jakarta.transaction.Transactional;
 
@@ -59,6 +63,28 @@ public class PedidoService implements IPedidoService {
             return pedidoRepository.save(new Pedido(cliente, pedido.getFechaPedido(), pedido.getEstado()));
         }
         throw new PedidoDuplicateException();
+    }
+
+    @Override
+    @Transactional
+    public void agregarDetalleAPedido(DetallePedidoDTO detalle, Long id) {
+        Pedido pedido = pedidoRepository.findById(id).orElseThrow(() -> new PedidoNotFoundException("Pedido no encontrado con id " + id));
+        Producto producto = null;
+        try {
+            producto = productoService.getProductoById(detalle.getProducto().getId()).orElseThrow(() -> new MissingProductoException());
+        } catch (MissingProductoException e) {
+            e.printStackTrace();
+        }
+        pedido.agregarDetalle(producto, detalle.getCantidad());
+        pedidoRepository.save(pedido);
+    }
+
+    @Override
+    @Transactional
+    public void agregarFacturaAPedido(FacturaDTO factura, Long id) {
+        Pedido pedido = pedidoRepository.findById(id).orElseThrow(() -> new PedidoNotFoundException("Pedido no encontrado con id " + id));
+        pedido.agregarFactura(factura);
+        pedidoRepository.save(pedido);
     }
 
     // @Override
