@@ -1,20 +1,21 @@
 package com.uade.tpo.petshop.controllers;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.petshop.entity.Pedido;
-import com.uade.tpo.petshop.entity.exceptions.MissingPedidoException;
+import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
+import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
+import com.uade.tpo.petshop.entity.exceptions.PedidoDuplicateException;
 import com.uade.tpo.petshop.service.interfaces.IPedidoService;
 
 @RestController
@@ -27,39 +28,31 @@ public class PedidoController {
         this.pedidoService = pedidoService;
     }
 
-    @GetMapping //Muestro todos los pedidos
-    public ResponseEntity<List<Pedido>> getAll() {
-        return ResponseEntity.ok(pedidoService.findAll());
+    @GetMapping // Traigo todos los pedidos
+    public ResponseEntity<Page<Pedido>> getAllPedidos(
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size) {
+
+        if (page == null || size == null) {
+            return ResponseEntity.ok(
+                pedidoService.getAllPedidos(PageRequest.of(0, Integer.MAX_VALUE))
+            );
+        }
+        return ResponseEntity.ok(
+            pedidoService.getAllPedidos(PageRequest.of(page, size))
+        );
     }
 
     @GetMapping("/{pedidoId}") //Muestro un pedido por id
     public ResponseEntity<Pedido> getById(@PathVariable Long pedidoId) {
-        return pedidoService.findById(pedidoId)
+        return pedidoService.getPedidoById(pedidoId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping //Creo UN nuevo pedido
-    public ResponseEntity<Pedido> create(@RequestBody Pedido pedido) {
-        return ResponseEntity.ok(pedidoService.save(pedido));
+    public ResponseEntity<Pedido> create(@RequestBody Pedido pedido) throws PedidoDuplicateException, MissingProductoException, MissingUserException {
+        return ResponseEntity.ok(pedidoService.crearPedido(pedido.toDTO()));
     }
 
-    @PutMapping("/{pedidoId}") //Actualizo UN pedido por id
-    public ResponseEntity<Pedido> update(@PathVariable Long pedidoId, @RequestBody Pedido pedido) {
-        try {
-            return ResponseEntity.ok(pedidoService.update(pedidoId, pedido));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @DeleteMapping("/{pedidoId}") //Elimino UN pedido por id
-    public ResponseEntity<Void> delete(@PathVariable Long pedidoId) throws  MissingPedidoException {
-        try {
-            pedidoService.delete(pedidoId);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
 }

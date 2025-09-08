@@ -45,18 +45,19 @@ public class CategoriaController {
         );
     }
 
-    @GetMapping("/{categoriaId}") /*Traigo una categoria segun su ID */
+    @GetMapping("/id/{categoriaId}") /*Traigo una categoria segun su ID */
     public ResponseEntity<Categoria> getCategoriaById(@PathVariable Long categoriaId) {
         Optional<Categoria> categoria=categoriaService.getCategoriaById(categoriaId);
         return categoria.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
     
-    @GetMapping("/{nombre}") /*busco una categoria segun el nombre */
-    public ResponseEntity<Categoria> getCategoriaByNombre(@RequestParam String nombre) {
+    @GetMapping("/nombre/{nombre}")
+    public ResponseEntity<Categoria> getCategoriaByNombre(@PathVariable String nombre) {
         return categoriaService.getCategoriaByNombre(nombre)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
 
     @PostMapping /*creo una nueva categoria */
     public ResponseEntity<Object> createCategoria(@RequestBody CategoriaDTO categoriaDTO) throws CategoriaDuplicateException {
