@@ -13,7 +13,7 @@ public class RolDTO {
     @Enumerated(EnumType.STRING)
     private RolEnum nombre;
 
-    public RolDTO(long id, RolEnum nombre) {
+    public RolDTO(Long id, RolEnum nombre) {
         this.id = id;
         this.nombre = nombre;
     }
