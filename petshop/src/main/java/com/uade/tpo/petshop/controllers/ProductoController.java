@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,12 +24,19 @@ import com.uade.tpo.petshop.entity.exceptions.ProductoDuplicateException;
 import com.uade.tpo.petshop.service.interfaces.IProductoService;
 
 
+
 @RestController
 @RequestMapping("api/productos")
 public class ProductoController {
 
     @Autowired
     private IProductoService productoService;
+
+    @PostMapping
+    public ResponseEntity<Producto> crearProducto(@RequestBody ProductoDTO producto) throws MissingCategoriaException, MissingUserException, MissingProductoException, ProductoDuplicateException {
+        Producto productoNuevo = productoService.createProducto(producto);
+        return ResponseEntity.ok(productoNuevo);
+    }
 
     @GetMapping
     public ResponseEntity<Page<Producto>> getAllProductos(@RequestParam(required = false) Integer page,@RequestParam(required = false) Integer size) {
