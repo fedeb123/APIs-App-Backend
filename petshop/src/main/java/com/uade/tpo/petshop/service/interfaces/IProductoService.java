@@ -9,6 +9,8 @@ import org.springframework.data.domain.PageRequest;
 import com.uade.tpo.petshop.entity.Producto;
 import com.uade.tpo.petshop.entity.dtos.ProductoDTO;
 import com.uade.tpo.petshop.entity.exceptions.MissingCategoriaException;
+import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
+import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
 import com.uade.tpo.petshop.entity.exceptions.ProductoDuplicateException;
 
 public interface IProductoService {
@@ -16,4 +18,5 @@ public interface IProductoService {
     public Optional<Producto> getProductoById(Long id);
     public List<Producto> getProductoByName(String name);
     public Producto createProducto(ProductoDTO producto) throws MissingCategoriaException, ProductoDuplicateException;
+    public Producto updateProducto(Long id, ProductoDTO producto) throws MissingCategoriaException, MissingProductoException, ProductoDuplicateException, MissingUserException;
 }
