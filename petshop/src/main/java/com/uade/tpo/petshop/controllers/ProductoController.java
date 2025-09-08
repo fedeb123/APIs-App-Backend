@@ -33,24 +33,31 @@ public class ProductoController {
     private IProductoService productoService;
 
     @PostMapping
-    public ResponseEntity<Producto> crearProducto(@RequestBody ProductoDTO producto) throws MissingCategoriaException, MissingUserException, MissingProductoException, ProductoDuplicateException {
+    public ResponseEntity<ProductoDTO> crearProducto(@RequestBody ProductoDTO producto) throws MissingCategoriaException, MissingUserException, MissingProductoException, ProductoDuplicateException {
         Producto productoNuevo = productoService.createProducto(producto);
-        return ResponseEntity.ok(productoNuevo);
+        return ResponseEntity.ok(productoNuevo.toDTO());
     }
 
     @GetMapping
-    public ResponseEntity<Page<Producto>> getAllProductos(@RequestParam(required = false) Integer page,@RequestParam(required = false) Integer size) {
+    public ResponseEntity<Page<ProductoDTO>> getAllProductos(@RequestParam(required = false) Integer page,@RequestParam(required = false) Integer size) {
+        Page<Producto> productos;
         if (page == null && size == null){
-            return ResponseEntity.ok(productoService.getAllProductos(PageRequest.of(0, Integer.MAX_VALUE)));
+            productos = productoService.getAllProductos(PageRequest.of(0, Integer.MAX_VALUE));
+            
         } else {
-            return ResponseEntity.ok(productoService.getAllProductos(PageRequest.of(page, size)));
+            productos = productoService.getAllProductos(PageRequest.of(page, size));
         }
+        Page<ProductoDTO> productosDTO = productos.map(Producto::toDTO);
+        return ResponseEntity.ok(productosDTO);
     }
 
     @GetMapping("/{productoId}")
-    public ResponseEntity<Producto> getProductoById(@PathVariable Long productoId) {
+    public ResponseEntity<ProductoDTO> getProductoById(@PathVariable Long productoId) {
         Optional<Producto> producto = productoService.getProductoById(productoId);
-        return producto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        if (producto.isPresent()) {
+            return ResponseEntity.ok(producto.get().toDTO());
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{productoId}")

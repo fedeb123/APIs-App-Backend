@@ -35,27 +35,30 @@ public class UsuarioController {
 	}
 
 	@GetMapping
-	public ResponseEntity<Page<Usuario>> getAllUsuarios(@RequestParam(required = false) Integer page,@RequestParam(required = false) Integer size) {
+	public ResponseEntity<Page<UsuarioDTO>> getAllUsuarios(@RequestParam(required = false) Integer page,@RequestParam(required = false) Integer size) {
+		Page<Usuario> usuarios;
 		if (page == null && size == null){
-			return ResponseEntity.ok(usuarioService.getAllUsuarios(PageRequest.of(0, Integer.MAX_VALUE)));
+			usuarios = usuarioService.getAllUsuarios(PageRequest.of(0, Integer.MAX_VALUE));
 		} else {
-			return ResponseEntity.ok(usuarioService.getAllUsuarios(PageRequest.of(page, size)));
+			usuarios = usuarioService.getAllUsuarios(PageRequest.of(page, size));
 		}
+		Page<UsuarioDTO> usuariosDTO = usuarios.map(Usuario::toDTO);
+		return ResponseEntity.ok(usuariosDTO);
 	}
 
 	@GetMapping("/{usuarioId}")
-	public ResponseEntity<Usuario> getUsuarioById(@PathVariable Long usuarioId) {
+	public ResponseEntity<UsuarioDTO> getUsuarioById(@PathVariable Long usuarioId) {
 		Optional<Usuario> usuario = usuarioService.getUsuarioById(usuarioId);
 		if (usuario.isPresent()){
-			return ResponseEntity.ok(usuario.get());
+			return ResponseEntity.ok(usuario.get().toDTO());
 		}
 		return ResponseEntity.notFound().build();
 	}
 
 	@PostMapping
-	public ResponseEntity<Object> createUsuario(@RequestBody UsuarioDTO usuario) throws UsuarioDuplicateException, MissingRolException {
+	public ResponseEntity<UsuarioDTO> createUsuario(@RequestBody UsuarioDTO usuario) throws UsuarioDuplicateException, MissingRolException {
 		Usuario nuevoUsuario = usuarioService.createUsuario(usuario);
-		return ResponseEntity.created(URI.create("/usuarios/" + nuevoUsuario.getId())).body(nuevoUsuario);
+		return ResponseEntity.created(URI.create("/usuarios/" + nuevoUsuario.getId())).body(nuevoUsuario.toDTO());
 	}
 
 	@DeleteMapping("/{usuarioId}")
