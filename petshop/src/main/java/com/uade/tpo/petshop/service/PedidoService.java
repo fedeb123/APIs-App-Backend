@@ -14,14 +14,15 @@ import com.uade.tpo.petshop.entity.Usuario;
 import com.uade.tpo.petshop.entity.dtos.DetallePedidoDTO;
 import com.uade.tpo.petshop.entity.dtos.FacturaDTO;
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
+import com.uade.tpo.petshop.entity.exceptions.MissingPedidoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
 import com.uade.tpo.petshop.entity.exceptions.PedidoDuplicateException;
+import com.uade.tpo.petshop.entity.exceptions.PedidoNotFoundException;
 import com.uade.tpo.petshop.repositories.interfaces.IPedidoRepository;
 import com.uade.tpo.petshop.service.interfaces.IPedidoService;
 import com.uade.tpo.petshop.service.interfaces.IProductoService;
 import com.uade.tpo.petshop.service.interfaces.IUsuarioService;
-import com.uade.tpo.petshop.entity.exceptions.PedidoNotFoundException;
 
 import jakarta.transaction.Transactional;
 
@@ -86,6 +87,15 @@ public class PedidoService implements IPedidoService {
         pedido.agregarFactura(factura);
         pedidoRepository.save(pedido);
     }
+
+
+    @Override
+    @Transactional
+
+    public Pedido updatePedido(PedidoDTO pedido, Long id) throws MissingPedidoException, PedidoDuplicateException, PedidoNotFoundException{
+        return null;
+    }
+
 
     // @Override
     // @Transactional
