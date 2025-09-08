@@ -81,7 +81,7 @@ public class Pedido {
     public void agregarDetalle(Producto producto, int cantidad) {
         DetallePedido detalle = new DetallePedido(this, producto, cantidad, producto.getPrecio() * cantidad);
         this.detalles.add(detalle);
-        this.precioTotal += producto.getPrecio() * cantidad; // Actualizar el precio total
+        this.precioTotal += detalle.getPrecioSubtotal(); // Actualizar el precio total
     }
 
     public void agregarFactura(FacturaDTO facturaDTO) {
