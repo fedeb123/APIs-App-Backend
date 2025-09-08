@@ -9,10 +9,10 @@ import com.uade.tpo.petshop.entity.Pedido;
 import com.uade.tpo.petshop.entity.dtos.DetallePedidoDTO;
 import com.uade.tpo.petshop.entity.dtos.FacturaDTO;
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
+import com.uade.tpo.petshop.entity.exceptions.MissingPedidoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
 import com.uade.tpo.petshop.entity.exceptions.PedidoDuplicateException;
-import com.uade.tpo.petshop.entity.exceptions.PedidoNotFoundException;
 
 public interface IPedidoService {
 
@@ -22,11 +22,11 @@ public interface IPedidoService {
 
     public Pedido crearPedido(PedidoDTO pedido) throws PedidoDuplicateException, MissingProductoException, MissingUserException;
 
-    public void agregarDetalleAPedido(DetallePedidoDTO detalle, Long id);
+    public void agregarDetalleAPedido(DetallePedidoDTO detalle, Long id) throws MissingProductoException, MissingPedidoException;
 
-    public void agregarFacturaAPedido(FacturaDTO factura, Long id);
+    public void agregarFacturaAPedido(FacturaDTO factura, Long id) throws MissingPedidoException;
 
-    public void cancelarPedido(Long id) throws PedidoNotFoundException;
+    public void cancelarPedido(Long id) throws MissingPedidoException;
 
-    public Pedido updatePedido(PedidoDTO pedido, Long id) throws PedidoNotFoundException;
+    public Pedido updatePedido(PedidoDTO pedido, Long id) throws MissingPedidoException;
 }

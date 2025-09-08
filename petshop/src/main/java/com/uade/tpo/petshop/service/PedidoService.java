@@ -15,10 +15,10 @@ import com.uade.tpo.petshop.entity.dtos.DetallePedidoDTO;
 import com.uade.tpo.petshop.entity.dtos.FacturaDTO;
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
 import com.uade.tpo.petshop.entity.enums.EstadoEnum;
+import com.uade.tpo.petshop.entity.exceptions.MissingPedidoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
 import com.uade.tpo.petshop.entity.exceptions.PedidoDuplicateException;
-import com.uade.tpo.petshop.entity.exceptions.PedidoNotFoundException;
 import com.uade.tpo.petshop.repositories.interfaces.IPedidoRepository;
 import com.uade.tpo.petshop.service.interfaces.IPedidoService;
 import com.uade.tpo.petshop.service.interfaces.IProductoService;
@@ -68,8 +68,8 @@ public class PedidoService implements IPedidoService {
 
     @Override
     @Transactional
-    public void agregarDetalleAPedido(DetallePedidoDTO detalle, Long id) {
-        Pedido pedido = pedidoRepository.findById(id).orElseThrow(() -> new PedidoNotFoundException("Pedido no encontrado con id " + id));
+    public void agregarDetalleAPedido(DetallePedidoDTO detalle, Long id) throws MissingProductoException, MissingPedidoException {
+        Pedido pedido = pedidoRepository.findById(id).orElseThrow(() -> new MissingPedidoException());
         Producto producto = null;
         try {
             producto = productoService.getProductoById(detalle.getProducto().getId()).orElseThrow(() -> new MissingProductoException());
@@ -82,8 +82,8 @@ public class PedidoService implements IPedidoService {
 
     @Override
     @Transactional
-    public void agregarFacturaAPedido(FacturaDTO factura, Long id) {
-        Pedido pedido = pedidoRepository.findById(id).orElseThrow(() -> new PedidoNotFoundException("Pedido no encontrado con id " + id));
+    public void agregarFacturaAPedido(FacturaDTO factura, Long id) throws MissingPedidoException  {
+        Pedido pedido = pedidoRepository.findById(id).orElseThrow(() -> new MissingPedidoException());
         pedido.agregarFactura(factura);
         pedidoRepository.save(pedido);
     }
@@ -91,19 +91,19 @@ public class PedidoService implements IPedidoService {
 
     @Override
     @Transactional
-    public Pedido updatePedido(PedidoDTO pedidoDTO, Long id) throws PedidoNotFoundException {
+    public Pedido updatePedido(PedidoDTO pedidoDTO, Long id) throws MissingPedidoException {
         return pedidoRepository.findById(id)
             .map(p->{
                 p.setEstado(pedidoDTO.getEstado());
                 return pedidoRepository.save(p);
             })
-            .orElseThrow(()-> new PedidoNotFoundException("Pedido no encontrado con id "+id));
+            .orElseThrow(()-> new MissingPedidoException());
     }
 
     @Override
     @Transactional
-    public void cancelarPedido(Long id) throws PedidoNotFoundException {
-        Pedido pedido = pedidoRepository.findById(id).orElseThrow(() -> new PedidoNotFoundException());
+    public void cancelarPedido(Long id) throws MissingPedidoException {
+        Pedido pedido = pedidoRepository.findById(id).orElseThrow(() -> new MissingPedidoException());
         pedido.setEstado(EstadoEnum.CANCELADO);
         pedidoRepository.save(pedido);
     }
