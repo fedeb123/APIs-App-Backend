@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> manejarExcepcionGenerica(Exception error){
-        return ResponseEntity.status(500).body("error interno: " + error);
+        return ResponseEntity.status(500).body("Eror Interno General: " + error);
     }
     
 }
