@@ -12,6 +12,7 @@ import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
 import com.uade.tpo.petshop.entity.exceptions.PedidoDuplicateException;
+import com.uade.tpo.petshop.entity.exceptions.PedidoNotFoundException;
 
 public interface IPedidoService {
 
@@ -24,4 +25,8 @@ public interface IPedidoService {
     public void agregarDetalleAPedido(DetallePedidoDTO detalle, Long id);
 
     public void agregarFacturaAPedido(FacturaDTO factura, Long id);
+
+    public void cancelarPedido(Long id) throws PedidoNotFoundException;
+
+    public Pedido updatePedido(PedidoDTO pedido, Long id) throws PedidoNotFoundException;
 }

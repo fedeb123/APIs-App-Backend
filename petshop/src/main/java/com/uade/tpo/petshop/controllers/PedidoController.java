@@ -7,16 +7,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.petshop.entity.Pedido;
+import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
 import com.uade.tpo.petshop.entity.exceptions.PedidoDuplicateException;
 import com.uade.tpo.petshop.service.interfaces.IPedidoService;
+
 
 @RestController
 @RequestMapping("/api/pedidos")
@@ -48,6 +51,18 @@ public class PedidoController {
         return pedidoService.getPedidoById(pedidoId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{pedidoId}")/*Actualizo */
+    public ResponseEntity<Pedido> updatePedido(@PathVariable Long pedidoId, @RequestBody PedidoDTO pedidoDTO) {
+        Pedido pedido=pedidoService.updatePedido(pedidoDTO, pedidoId);
+        return ResponseEntity.ok(pedido);        
+    }
+
+    @PutMapping("/cancelar/{pedidoId}")/*En vez de Borrar, actualizo a cancelado*/
+    public ResponseEntity<String> cancelarPedido(@PathVariable Long pedidoId, @RequestBody PedidoDTO pedidoDTO) {
+        pedidoService.cancelarPedido(pedidoId);
+        return ResponseEntity.ok("Pedido Cancelado Correctamente");   
     }
 
     @PostMapping //Creo UN nuevo pedido

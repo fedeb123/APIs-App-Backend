@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +22,7 @@ import com.uade.tpo.petshop.entity.dtos.CategoriaDTO;
 import com.uade.tpo.petshop.entity.exceptions.CategoriaDuplicateException;
 import com.uade.tpo.petshop.entity.exceptions.MissingCategoriaException;
 import com.uade.tpo.petshop.service.interfaces.ICategoriaService;
+
 
 
 
@@ -63,6 +65,12 @@ public class CategoriaController {
     public ResponseEntity<Object> createCategoria(@RequestBody CategoriaDTO categoriaDTO) throws CategoriaDuplicateException {
         Categoria result = categoriaService.createCategoria(categoriaDTO);
         return ResponseEntity.created(URI.create("/api/categorias/" + result.getId())).body(result);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Categoria> updateCategoria(@PathVariable Long id, @RequestBody CategoriaDTO categoriaDTO) throws MissingCategoriaException, CategoriaDuplicateException {
+        Categoria categoriaActualizada = categoriaService.updateCategoria(id, categoriaDTO);
+        return ResponseEntity.ok(categoriaActualizada);
     }
 
     @DeleteMapping("/{categoriaId}") /*elimino una categoria segun el id */

@@ -10,12 +10,16 @@ import org.springframework.stereotype.Service;
 
 import com.uade.tpo.petshop.entity.Categoria;
 import com.uade.tpo.petshop.entity.Producto;
+import com.uade.tpo.petshop.entity.Usuario;
 import com.uade.tpo.petshop.entity.dtos.ProductoDTO;
 import com.uade.tpo.petshop.entity.exceptions.MissingCategoriaException;
+import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
+import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
 import com.uade.tpo.petshop.entity.exceptions.ProductoDuplicateException;
 import com.uade.tpo.petshop.repositories.interfaces.IProductoRepository;
 import com.uade.tpo.petshop.service.interfaces.ICategoriaService;
 import com.uade.tpo.petshop.service.interfaces.IProductoService;
+import com.uade.tpo.petshop.service.interfaces.IUsuarioService;
 
 import jakarta.transaction.Transactional;
 
@@ -27,9 +31,13 @@ public class ProductoService implements IProductoService {
     @Autowired
     private final ICategoriaService categoriaService;
 
-    public ProductoService(IProductoRepository productoRepository, ICategoriaService categoriaService) {
+    @Autowired
+    private final IUsuarioService usuarioService;
+
+    public ProductoService(IProductoRepository productoRepository, ICategoriaService categoriaService, IUsuarioService usuarioService) {
         this.productoRepository = productoRepository;
         this.categoriaService = categoriaService;
+        this.usuarioService = usuarioService;
     }
 
     @Override
@@ -60,7 +68,28 @@ public class ProductoService implements IProductoService {
         }
     }
 
-    //update
+    @Override
+    @Transactional
+    public Producto updateProducto(Long id, ProductoDTO producto) throws MissingCategoriaException, MissingProductoException, ProductoDuplicateException, MissingUserException {
+        Producto productoAUpdatear = productoRepository.findById(id).orElseThrow(() -> new MissingProductoException());        
+        List<Producto> productos = productoRepository.findByName(producto.getNombre());
+        if (productos.isEmpty()) {
+            if (producto.getCategoria() != null) {
+                //validacion de categoria
+                Categoria categoria = categoriaService.getCategoriaByNombre(producto.getCategoria().getNombreCategoria()).orElseThrow(() -> new MissingCategoriaException());
+            }
+
+            if (producto.getUsuarioCreador() != null) {
+                //validacion de usuario
+                Usuario usuario = usuarioService.getUsuarioByEmail(producto.getUsuarioCreador().getEmail()).orElseThrow(() -> new MissingUserException());
+            }
+            
+            productoAUpdatear.updateFromDTO(producto);
+            return productoRepository.save(productoAUpdatear);
+        } else {
+            throw new ProductoDuplicateException();
+        }
+    }
 
 
 
