@@ -55,14 +55,22 @@ public class PedidoController {
 
     @PutMapping("/{pedidoId}")/*Actualizo */
     public ResponseEntity<Pedido> updatePedido(@PathVariable Long pedidoId, @RequestBody PedidoDTO pedidoDTO) {
-        Pedido pedido=pedidoService.updatePedido(pedidoDTO, pedidoId);
-        return ResponseEntity.ok(pedido);        
+        try {
+            Pedido pedido = pedidoService.updatePedido(pedidoDTO, pedidoId);
+            return ResponseEntity.ok(pedido);
+        } catch (com.uade.tpo.petshop.entity.exceptions.MissingPedidoException e) {
+            return ResponseEntity.notFound().build();
+        }       
     }
 
     @PutMapping("/cancelar/{pedidoId}")/*En vez de Borrar, actualizo a cancelado*/
     public ResponseEntity<String> cancelarPedido(@PathVariable Long pedidoId, @RequestBody PedidoDTO pedidoDTO) {
-        pedidoService.cancelarPedido(pedidoId);
-        return ResponseEntity.ok("Pedido Cancelado Correctamente");   
+            try {
+            pedidoService.cancelarPedido(pedidoId);
+            return ResponseEntity.ok("Pedido Cancelado Correctamente");
+        } catch (com.uade.tpo.petshop.entity.exceptions.MissingPedidoException e) {
+            return ResponseEntity.notFound().build();
+        } 
     }
 
     @PostMapping //Creo UN nuevo pedido

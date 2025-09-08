@@ -35,7 +35,7 @@ public class AutenticacionService implements IAutenticacionService {
             throws MissingRolException, UsuarioDuplicateException {
 
         var rol = rolService.getRolById(request.getRolId())
-            .orElseThrow(() -> new MissingRolException("Rol no encontrado: id=" + request.getRolId()));
+            .orElseThrow(() -> new MissingRolException());
 
         var user = Usuario.builder()
             .nombre(request.getNombre())
