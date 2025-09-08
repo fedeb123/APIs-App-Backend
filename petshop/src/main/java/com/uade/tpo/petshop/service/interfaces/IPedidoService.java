@@ -26,5 +26,7 @@ public interface IPedidoService {
 
     public void agregarFacturaAPedido(FacturaDTO factura, Long id);
 
+    public void cancelarPedido(Long id) throws PedidoNotFoundException;
+
     public Pedido updatePedido(PedidoDTO pedido, Long id) throws PedidoNotFoundException;
 }

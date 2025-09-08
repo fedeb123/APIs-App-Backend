@@ -53,12 +53,16 @@ public class PedidoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}")/*Cambio de ESTADO en un pedido */
-    public ResponseEntity<Pedido> updatePedido(@PathVariable Long id, @RequestBody PedidoDTO pedidoDTO) {
-        Pedido pedido=pedidoService.updatePedido(pedidoDTO, id);
-        return ResponseEntity.ok(pedido);
-        
-        
+    @PutMapping("/{pedidoId}")/*Actualizo */
+    public ResponseEntity<Pedido> updatePedido(@PathVariable Long pedidoId, @RequestBody PedidoDTO pedidoDTO) {
+        Pedido pedido=pedidoService.updatePedido(pedidoDTO, pedidoId);
+        return ResponseEntity.ok(pedido);        
+    }
+
+    @PutMapping("/{pedidoId}")/*En vez de Borrar, actualizo a cancelado*/
+    public ResponseEntity<String> cancelarPedido(@PathVariable Long pedidoId, @RequestBody PedidoDTO pedidoDTO) {
+        pedidoService.cancelarPedido(pedidoId);
+        return ResponseEntity.ok("Pedido Cancelado Correctamente");   
     }
 
     @PostMapping //Creo UN nuevo pedido

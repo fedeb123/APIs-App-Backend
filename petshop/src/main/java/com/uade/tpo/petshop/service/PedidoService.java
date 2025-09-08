@@ -14,6 +14,7 @@ import com.uade.tpo.petshop.entity.Usuario;
 import com.uade.tpo.petshop.entity.dtos.DetallePedidoDTO;
 import com.uade.tpo.petshop.entity.dtos.FacturaDTO;
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
+import com.uade.tpo.petshop.entity.enums.EstadoEnum;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
 import com.uade.tpo.petshop.entity.exceptions.PedidoDuplicateException;
@@ -90,8 +91,7 @@ public class PedidoService implements IPedidoService {
 
     @Override
     @Transactional
-
-    public Pedido updatePedido(PedidoDTO pedidoDTO, Long id) throws PedidoNotFoundException{
+    public Pedido updatePedido(PedidoDTO pedidoDTO, Long id) throws PedidoNotFoundException {
         return pedidoRepository.findById(id)
             .map(p->{
                 p.setEstado(pedidoDTO.getEstado());
@@ -100,26 +100,12 @@ public class PedidoService implements IPedidoService {
             .orElseThrow(()-> new PedidoNotFoundException("Pedido no encontrado con id "+id));
     }
 
+    @Override
+    @Transactional
+    public void cancelarPedido(Long id) throws PedidoNotFoundException {
+        Pedido pedido = pedidoRepository.findById(id).orElseThrow(() -> new PedidoNotFoundException());
+        pedido.setEstado(EstadoEnum.CANCELADO);
+        pedidoRepository.save(pedido);
+    }
 
-    // @Override
-    // @Transactional
-    // public Pedido updatePedido(Long id, Pedido pedido) {
-    //     return pedidoRepository.findById(id)
-    //             .map(p -> {
-    //                 p.setCliente(pedido.getCliente());
-    //                 p.setFechaPedido(pedido.getFechaPedido());
-    //                 p.setEstado(pedido.getEstado());
-    //                 return pedidoRepository.save(p);
-    //             })
-    //             .orElseThrow(() -> new RuntimeException("Pedido no encontrado con id " + id));
-    // }
-
-    // @Override
-    // @Transactional
-    // public void delete(Long id) {
-    //     if (!pedidoRepository.existsById(id)) {
-    //         throw new RuntimeException("Pedido no encontrado con id " + id);
-    //     }
-    //     pedidoRepository.deleteById(id);
-    // }
 }
