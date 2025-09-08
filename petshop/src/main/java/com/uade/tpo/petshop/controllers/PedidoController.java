@@ -59,7 +59,7 @@ public class PedidoController {
         return ResponseEntity.ok(pedido);        
     }
 
-    @PutMapping("/{pedidoId}")/*En vez de Borrar, actualizo a cancelado*/
+    @PutMapping("/cancelar/{pedidoId}")/*En vez de Borrar, actualizo a cancelado*/
     public ResponseEntity<String> cancelarPedido(@PathVariable Long pedidoId, @RequestBody PedidoDTO pedidoDTO) {
         pedidoService.cancelarPedido(pedidoId);
         return ResponseEntity.ok("Pedido Cancelado Correctamente");   
