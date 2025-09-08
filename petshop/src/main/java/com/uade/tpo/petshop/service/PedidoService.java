@@ -14,7 +14,6 @@ import com.uade.tpo.petshop.entity.Usuario;
 import com.uade.tpo.petshop.entity.dtos.DetallePedidoDTO;
 import com.uade.tpo.petshop.entity.dtos.FacturaDTO;
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
-import com.uade.tpo.petshop.entity.exceptions.MissingPedidoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
 import com.uade.tpo.petshop.entity.exceptions.PedidoDuplicateException;
@@ -92,8 +91,13 @@ public class PedidoService implements IPedidoService {
     @Override
     @Transactional
 
-    public Pedido updatePedido(PedidoDTO pedido, Long id) throws MissingPedidoException, PedidoDuplicateException, PedidoNotFoundException{
-        return null;
+    public Pedido updatePedido(PedidoDTO pedidoDTO, Long id) throws PedidoNotFoundException{
+        return pedidoRepository.findById(id)
+            .map(p->{
+                p.setEstado(pedidoDTO.getEstado());
+                return pedidoRepository.save(p);
+            })
+            .orElseThrow(()-> new PedidoNotFoundException("Pedido no encontrado con id "+id));
     }
 
 

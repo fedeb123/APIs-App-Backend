@@ -15,11 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.petshop.entity.Pedido;
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
-import com.uade.tpo.petshop.entity.exceptions.MissingPedidoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
 import com.uade.tpo.petshop.entity.exceptions.PedidoDuplicateException;
-import com.uade.tpo.petshop.entity.exceptions.PedidoNotFoundException;
 import com.uade.tpo.petshop.service.interfaces.IPedidoService;
 
 
@@ -55,9 +53,10 @@ public class PedidoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}")
-    public Pedido updatePedido(@PathVariable Long id, @RequestBody PedidoDTO pedidoDTO) throws MissingPedidoException, PedidoDuplicateException, PedidoNotFoundException {
-        return null;
+    @PutMapping("/{id}")/*Cambio de ESTADO en un pedido */
+    public ResponseEntity<Pedido> updatePedido(@PathVariable Long id, @RequestBody PedidoDTO pedidoDTO) {
+        Pedido pedido=pedidoService.updatePedido(pedidoDTO, id);
+        return ResponseEntity.ok(pedido);
         
         
     }
