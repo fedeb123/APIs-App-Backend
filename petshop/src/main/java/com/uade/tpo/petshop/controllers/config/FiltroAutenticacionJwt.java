@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 
-import com.uade.tpo.petshop.service.interfaces.IAutenticacionService;
 import com.uade.tpo.petshop.service.interfaces.IJwtService;
 
 import org.springframework.security.core.userdetails.UserDetailsService;

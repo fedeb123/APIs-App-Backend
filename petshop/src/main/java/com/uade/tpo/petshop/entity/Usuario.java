@@ -2,6 +2,10 @@ package com.uade.tpo.petshop.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
 import com.uade.tpo.petshop.entity.dtos.ProductoDTO;
 import com.uade.tpo.petshop.entity.dtos.UsuarioDTO;
@@ -17,9 +21,12 @@ import jakarta.persistence.OneToMany;
 import lombok.Data;
 import lombok.Builder;
 
+import java.util.Collection;
+import java.util.Collections;
+
 @Data
 @Entity
-public class Usuario {
+public class Usuario implements UserDetails {
     public Usuario() {
     }
 
@@ -123,4 +130,37 @@ public class Usuario {
             this.setPedidos(pedidosU);
         }
     }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority(rol.getNombre().toString()));
+    }
+
+    @Override
+    public String getUsername(){
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired(){
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked(){
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired(){
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled(){
+        return true;
+    }
+
+
+
 }

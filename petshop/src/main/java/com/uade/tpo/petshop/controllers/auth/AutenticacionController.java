@@ -1,46 +1,32 @@
 package com.uade.tpo.petshop.controllers.auth;
 
-import com.uade.tpo.petshop.service.interfaces.IAutenticacionService;
-import com.uade.tpo.petshop.service.interfaces.IUsuarioService;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
-import com.uade.tpo.petshop.entity.dtos.LoginRequest;
 
-import java.util.Map;
+import com.uade.tpo.petshop.entity.dtos.AuthResponseDTO;
+import com.uade.tpo.petshop.entity.dtos.LoginRequestDTO;
+import com.uade.tpo.petshop.entity.dtos.RegistroRequestDTO;
+import com.uade.tpo.petshop.entity.exceptions.MissingRolException;
+import com.uade.tpo.petshop.entity.exceptions.UsuarioDuplicateException;
+import com.uade.tpo.petshop.service.interfaces.IAutenticacionService;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AutenticacionController {
 
-    private final AuthenticationManager authenticationManager;
-    private final IAutenticacionService autenticacionService;
-    private final IUsuarioService usuarioService;
+    private final IAutenticacionService service;
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getEmail(),
-                            request.getPassword()
-                    )
-            );
+    @PostMapping(value = "/register", consumes = "application/json")
+    public ResponseEntity<AuthResponseDTO> register(@RequestBody RegistroRequestDTO request)
+            throws MissingRolException, UsuarioDuplicateException {
+        return ResponseEntity.ok(service.registrar(request));
+    }
 
-            var user = (org.springframework.security.core.userdetails.UserDetails) authentication.getPrincipal();
-            String token = autenticacionService.generarToken(user);
-
-            return ResponseEntity.ok(Map.of("token", token));
-        } catch (AuthenticationException e) {
-            throw new BadCredentialsException("Credenciales inválidas");
-        }
+    @PostMapping(value = "/authenticate", consumes = "application/json")
+    public ResponseEntity<AuthResponseDTO> authenticate(@RequestBody LoginRequestDTO request) {
+        return ResponseEntity.ok(service.autenticar(request));
     }
 }
 
