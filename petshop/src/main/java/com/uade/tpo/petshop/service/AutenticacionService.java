@@ -31,30 +31,30 @@ public class AutenticacionService implements IAutenticacionService {
     private final IUsuarioService usuarioService;
 
     @Override
-    @Transactional
-    public AuthResponseDTO registrar(RegistroRequestDTO request) {
-        try {
-            var user = Usuario.builder()
-                .nombre(request.getNombre())
-                .apellido(request.getApellido())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .direccion(request.getDireccion())
-                .telefono(request.getTelefono())
-                .rol(rolService.getRolById(request.getRolId())
-                        .orElseThrow(MissingRolException::new))
+    public AuthResponseDTO registrar(RegistroRequestDTO request)
+            throws MissingRolException, UsuarioDuplicateException {
+
+        var rol = rolService.getRolById(request.getRolId())
+            .orElseThrow(() -> new MissingRolException("Rol no encontrado: id=" + request.getRolId()));
+
+        var user = Usuario.builder()
+            .nombre(request.getNombre())
+            .apellido(request.getApellido())
+            .email(request.getEmail())
+            .password(passwordEncoder.encode(request.getPassword()))
+            .direccion(request.getDireccion())
+            .telefono(request.getTelefono())
+            .rol(rol)
+            .build();
+
+        usuarioService.createUsuario(user.toDTO());
+
+        var jwtToken = jwtService.generarToken(user);
+        return AuthResponseDTO.builder()
+                .accessToken(jwtToken)
                 .build();
-
-            usuarioService.createUsuario(user.toDTO());
-
-            var jwtToken = jwtService.generarToken(user); // si tu JwtService acepta UserDetails/Usuario
-            return AuthResponseDTO.builder()
-                    .accessToken(jwtToken)
-                    .build();
-        } catch (MissingRolException | UsuarioDuplicateException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
     }
+
 
     @Override
     public AuthResponseDTO autenticar(LoginRequestDTO request) {
