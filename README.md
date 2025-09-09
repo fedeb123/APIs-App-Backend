@@ -1,6 +1,6 @@
 # APIs-App-Backend
 Desarrollo del Backend para la materia Aplicaciones Interactivas (APIs) en UADE
---
+
 # Variables de Entorno
 Es necesario tener un archivo .env con las siguientes clave valor como el .env.example en la raiz del proyecto
 
@@ -16,3 +16,18 @@ MYSQL_PORT=3306
 # Docker Compose MySQL
 Se adjunta un archivo tipo docker-compose para poder levantar la base de datos MySQL rapidamente con el siguiente comando
 `docker compose up -d`
+
+# Swagger
+Se utiliza Swagger para la documentacion de Endpoints.
+
+Ruta de Swagger: 
+```Ruta de UI Swagger
+/swagger-ui/index.html
+```
+
+Recordar solicitar el access token a las siguientes rutas
+
+```POST Auth
+api/v1/auth/register
+api/v1/auth/authenticate
+```
