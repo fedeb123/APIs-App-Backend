@@ -31,39 +31,39 @@ public class PedidoController {
         this.pedidoService = pedidoService;
     }
 
-    @GetMapping // Traigo todos los pedidos
-    public ResponseEntity<Page<Pedido>> getAllPedidos(
+    @GetMapping /*Traigo todos los pedidos y los transformo en DTO*/
+    public ResponseEntity<Page<PedidoDTO>> getAllPedidos(
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size) {
 
+        Page<Pedido> pedidos;
         if (page == null || size == null) {
-            return ResponseEntity.ok(
-                pedidoService.getAllPedidos(PageRequest.of(0, Integer.MAX_VALUE))
-            );
+            pedidos = pedidoService.getAllPedidos(PageRequest.of(0, Integer.MAX_VALUE));
+        } else {
+            pedidos = pedidoService.getAllPedidos(PageRequest.of(page, size));
         }
-        return ResponseEntity.ok(
-            pedidoService.getAllPedidos(PageRequest.of(page, size))
-        );
+        Page<PedidoDTO> pedidosDTO = pedidos.map(Pedido::toDTO);
+        return ResponseEntity.ok(pedidosDTO);
     }
 
-    @GetMapping("/{pedidoId}") //Muestro un pedido por id
-    public ResponseEntity<Pedido> getById(@PathVariable Long pedidoId) {
+    @GetMapping("/{pedidoId}") /*busco pedido por id y los transformo en DTO*/
+    public ResponseEntity<PedidoDTO> getById(@PathVariable Long pedidoId) {
         return pedidoService.getPedidoById(pedidoId)
-                .map(ResponseEntity::ok)
+                .map(pedido -> ResponseEntity.ok(pedido.toDTO()))
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{pedidoId}")/*Actualizo */
-    public ResponseEntity<Pedido> updatePedido(@PathVariable Long pedidoId, @RequestBody PedidoDTO pedidoDTO) {
+    @PutMapping("/{pedidoId}")/*lo actualizo  */
+    public ResponseEntity<PedidoDTO> updatePedido(@PathVariable Long pedidoId, @RequestBody PedidoDTO pedidoDTO) {
         try {
             Pedido pedido = pedidoService.updatePedido(pedidoDTO, pedidoId);
-            return ResponseEntity.ok(pedido);
+            return ResponseEntity.ok(pedido.toDTO());
         } catch (com.uade.tpo.petshop.entity.exceptions.MissingPedidoException e) {
             return ResponseEntity.notFound().build();
         }       
     }
 
-    @PutMapping("/cancelar/{pedidoId}")/*En vez de Borrar, actualizo a cancelado*/
+    @PutMapping("/cancelar/{pedidoId}")/*En vez de Borrar, actualizo a cancelado, es decir, cambio el estado*/
     public ResponseEntity<String> cancelarPedido(@PathVariable Long pedidoId, @RequestBody PedidoDTO pedidoDTO) {
             try {
             pedidoService.cancelarPedido(pedidoId);
@@ -73,9 +73,9 @@ public class PedidoController {
         } 
     }
 
-    @PostMapping //Creo UN nuevo pedido
-    public ResponseEntity<Pedido> create(@RequestBody Pedido pedido) throws PedidoDuplicateException, MissingProductoException, MissingUserException {
-        return ResponseEntity.ok(pedidoService.crearPedido(pedido.toDTO()));
+    @PostMapping /*Crea un nuevo pedido y devuelve sus datos como DTO*/
+    public ResponseEntity<PedidoDTO> create(@RequestBody PedidoDTO pedidoDTO) throws PedidoDuplicateException, MissingProductoException, MissingUserException {
+        Pedido nuevoPedido = pedidoService.crearPedido(pedidoDTO);
+        return ResponseEntity.ok(nuevoPedido.toDTO());
     }
-
 }
