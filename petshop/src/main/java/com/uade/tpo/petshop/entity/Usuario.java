@@ -2,6 +2,10 @@ package com.uade.tpo.petshop.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
 import com.uade.tpo.petshop.entity.dtos.ProductoDTO;
 import com.uade.tpo.petshop.entity.dtos.UsuarioDTO;
@@ -15,11 +19,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
+import lombok.Builder;
+
+import java.util.Collection;
+import java.util.Collections;
 
 @Data
 @Entity
-
-public class Usuario {
+public class Usuario implements UserDetails {
     public Usuario() {
     }
 
@@ -31,10 +38,12 @@ public class Usuario {
         this.direccion = direccion;
     }
 
-    public Usuario(String nombre, String apellido,String telefono, String email, String direccion, Rol rol) {
+    @Builder
+    public Usuario(String nombre, String apellido, String telefono, String email, String password, String direccion, Rol rol) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
+        this.password = password;
         this.telefono = telefono;
         this.direccion = direccion;
         this.pedidos = new ArrayList<>();
@@ -57,6 +66,9 @@ public class Usuario {
 
     @Column
     private String email;
+
+    @Column
+    private String password;
     
     @Column
     private String direccion;
@@ -81,7 +93,7 @@ public class Usuario {
         for (Producto pr : this.productos_creados){
             productosDTOs.add(pr.toDTO());
         }
-        return new UsuarioDTO(this.id, this.nombre, this.apellido, this.telefono, this.email, this.direccion, productosDTOs, pedidosDTOs, this.rol.toDTO());
+        return new UsuarioDTO(this.id, this.nombre, this.apellido, this.telefono, this.email, this.password, this.direccion, productosDTOs, pedidosDTOs, this.rol.toDTO());
     }
 
     public void updateFromDTO(UsuarioDTO usuario){
@@ -113,9 +125,42 @@ public class Usuario {
         if (usuario.getPedidos() != null) {
             List<Pedido> pedidosU = new ArrayList<>();
             for (PedidoDTO pedidoDTO : usuario.getPedidos()){
-                pedidosU.add(new Pedido(this, pedidoDTO.getFecha(), pedidoDTO.getEstado()));
+                pedidosU.add(new Pedido(this, pedidoDTO.getFechaPedido(), pedidoDTO.getEstado()));
             }
             this.setPedidos(pedidosU);
         }
     }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority(rol.getNombre().toString()));
+    }
+
+    @Override
+    public String getUsername(){
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired(){
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked(){
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired(){
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled(){
+        return true;
+    }
+
+
+
 }

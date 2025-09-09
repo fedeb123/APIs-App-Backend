@@ -84,7 +84,7 @@ public class UsuarioService implements IUsuarioService {
         List<Usuario> usuarios = usuarioRepository.findByEmail(usuario.getEmail());
         if (usuarios.isEmpty()) {
             usuario.setRol(rol.toDTO());
-            return usuarioRepository.save(new Usuario(usuario.getNombre(), usuario.getApellido(), usuario.getTelefono(), usuario.getEmail(), usuario.getDireccion(), rol));
+            return usuarioRepository.save(new Usuario(usuario.getNombre(), usuario.getApellido(), usuario.getTelefono(), usuario.getEmail(), usuario.getPassword(), usuario.getDireccion(), rol));
         } else {
             throw new UsuarioDuplicateException();
         }

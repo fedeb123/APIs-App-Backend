@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
+
 @Data
 @Entity
 public class Producto {
@@ -58,6 +59,29 @@ public class Producto {
 
     public ProductoDTO toDTO(){
         return new ProductoDTO(this.id, this.nombre, this.descripcion, this.precio, this.stock, this.categoria.toDTO(), this.usuario_creador.toDTO());
+    }
+
+    public void updateFromDTO(ProductoDTO producto) {
+        if (producto.getNombre() != null && !producto.getNombre().isEmpty()) {
+            this.nombre = producto.getNombre();
+        }
+        if (producto.getDescripcion() != null && !producto.getDescripcion().isEmpty()) {
+            this.descripcion = producto.getDescripcion();
+        }
+        if (producto.getPrecio() != this.getPrecio()) {
+            this.precio = producto.getPrecio();
+        }
+        if (producto.getStock() != this.getPrecio()) {
+            this.stock = producto.getStock();
+        }
+        if (producto.getCategoria() != null) {
+            this.categoria = new Categoria(); // Asume entidad válida
+            this.categoria.updateFromDTO(producto.getCategoria());
+        }
+        if (producto.getUsuarioCreador() != null) {
+            this.usuario_creador = new Usuario();  // Asume entidad válida
+            this.usuario_creador.updateFromDTO(producto.getUsuarioCreador());
+        }
     }
 
 }

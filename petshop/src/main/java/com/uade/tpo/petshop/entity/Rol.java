@@ -30,7 +30,7 @@ public class Rol {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
 
-    @Column
+    @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
     private RolEnum nombre;
 

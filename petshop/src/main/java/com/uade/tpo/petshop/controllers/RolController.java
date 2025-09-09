@@ -37,27 +37,30 @@ public class RolController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Rol>> getAllRoles(@RequestParam(required = false) Integer page,@RequestParam(required = false) Integer size) {
+    public ResponseEntity<Page<RolDTO>> getAllRoles(@RequestParam(required = false) Integer page,@RequestParam(required = false) Integer size) {
+        Page<Rol> roles;
         if (page == null && size == null){
-            return ResponseEntity.ok(rolService.getAllRoles(PageRequest.of(0, Integer.MAX_VALUE)));
+            roles = rolService.getAllRoles(PageRequest.of(0, Integer.MAX_VALUE));
         } else {
-            return ResponseEntity.ok(rolService.getAllRoles(PageRequest.of(page, size)));
+            roles = rolService.getAllRoles(PageRequest.of(page, size));
         }
+        Page<RolDTO> rolesDTO = roles.map(Rol::toDTO);
+        return ResponseEntity.ok(rolesDTO);
     }
 
     @GetMapping("/{rolId}")
-    public ResponseEntity<Rol> getRolById(@PathVariable Long rolId) {
+    public ResponseEntity<RolDTO> getRolById(@PathVariable Long rolId) {
         Optional<Rol> rol = rolService.getRolById(rolId);
         if (rol.isPresent()){
-            return ResponseEntity.ok(rol.get());
+            return ResponseEntity.ok(rol.get().toDTO());
         }
         return ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public ResponseEntity<Object> createRol(@RequestBody RolDTO rol)
+    public ResponseEntity<RolDTO> createRol(@RequestBody RolDTO rol)
             throws RolDuplicateException {
         Rol nuevoRol = rolService.createRol(rol);
-        return ResponseEntity.created(URI.create("/roles/" + nuevoRol.getId())).body(nuevoRol);
+        return ResponseEntity.created(URI.create("/roles/" + nuevoRol.getId())).body(nuevoRol.toDTO());
     }    
 }

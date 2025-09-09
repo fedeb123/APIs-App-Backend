@@ -10,9 +10,10 @@ import org.springframework.stereotype.Repository;
 import com.uade.tpo.petshop.entity.Pedido;
 
 @Repository
-public interface IPedidoRepository extends JpaRepository<Long, Pedido> {
+public interface IPedidoRepository extends JpaRepository<Pedido, Long>{
 
     @Query("SELECT p FROM Pedido p WHERE p.cliente.email = ?1 AND p.fechaPedido = ?2")
     List<Pedido> findByClienteAndFechaPedido(String email, Date fechaPedido);
+
 
 }
