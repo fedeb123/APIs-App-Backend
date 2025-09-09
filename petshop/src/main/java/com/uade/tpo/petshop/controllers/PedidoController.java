@@ -17,7 +17,9 @@ import com.uade.tpo.petshop.entity.Pedido;
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
+import com.uade.tpo.petshop.entity.exceptions.MissingPedidoException;
 import com.uade.tpo.petshop.entity.exceptions.PedidoDuplicateException;
+import com.uade.tpo.petshop.entity.exceptions.ProductoDuplicateException;
 import com.uade.tpo.petshop.service.interfaces.IPedidoService;
 
 
@@ -54,23 +56,17 @@ public class PedidoController {
     }
 
     @PutMapping("/{pedidoId}")/*lo actualizo  */
-    public ResponseEntity<PedidoDTO> updatePedido(@PathVariable Long pedidoId, @RequestBody PedidoDTO pedidoDTO) {
-        try {
-            Pedido pedido = pedidoService.updatePedido(pedidoDTO, pedidoId);
-            return ResponseEntity.ok(pedido.toDTO());
-        } catch (com.uade.tpo.petshop.entity.exceptions.MissingPedidoException e) {
-            return ResponseEntity.notFound().build();
-        }       
+    public ResponseEntity<PedidoDTO> updatePedido(@PathVariable Long pedidoId, @RequestBody PedidoDTO pedidoDTO) throws MissingPedidoException, ProductoDuplicateException {
+        Pedido pedido = pedidoService.updatePedido(pedidoDTO, pedidoId);
+        return ResponseEntity.ok(pedido.toDTO());
+          
     }
 
     @PutMapping("/cancelar/{pedidoId}")/*En vez de Borrar, actualizo a cancelado, es decir, cambio el estado*/
-    public ResponseEntity<String> cancelarPedido(@PathVariable Long pedidoId, @RequestBody PedidoDTO pedidoDTO) {
-            try {
-            pedidoService.cancelarPedido(pedidoId);
-            return ResponseEntity.ok("Pedido Cancelado Correctamente");
-        } catch (com.uade.tpo.petshop.entity.exceptions.MissingPedidoException e) {
-            return ResponseEntity.notFound().build();
-        } 
+    public ResponseEntity<String> cancelarPedido(@PathVariable Long pedidoId, @RequestBody PedidoDTO pedidoDTO) throws MissingPedidoException {
+        pedidoService.cancelarPedido(pedidoId);
+        return ResponseEntity.ok("Pedido Cancelado Correctamente");
+
     }
 
     @PostMapping /*Crea un nuevo pedido y devuelve sus datos como DTO*/
