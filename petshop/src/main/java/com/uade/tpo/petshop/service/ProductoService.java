@@ -62,7 +62,7 @@ public class ProductoService implements IProductoService {
 
     @Override
     @Transactional
-    public Producto createProducto(ProductoDTO producto) throws MissingCategoriaException, ProductoDuplicateException {
+    public Producto createProducto(ProductoDTO producto) throws MissingCategoriaException, ProductoDuplicateException, MissingUserException {
         // Validar nombre duplicado
         List<Producto> productos = productoRepository.findByName(producto.getNombre());
         if (!productos.isEmpty()) {
@@ -75,7 +75,7 @@ public class ProductoService implements IProductoService {
 
         // Buscar usuario creador por ID
         Usuario usuario = usuarioService.getUsuarioById(producto.getUsuarioId())
-            .orElseThrow(RuntimeException::new);
+            .orElseThrow(MissingUserException::new);
 
         Producto nuevo = new Producto(
             producto.getNombre(),

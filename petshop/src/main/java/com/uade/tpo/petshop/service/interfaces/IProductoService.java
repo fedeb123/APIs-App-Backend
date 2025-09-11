@@ -18,6 +18,6 @@ public interface IProductoService {
     public Page<Producto> getProductosConStock(PageRequest pageable);
     public Optional<Producto> getProductoById(Long id);
     public List<Producto> getProductoByName(String name);
-    public Producto createProducto(ProductoDTO producto) throws MissingCategoriaException, ProductoDuplicateException;
+    public Producto createProducto(ProductoDTO producto) throws MissingCategoriaException, ProductoDuplicateException, MissingUserException;
     public Producto updateProducto(Long id, ProductoDTO producto) throws MissingCategoriaException, MissingProductoException, ProductoDuplicateException, MissingUserException;
 }
