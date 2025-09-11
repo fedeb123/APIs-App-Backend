@@ -37,7 +37,7 @@ public class UsuarioDTO {
         this.rol = rol;
 
         this.rolId = rol.getId();
-        
+
         if (!productos_creados.isEmpty()){
             for (ProductoDTO p : productos_creados){
                 this.productosIds.add(p.getId());
