@@ -12,8 +12,8 @@ import com.uade.tpo.petshop.entity.Pedido;
 @Repository
 public interface IPedidoRepository extends JpaRepository<Pedido, Long>{
 
-    @Query("SELECT p FROM Pedido p WHERE p.cliente.email = ?1 AND p.fechaPedido = ?2")
-    List<Pedido> findByClienteAndFechaPedido(String email, Date fechaPedido);
+    @Query("SELECT p FROM Pedido p WHERE p.cliente.id = ?1 AND p.fechaPedido = ?2")
+    List<Pedido> findByClienteAndFechaPedido(Long id, Date fechaPedido);
 
 
 }
