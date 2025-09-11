@@ -51,6 +51,20 @@ public class ProductoController {
         return ResponseEntity.ok(productosDTO);
     }
 
+    @GetMapping("/validos")
+    public ResponseEntity<Page<ProductoDTO>> getAllProductosConStock(@RequestParam(required = false) Integer page,@RequestParam(required = false) Integer size) {
+        Page<Producto> productos;
+        if (page == null && size == null){
+            productos = productoService.getProductosConStock(PageRequest.of(0, Integer.MAX_VALUE));
+            
+        } else {
+            productos = productoService.getProductosConStock(PageRequest.of(page, size));
+        }
+        Page<ProductoDTO> productosDTO = productos.map(Producto::toDTO);
+        return ResponseEntity.ok(productosDTO);
+
+    }
+
     @GetMapping("/{productoId}")
     public ResponseEntity<ProductoDTO> getProductoById(@PathVariable Long productoId) {
         Optional<Producto> producto = productoService.getProductoById(productoId);
