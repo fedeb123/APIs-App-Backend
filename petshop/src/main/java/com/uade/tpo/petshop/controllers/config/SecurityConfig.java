@@ -37,6 +37,7 @@ public class SecurityConfig {
                                                 //Acciones Administrativas (@ADMIN)
                                                 .requestMatchers("/api/usuarios/**").hasAnyAuthority(RolEnum.ADMIN.name())
                                                 .requestMatchers("/api/roles/**").hasAnyAuthority(RolEnum.ADMIN.name())
+                                                .requestMatchers("/api/facturas").hasAnyAuthority(RolEnum.ADMIN.name())
 
                                                 .requestMatchers(HttpMethod.POST, "/api/categorias/**").hasAnyAuthority(RolEnum.ADMIN.name())
                                                 .requestMatchers(HttpMethod.PUT, "/api/categorias/**").hasAnyAuthority(RolEnum.ADMIN.name())                                                .requestMatchers(HttpMethod.PUT, "/api/productos/**").hasAnyAuthority(RolEnum.ADMIN.name())
