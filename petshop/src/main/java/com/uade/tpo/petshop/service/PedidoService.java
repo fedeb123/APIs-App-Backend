@@ -1,6 +1,6 @@
 package com.uade.tpo.petshop.service;
 
-import java.util.List;
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import com.uade.tpo.petshop.entity.DetallePedido;
 import com.uade.tpo.petshop.entity.Pedido;
 import com.uade.tpo.petshop.entity.Producto;
 import com.uade.tpo.petshop.entity.Usuario;
@@ -18,7 +19,7 @@ import com.uade.tpo.petshop.entity.enums.EstadoEnum;
 import com.uade.tpo.petshop.entity.exceptions.MissingPedidoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
-import com.uade.tpo.petshop.entity.exceptions.PedidoDuplicateException;
+import com.uade.tpo.petshop.repositories.interfaces.IDetallePedidoRepository;
 import com.uade.tpo.petshop.repositories.interfaces.IPedidoRepository;
 import com.uade.tpo.petshop.service.interfaces.IPedidoService;
 import com.uade.tpo.petshop.service.interfaces.IProductoService;
@@ -37,6 +38,8 @@ public class PedidoService implements IPedidoService {
 
     @Autowired
     private final IUsuarioService usuarioService;
+    @Autowired
+    private IDetallePedidoRepository detalleRepository;
 
     public PedidoService(IPedidoRepository pedidoRepository, IProductoService productoService, IUsuarioService usuarioService) {
         this.pedidoRepository = pedidoRepository;
@@ -56,22 +59,50 @@ public class PedidoService implements IPedidoService {
 
     @Override
     @Transactional
-    //completar
-    public Pedido crearPedido(PedidoDTO pedido) throws PedidoDuplicateException, MissingProductoException, MissingUserException {
-        List<Pedido> pedidos = pedidoRepository.findByClienteAndFechaPedido(pedido.getClienteId(), pedido.getFechaPedido());
-        if (pedidos.isEmpty()){
-            Usuario cliente = usuarioService.getUsuarioByEmail(pedido.getClienteId()).orElseThrow(() -> new MissingUserException());
-            return pedidoRepository.save(new Pedido(cliente, pedido.getFechaPedido(), pedido.getEstado()));
+
+    public Pedido crearPedido(PedidoDTO pedidoDTO) throws MissingProductoException, MissingUserException {
+        Usuario cliente = usuarioService.getUsuarioById(pedidoDTO.getClienteId())
+                .orElseThrow(MissingUserException::new);
+
+        Pedido pedido = new Pedido(cliente, new Date(), EstadoEnum.PENDIENTE);
+        pedido = pedidoRepository.save(pedido); // primero guardo el pedido
+
+        // luego guardo los detalles uno por uno
+        if (pedidoDTO.getDetalles() != null) {
+            for (DetallePedidoDTO detalleDTO : pedidoDTO.getDetalles()) {
+                Producto producto = productoService.getProductoById(detalleDTO.getProductoId())
+                        .orElseThrow(MissingProductoException::new);
+
+                DetallePedido detalle = new DetallePedido(
+                    pedido,
+                    producto,
+                    detalleDTO.getCantidad(),
+                    producto.getPrecio() * detalleDTO.getCantidad()
+                );
+
+                detalleRepository.save(detalle); // guardo detalle explícitamente
+                pedido.getDetalles().add(detalle); // lo asocio al pedido
+                pedido.setPrecioTotal(pedido.getPrecioTotal() + detalle.getPrecioSubtotal());
+            }
         }
-        throw new PedidoDuplicateException();
+
+        return pedidoRepository.save(pedido); // actualizo con los detalles
     }
 
     @Override
     @Transactional
     public void agregarDetalleAPedido(DetallePedidoDTO detalle, Long id) throws MissingProductoException, MissingPedidoException {
-        Pedido pedido = pedidoRepository.findById(id).orElseThrow(MissingPedidoException::new);
-        Producto producto = productoService.getProductoById(detalle.getProducto().getId()).orElseThrow(MissingProductoException::new);
+        Pedido pedido = pedidoRepository.findById(id)
+            .orElseThrow(MissingPedidoException::new);
+
+        // Busco el producto a partir del productoId que trae el DTO
+        Producto producto = productoService.getProductoById(detalle.getProductoId())
+                .orElseThrow(MissingProductoException::new);
+
+        // Agrego el detalle al pedido
         pedido.agregarDetalle(producto, detalle.getCantidad());
+
+        // Persiste el cambio
         pedidoRepository.save(pedido);
     }
 
