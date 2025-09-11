@@ -84,7 +84,7 @@ public class PedidoController {
     }
 
     @PostMapping("/agregarFactura/{pedidoId}")
-    public ResponseEntity<String> agregarProducto(@RequestBody FacturaDTO facturaDTO, Long pedidoID) throws MissingProductoException, MissingPedidoException {
+    public ResponseEntity<String> agregarFactura(@RequestBody FacturaDTO facturaDTO, Long pedidoID) throws MissingProductoException, MissingPedidoException {
         pedidoService.agregarFacturaAPedido(facturaDTO, pedidoID);
         return ResponseEntity.ok("Factura: " + facturaDTO.getId() + " agregada Correctamente");
     }
