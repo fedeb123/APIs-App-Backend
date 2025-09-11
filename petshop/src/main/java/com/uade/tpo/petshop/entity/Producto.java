@@ -58,29 +58,27 @@ public class Producto {
     List<DetallePedido> detallePedidos;
 
     public ProductoDTO toDTO(){
-        return new ProductoDTO(this.id, this.nombre, this.descripcion, this.precio, this.stock, this.categoria.toDTO(), this.usuario_creador.toDTO());
+        return new ProductoDTO(this.id, this.nombre, this.descripcion, this.precio, this.stock, this.categoria != null ? this.categoria.getId():null, this.usuario_creador != null ? this.usuario_creador.getId():null);
     }
 
-    public void updateFromDTO(ProductoDTO producto) {
+    public void updateFromDTO(ProductoDTO producto, Categoria categoria, Usuario usuario) {
         if (producto.getNombre() != null && !producto.getNombre().isEmpty()) {
             this.nombre = producto.getNombre();
         }
         if (producto.getDescripcion() != null && !producto.getDescripcion().isEmpty()) {
             this.descripcion = producto.getDescripcion();
         }
-        if (producto.getPrecio() != this.getPrecio()) {
+        if (producto.getPrecio() != this.precio) {
             this.precio = producto.getPrecio();
         }
-        if (producto.getStock() != this.getPrecio()) {
+        if (producto.getStock() != this.stock) {
             this.stock = producto.getStock();
         }
-        if (producto.getCategoria() != null) {
-            this.categoria = new Categoria(); // Asume entidad válida
-            this.categoria.updateFromDTO(producto.getCategoria());
+        if (categoria != null) {
+            this.categoria = categoria;
         }
-        if (producto.getUsuarioCreador() != null) {
-            this.usuario_creador = new Usuario();  // Asume entidad válida
-            this.usuario_creador.updateFromDTO(producto.getUsuarioCreador());
+        if (usuario != null) {
+            this.usuario_creador = usuario;
         }
     }
 
