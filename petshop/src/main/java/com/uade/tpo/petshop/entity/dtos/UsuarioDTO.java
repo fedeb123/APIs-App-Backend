@@ -35,6 +35,14 @@ public class UsuarioDTO {
         this.productos_creados = productos_creados;
         this.pedidos = pedidos;
         this.rol = rol;
+
+        this.rolId = rol.getId();
+        
+        if (!productos_creados.isEmpty()){
+            for (ProductoDTO p : productos_creados){
+                this.productosIds.add(p.getId());
+            }
+        }
     }
 
     public UsuarioDTO() {}
