@@ -69,13 +69,8 @@ public class PedidoService implements IPedidoService {
     @Override
     @Transactional
     public void agregarDetalleAPedido(DetallePedidoDTO detalle, Long id) throws MissingProductoException, MissingPedidoException {
-        Pedido pedido = pedidoRepository.findById(id).orElseThrow(() -> new MissingPedidoException());
-        Producto producto = null;
-        try {
-            producto = productoService.getProductoById(detalle.getProducto().getId()).orElseThrow(() -> new MissingProductoException());
-        } catch (MissingProductoException e) {
-            e.printStackTrace();
-        }
+        Pedido pedido = pedidoRepository.findById(id).orElseThrow(MissingPedidoException::new);
+        Producto producto = productoService.getProductoById(detalle.getProducto().getId()).orElseThrow(MissingProductoException::new);
         pedido.agregarDetalle(producto, detalle.getCantidad());
         pedidoRepository.save(pedido);
     }
