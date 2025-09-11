@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.petshop.entity.Pedido;
+import com.uade.tpo.petshop.entity.dtos.DetallePedidoDTO;
+import com.uade.tpo.petshop.entity.dtos.FacturaDTO;
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
+import com.uade.tpo.petshop.entity.exceptions.MissingPedidoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
-import com.uade.tpo.petshop.entity.exceptions.MissingPedidoException;
 import com.uade.tpo.petshop.entity.exceptions.PedidoDuplicateException;
 import com.uade.tpo.petshop.entity.exceptions.ProductoDuplicateException;
 import com.uade.tpo.petshop.service.interfaces.IPedidoService;
@@ -74,4 +76,17 @@ public class PedidoController {
         Pedido nuevoPedido = pedidoService.crearPedido(pedidoDTO);
         return ResponseEntity.ok(nuevoPedido.toDTO());
     }
+
+    @PostMapping("/agregarProducto/{pedidoId}")
+    public ResponseEntity<String> agregarProducto(@RequestBody DetallePedidoDTO detallePedidoDTO, Long pedidoID) throws MissingProductoException, MissingPedidoException {
+        pedidoService.agregarDetalleAPedido(detallePedidoDTO, pedidoID);
+        return ResponseEntity.ok("Producto: " + detallePedidoDTO.getProducto().getNombre() + " agregado Correctamente");
+    }
+
+    @PostMapping("/agregarFactura/{pedidoId}")
+    public ResponseEntity<String> agregarProducto(@RequestBody FacturaDTO facturaDTO, Long pedidoID) throws MissingProductoException, MissingPedidoException {
+        pedidoService.agregarFacturaAPedido(facturaDTO, pedidoID);
+        return ResponseEntity.ok("Factura: " + facturaDTO.getId() + " agregada Correctamente");
+    }
+    
 }
