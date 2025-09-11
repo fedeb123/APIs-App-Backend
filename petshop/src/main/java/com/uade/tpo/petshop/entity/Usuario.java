@@ -1,5 +1,7 @@
 package com.uade.tpo.petshop.entity;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -18,11 +20,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import lombok.Data;
 import lombok.Builder;
-
-import java.util.Collection;
-import java.util.Collections;
+import lombok.Data;
 
 @Data
 @Entity
@@ -85,14 +84,19 @@ public class Usuario implements UserDetails {
 
     public UsuarioDTO toDTO(){
         List<PedidoDTO> pedidosDTOs = new ArrayList<>();
-        for (Pedido p : this.pedidos){
-            pedidosDTOs.add(p.toDTO());
+        if (pedidosDTOs != null){
+            for (Pedido p : this.pedidos){
+                pedidosDTOs.add(p.toDTO());
+            }
         }
 
         List<ProductoDTO> productosDTOs = new ArrayList<>();
-        for (Producto pr : this.productos_creados){
-            productosDTOs.add(pr.toDTO());
+        if (productosDTOs != null){
+            for (Producto pr : this.productos_creados){
+                productosDTOs.add(pr.toDTO());
+            }
         }
+
         return new UsuarioDTO(this.id, this.nombre, this.apellido, this.telefono, this.email, this.password, this.direccion, productosDTOs, pedidosDTOs, this.rol.toDTO());
     }
 
@@ -112,23 +116,7 @@ public class Usuario implements UserDetails {
         if (usuario.getDireccion() != null && !usuario.getDireccion().isEmpty()) {
             this.setDireccion(usuario.getDireccion());
         }
-        if (usuario.getRol() != null) {
-            this.setRol(new Rol(usuario.getRol().getNombre()));
-        }
-        if (usuario.getProductos_creados() != null) {
-            List<Producto> productos = new ArrayList<>();
-            for (ProductoDTO productoDTO : usuario.getProductos_creados()){
-                productos.add(new Producto(productoDTO.getNombre(), productoDTO.getDescripcion(), productoDTO.getPrecio(), productoDTO.getStock(), new Categoria(productoDTO.getCategoria().getNombreCategoria(), productoDTO.getCategoria().getDescripcion())));
-            }
-            this.setProductos_creados(productos);
-        }
-        if (usuario.getPedidos() != null) {
-            List<Pedido> pedidosU = new ArrayList<>();
-            for (PedidoDTO pedidoDTO : usuario.getPedidos()){
-                pedidosU.add(new Pedido(this, pedidoDTO.getFechaPedido(), pedidoDTO.getEstado()));
-            }
-            this.setPedidos(pedidosU);
-        }
+        
     }
 
     @Override
