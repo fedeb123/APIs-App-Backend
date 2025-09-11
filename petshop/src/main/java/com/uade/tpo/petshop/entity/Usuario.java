@@ -84,18 +84,17 @@ public class Usuario implements UserDetails {
 
     public UsuarioDTO toDTO(){
         List<PedidoDTO> pedidosDTOs = new ArrayList<>();
-        if (pedidosDTOs != null){
-            for (Pedido p : this.pedidos){
-                pedidosDTOs.add(p.toDTO());
-            }
+        
+        for (Pedido p : this.pedidos){
+            pedidosDTOs.add(p.toDTO());
         }
 
         List<ProductoDTO> productosDTOs = new ArrayList<>();
-        if (productosDTOs != null){
-            for (Producto pr : this.productos_creados){
-                productosDTOs.add(pr.toDTO());
-            }
+
+        for (Producto pr : this.productos_creados){
+            productosDTOs.add(pr.toDTO());
         }
+        
 
         return new UsuarioDTO(this.id, this.nombre, this.apellido, this.telefono, this.email, this.password, this.direccion, productosDTOs, pedidosDTOs, this.rol.toDTO());
     }
