@@ -52,8 +52,6 @@ public class SecurityConfig {
                                                 .requestMatchers(HttpMethod.GET, "/api/categorias/**").authenticated()
                                                 .requestMatchers(HttpMethod.POST, "/api/detalle-pedidos").authenticated()
                                                 .requestMatchers(HttpMethod.PUT, "/api/detalle-pedidos").authenticated()                                                .requestMatchers(HttpMethod.GET, "/api/detalle-pedidos").authenticated()                                                
-                                                
-
 
                                                 .anyRequest().authenticated())
                                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
