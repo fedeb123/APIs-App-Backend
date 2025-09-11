@@ -85,14 +85,14 @@ public class Usuario implements UserDetails {
     public UsuarioDTO toDTO(){
         List<PedidoDTO> pedidosDTOs = new ArrayList<>();
         
-        if (this.pedidos != null){
+        if (!this.pedidos.isEmpty()){
             for (Pedido p : this.pedidos){
                 pedidosDTOs.add(p.toDTO());
             }
         }
         List<ProductoDTO> productosDTOs = new ArrayList<>();
 
-        if (this.productos_creados!= null){
+        if (!this.productos_creados.isEmpty()){
             for (Producto pr : this.productos_creados){
                 productosDTOs.add(pr.toDTO());
             }
