@@ -42,6 +42,6 @@ public class DetallePedido {
     private Pedido pedido;
 
     public DetallePedidoDTO toDTO(){
-        return new DetallePedidoDTO(this.id, this.cantidad, this.precioSubtotal, this.producto.toDTO(), this.pedido.toDTO());
+        return new DetallePedidoDTO(this.id, this.cantidad, this.precioSubtotal, this.producto.getId(), this.pedido.getId());
     }
 }

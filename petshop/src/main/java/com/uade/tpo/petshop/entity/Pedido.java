@@ -75,7 +75,7 @@ public class Pedido {
         for (DetallePedido d : this.detalles){
             detallesDTO.add(d.toDTO());
         }
-        return new PedidoDTO(this.id, this.cliente.toDTO(), this.fechaPedido, this.estado, this.precioTotal, detallesDTO, this.factura.toDTO());
+        return new PedidoDTO(this.id, this.cliente.getId(), this.fechaPedido, this.estado, this.precioTotal, detallesDTO, this.factura.toDTO());
     }
 
     public void agregarDetalle(Producto producto, int cantidad) {

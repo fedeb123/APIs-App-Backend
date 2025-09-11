@@ -11,17 +11,18 @@ import lombok.Data;
 public class PedidoDTO {
 
     private Long id;
-    UsuarioDTO cliente;
-    private Date fechaPedido;
+    private Long clienteId; /*(para post sencillo) */
+    private Date fechaPedido; /*Se asigna automaticamente */
     private EstadoEnum estado;
     private double precioTotal;
-    private List<DetallePedidoDTO> detalles;
+    private List<DetallePedidoDTO> detalles; /*(con producto ID y cantidad) */
     private FacturaDTO factura;
 
-    public PedidoDTO(Long id, UsuarioDTO cliente, Date fechaPedido, EstadoEnum estado, double precioTotal, List<DetallePedidoDTO> detalles, FacturaDTO factura) {
+    public PedidoDTO(Long id, Long clienteId, Date fechaPedido, EstadoEnum estado, double precioTotal, List<DetallePedidoDTO> detalles, FacturaDTO factura) {
         this.id = id;
-        this.cliente = cliente;
+        this.clienteId = clienteId;
         this.fechaPedido = fechaPedido;
+        this.estado=estado;
         this.precioTotal = precioTotal;
         this.detalles = detalles;
         this.factura = factura;
