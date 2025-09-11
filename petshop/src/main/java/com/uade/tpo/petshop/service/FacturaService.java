@@ -1,11 +1,11 @@
 package com.uade.tpo.petshop.service;
 
-import com.uade.tpo.petshop.models.Factura;
+import com.uade.tpo.petshop.entity.Factura;
 import com.uade.tpo.petshop.repositories.interfaces.IFacturaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class FacturaService {
@@ -13,8 +13,8 @@ public class FacturaService {
     @Autowired
     private IFacturaRepository facturaRepository;
 
-    public List<Factura> getAllFacturas() {
-        return facturaRepository.findAll();
+    public Page<Factura> getAllFacturas(PageRequest pageRequest) {
+        return facturaRepository.findAll(pageRequest);
     }
 
     public Factura getFacturaById(Long id) {

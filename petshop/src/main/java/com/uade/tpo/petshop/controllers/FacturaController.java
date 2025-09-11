@@ -1,13 +1,12 @@
 package com.uade.tpo.petshop.controllers;
 
-
 import com.uade.tpo.petshop.entity.Factura;
 import com.uade.tpo.petshop.service.FacturaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/facturas")
@@ -17,8 +16,8 @@ public class FacturaController {
     private FacturaService facturaService;
 
     @GetMapping
-    public ResponseEntity<List<Factura>> getAllFacturas() {
-        List<Factura> facturas = facturaService.getAllFacturas();
+    public ResponseEntity<Page<Factura>> getAllFacturas(PageRequest pageRequest) {
+        Page<Factura> facturas = facturaService.getAllFacturas(pageRequest);
         return ResponseEntity.ok(facturas);
     }
 
