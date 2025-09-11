@@ -40,7 +40,8 @@ public class SecurityConfig {
                                                 .requestMatchers("/api/facturas").hasAnyAuthority(RolEnum.ADMIN.name())
 
                                                 .requestMatchers(HttpMethod.POST, "/api/categorias/**").hasAnyAuthority(RolEnum.ADMIN.name())
-                                                .requestMatchers(HttpMethod.PUT, "/api/categorias/**").hasAnyAuthority(RolEnum.ADMIN.name())                                                .requestMatchers(HttpMethod.PUT, "/api/productos/**").hasAnyAuthority(RolEnum.ADMIN.name())
+                                                .requestMatchers(HttpMethod.PUT, "/api/categorias/**").hasAnyAuthority(RolEnum.ADMIN.name())                                                
+                                                .requestMatchers(HttpMethod.PUT, "/api/productos/**").hasAnyAuthority(RolEnum.ADMIN.name())
                                                 .requestMatchers(HttpMethod.GET, "/api/pedidos/**").hasAnyAuthority(RolEnum.ADMIN.name())
                                                 .requestMatchers(HttpMethod.POST, "/api/pedidos/agregarFactura/**").hasAnyAuthority(RolEnum.ADMIN.name())
                                                 .requestMatchers(HttpMethod.DELETE, "/api/detalle-pedidos").authenticated()
@@ -51,7 +52,8 @@ public class SecurityConfig {
                                                 .requestMatchers(HttpMethod.PUT, "/api/pedidos/**").authenticated()
                                                 .requestMatchers(HttpMethod.GET, "/api/categorias/**").authenticated()
                                                 .requestMatchers(HttpMethod.POST, "/api/detalle-pedidos").authenticated()
-                                                .requestMatchers(HttpMethod.PUT, "/api/detalle-pedidos").authenticated()                                                .requestMatchers(HttpMethod.GET, "/api/detalle-pedidos").authenticated()                                                
+                                                .requestMatchers(HttpMethod.PUT, "/api/detalle-pedidos").authenticated()                                                
+                                                .requestMatchers(HttpMethod.GET, "/api/detalle-pedidos").authenticated()                                                
 
                                                 .anyRequest().authenticated())
                                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
