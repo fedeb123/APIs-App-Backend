@@ -1,10 +1,8 @@
 package com.uade.tpo.petshop.entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.uade.tpo.petshop.entity.dtos.CategoriaDTO;
-import com.uade.tpo.petshop.entity.dtos.ProductoDTO;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,11 +38,7 @@ public class Categoria {
     List<Producto> productos;
 
     public CategoriaDTO toDTO(){
-        List<ProductoDTO> productosDTO = new ArrayList<>();
-        for(Producto p : this.productos){
-            productosDTO.add(p.toDTO());
-        }
-        return new CategoriaDTO(this.id, this.nombreCategoria, this.descripcion, productosDTO);
+        return new CategoriaDTO(this.id, this.nombreCategoria, this.descripcion);
     }
 
     public void updateFromDTO(CategoriaDTO categoriaDTO) {
@@ -56,13 +50,6 @@ public class Categoria {
             this.descripcion = categoriaDTO.getDescripcion();
         }
 
-        if (categoriaDTO.getProductos() != null) {
-            List<Producto> productosArr = new ArrayList<>();
-            for (ProductoDTO productoDTO : categoriaDTO.getProductos()) {
-                this.productos.add(new Producto(productoDTO.getNombre(), productoDTO.getDescripcion(), productoDTO.getPrecio(), productoDTO.getStock(), this));
-            }
-            this.productos = productosArr;
-        }
     }
 
 }
