@@ -15,9 +15,9 @@ import org.springframework.stereotype.Service;
 
 import com.uade.tpo.petshop.service.interfaces.IJwtService;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.Claims;
 
 @Service
 public class JwtService implements IJwtService {
@@ -53,6 +53,7 @@ public class JwtService implements IJwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
+    @Override
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = Jwts.parser()
             .verifyWith(getJwtKey())
