@@ -58,9 +58,9 @@ public class PedidoService implements IPedidoService {
     @Transactional
     //completar
     public Pedido crearPedido(PedidoDTO pedido) throws PedidoDuplicateException, MissingProductoException, MissingUserException {
-        List<Pedido> pedidos = pedidoRepository.findByClienteAndFechaPedido(pedido.getCliente().getEmail(), pedido.getFechaPedido());
+        List<Pedido> pedidos = pedidoRepository.findByClienteAndFechaPedido(pedido.getClienteId(), pedido.getFechaPedido());
         if (pedidos.isEmpty()){
-            Usuario cliente = usuarioService.getUsuarioByEmail(pedido.getCliente().getEmail()).orElseThrow(() -> new MissingUserException());
+            Usuario cliente = usuarioService.getUsuarioByEmail(pedido.getClienteId()).orElseThrow(() -> new MissingUserException());
             return pedidoRepository.save(new Pedido(cliente, pedido.getFechaPedido(), pedido.getEstado()));
         }
         throw new PedidoDuplicateException();
