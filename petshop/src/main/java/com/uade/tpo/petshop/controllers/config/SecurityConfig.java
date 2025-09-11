@@ -36,11 +36,11 @@ public class SecurityConfig {
 
                                                 //Acciones Administrativas (@ADMIN)
                                                 .requestMatchers("/api/usuarios/**").hasAnyAuthority(RolEnum.ADMIN.name())
-                                                //.requestMatchers("/api/roles/**").hasAnyAuthority(RolEnum.ADMIN.name())
+                                                .requestMatchers("/api/roles/**").hasAnyAuthority(RolEnum.ADMIN.name())
                                                 .requestMatchers("/api/facturas").hasAnyAuthority(RolEnum.ADMIN.name())
 
                                                 //PRIMER ACCESO
-                                                .requestMatchers("/api/roles/**").permitAll()
+                                                //.requestMatchers("/api/roles/**").permitAll()
 
                                                 .requestMatchers(HttpMethod.POST, "/api/categorias/**").hasAnyAuthority(RolEnum.ADMIN.name())
                                                 .requestMatchers(HttpMethod.PUT, "/api/categorias/**").hasAnyAuthority(RolEnum.ADMIN.name())                                                

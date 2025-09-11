@@ -1,5 +1,6 @@
 package com.uade.tpo.petshop.entity.dtos;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Data;
@@ -16,7 +17,7 @@ public class UsuarioDTO {
 
     // POST (con ID es suficiente)
     private Long rolId;
-    private List<Long> productosIds;
+    private List<Long> productosIds = new ArrayList<>();
 
     // GET (que se muestre el json completo)
     private List<ProductoDTO> productos_creados;
