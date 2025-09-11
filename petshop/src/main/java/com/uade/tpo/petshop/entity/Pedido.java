@@ -72,10 +72,23 @@ public class Pedido {
 
     public PedidoDTO toDTO(){
         List<DetallePedidoDTO> detallesDTO = new ArrayList<>();
-        for (DetallePedido d : this.detalles){
-            detallesDTO.add(d.toDTO());
+        if (this.detalles != null) {
+            for (DetallePedido d : this.detalles) {
+                if (d != null) {
+                    detallesDTO.add(d.toDTO());
+                }
+            }
         }
-        return new PedidoDTO(this.id, this.cliente.toDTO(), this.fechaPedido, this.estado, this.precioTotal, detallesDTO, this.factura.toDTO());
+
+        return new PedidoDTO(
+            this.id,
+            (this.cliente != null) ? this.cliente.getId() : null,
+            this.fechaPedido,
+            this.estado,
+            this.precioTotal,
+            detallesDTO,
+            (this.factura != null) ? this.factura.toDTO() : null 
+        );
     }
 
     public void agregarDetalle(Producto producto, int cantidad) {
