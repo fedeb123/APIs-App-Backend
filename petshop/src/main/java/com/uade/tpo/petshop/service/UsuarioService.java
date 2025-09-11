@@ -80,10 +80,9 @@ public class UsuarioService implements IUsuarioService {
     @Override
     @Transactional // este transactional asegura que si algo falla, no se guarde nada en la base de datos.
     public Usuario createUsuario(UsuarioDTO usuario) throws UsuarioDuplicateException, MissingRolException {
-        Rol rol = rolService.getRolById(usuario.getRol().getId()).orElseThrow(() -> new MissingRolException());
+        Rol rol = rolService.getRolById(usuario.getRolId()).orElseThrow(() -> new MissingRolException());
         List<Usuario> usuarios = usuarioRepository.findByEmail(usuario.getEmail());
         if (usuarios.isEmpty()) {
-            usuario.setRol(rol.toDTO());
             return usuarioRepository.save(new Usuario(usuario.getNombre(), usuario.getApellido(), usuario.getTelefono(), usuario.getEmail(), usuario.getPassword(), usuario.getDireccion(), rol));
         } else {
             throw new UsuarioDuplicateException();

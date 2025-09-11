@@ -9,17 +9,17 @@ public class ProductoDTO {
     private String descripcion;
     private double precio;
     private int stock;
-    private CategoriaDTO categoria;
-    private UsuarioDTO usuarioCreador;
+    private Long categoriaId;
+    private Long usuarioId;
 
-    public ProductoDTO(Long id, String nombre, String descripcion, double precio, int stock, CategoriaDTO categoria, UsuarioDTO usuarioCreador) {
+    public ProductoDTO(Long id, String nombre, String descripcion, double precio, int stock, Long categoriaId, Long usuadioId) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.stock = stock;
-        this.categoria = categoria;
-        this.usuarioCreador = usuarioCreador;
+        this.categoriaId = categoriaId;
+        this.usuarioId = usuadioId;
     }
 
     public ProductoDTO() {

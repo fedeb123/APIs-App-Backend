@@ -62,38 +62,57 @@ public class ProductoService implements IProductoService {
 
     @Override
     @Transactional
-    public Producto createProducto(ProductoDTO producto) throws MissingCategoriaException, ProductoDuplicateException {
-        // Implementacion del metodo para crear un nuevo producto
+    public Producto createProducto(ProductoDTO producto) throws MissingCategoriaException, ProductoDuplicateException, MissingUserException {
+        // Validar nombre duplicado
         List<Producto> productos = productoRepository.findByName(producto.getNombre());
-        if(productos.isEmpty()){
-            Categoria categoriaProducto = categoriaService.getCategoriaByNombre(producto.getCategoria().getNombreCategoria()).orElseThrow(() -> new MissingCategoriaException());
-            return productoRepository.save(new Producto(producto.getNombre(), producto.getDescripcion(), producto.getPrecio(), producto.getStock(), categoriaProducto));
-        } else {
+        if (!productos.isEmpty()) {
             throw new ProductoDuplicateException();
         }
-    }
 
+        // Buscar la categoría por ID
+        Categoria categoria = categoriaService.getCategoriaById(producto.getCategoriaId())
+            .orElseThrow(MissingCategoriaException::new);
+
+        // Buscar usuario creador por ID
+        Usuario usuario = usuarioService.getUsuarioById(producto.getUsuarioId())
+            .orElseThrow(MissingUserException::new);
+
+        Producto nuevo = new Producto(
+            producto.getNombre(),
+            producto.getDescripcion(),
+            producto.getPrecio(),
+            producto.getStock(),
+            categoria
+        );
+        nuevo.setUsuario_creador(usuario);
+
+        return productoRepository.save(nuevo);
+    }
     @Override
     @Transactional
     public Producto updateProducto(Long id, ProductoDTO producto) throws MissingCategoriaException, MissingProductoException, ProductoDuplicateException, MissingUserException {
-        Producto productoAUpdatear = productoRepository.findById(id).orElseThrow(() -> new MissingProductoException());        
-        List<Producto> productos = productoRepository.findByName(producto.getNombre());
-        if (productos.isEmpty()) {
-            if (producto.getCategoria() != null) {
-                //validacion de categoria
-                Categoria categoria = categoriaService.getCategoriaByNombre(producto.getCategoria().getNombreCategoria()).orElseThrow(() -> new MissingCategoriaException());
-            }
+        Producto productoAUpdatear = productoRepository.findById(id)
+            .orElseThrow(MissingProductoException::new);
 
-            if (producto.getUsuarioCreador() != null) {
-                //validacion de usuario
-                Usuario usuario = usuarioService.getUsuarioByEmail(producto.getUsuarioCreador().getEmail()).orElseThrow(() -> new MissingUserException());
-            }
-            
-            productoAUpdatear.updateFromDTO(producto);
-            return productoRepository.save(productoAUpdatear);
-        } else {
+        List<Producto> productos = productoRepository.findByName(producto.getNombre());
+        if (!productos.isEmpty() && !productos.get(0).getId().equals(id)) {
             throw new ProductoDuplicateException();
         }
+
+        Categoria categoria = null;
+        if (producto.getCategoriaId() != null) {
+            categoria = categoriaService.getCategoriaById(producto.getCategoriaId())
+                .orElseThrow(MissingCategoriaException::new);
+        }
+
+        Usuario usuario = null;
+        if (producto.getUsuarioId() != null) {
+            usuario = usuarioService.getUsuarioById(producto.getUsuarioId())
+                .orElseThrow(MissingUserException::new);
+        }
+
+        productoAUpdatear.updateFromDTO(producto, categoria, usuario);
+        return productoRepository.save(productoAUpdatear);
     }
 
 

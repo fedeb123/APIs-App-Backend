@@ -13,11 +13,18 @@ public class UsuarioDTO {
     private String email;
     private String password;
     private String direccion;
+
+    // POST (con ID es suficiente)
+    private Long rolId;
+    private List<Long> productosIds;
+
+    // GET (que se muestre el json completo)
     private List<ProductoDTO> productos_creados;
     private List<PedidoDTO> pedidos;
     private RolDTO rol;
 
-    public UsuarioDTO(Long id, String nombre, String apellido, String telefono, String email, String password, String direccion, List<ProductoDTO> productos_creados, List<PedidoDTO> pedidos, RolDTO rol) {
+    public UsuarioDTO(Long id, String nombre, String apellido, String telefono, String email, String password,
+                      String direccion, List<ProductoDTO> productos_creados, List<PedidoDTO> pedidos, RolDTO rol) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -30,6 +37,5 @@ public class UsuarioDTO {
         this.rol = rol;
     }
 
-    public UsuarioDTO() {
-    }
+    public UsuarioDTO() {}
 }
