@@ -1,24 +1,22 @@
 package com.uade.tpo.petshop.service;
 
-import org.springframework.stereotype.Service;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.stereotype.Service;
 
-import com.uade.tpo.petshop.service.interfaces.IAutenticacionService;
 import com.uade.tpo.petshop.entity.Usuario;
 import com.uade.tpo.petshop.entity.dtos.AuthResponseDTO;
+import com.uade.tpo.petshop.entity.dtos.LoginRequestDTO;
 import com.uade.tpo.petshop.entity.dtos.RegistroRequestDTO;
 import com.uade.tpo.petshop.entity.exceptions.MissingRolException;
 import com.uade.tpo.petshop.entity.exceptions.UsuarioDuplicateException;
+import com.uade.tpo.petshop.service.interfaces.IAutenticacionService;
 import com.uade.tpo.petshop.service.interfaces.IJwtService;
 import com.uade.tpo.petshop.service.interfaces.IRolService;
 import com.uade.tpo.petshop.service.interfaces.IUsuarioService;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-
-import com.uade.tpo.petshop.entity.dtos.LoginRequestDTO;
 
 @Service
 @RequiredArgsConstructor
