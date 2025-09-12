@@ -65,3 +65,29 @@ Para crear una factura de un Pedido. Hacerlo mediante FacturaController que reci
     "metodoDePago": "TARJETA_CREDITO" //que refiere al metodo de pago segun MetodoDePagoEnum `(package com.uade.tpo.petshop.entity.enums)`
 }
 ```
+
+# Estado de Pedido
+Pedido maneja actualizaciones de estado segun su controller PedidoController. 
+La solicitud PUT es del tipo: 
+
+```PARAMETROS
+Parametros {
+    pedidoId: INT //que refiere a algun pedido dentro de la BD
+}
+```
+
+```PUT Pedido Body
+{
+    "estado": ENVIADO, //que refiere al estado segun EstadoEnum `(package com.uade.tpo.petshop.entity.enums)`
+}
+```
+
+# Solicitud de pedidos de un usuario especifico
+Se pueden solicitar todos los pedidos realizados por un usuario mediante PedidoController. Esto devuelve una lista de Pedidos con sus respectivos objetos dentro
+ya sea DetallePedido y Factura. La solicitud GET es del tipo: 
+
+```PARAMETROS
+Parametros {
+    email: STRING //que refiere a algun email perteneciente unico a algun usuario dentro de la BD
+}
+```
