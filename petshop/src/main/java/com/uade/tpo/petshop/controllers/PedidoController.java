@@ -1,5 +1,7 @@
 package com.uade.tpo.petshop.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -75,5 +77,13 @@ public class PedidoController {
         Pedido nuevoPedido = pedidoService.crearPedido(pedidoDTO);
         return ResponseEntity.ok(nuevoPedido.toDTO());
     }
+
+    @GetMapping("/usuario")
+    public ResponseEntity<List<PedidoDTO>> getPedidosFromUsuario(@RequestParam String usuarioEmail) throws MissingUserException, MissingPedidoException {
+        List<Pedido> pedidos = pedidoService.getPedidosFromUsuario(usuarioEmail);
+        List<PedidoDTO> pedidosDTO = pedidos.stream().map(Pedido::toDTO).toList();
+        return ResponseEntity.ok(pedidosDTO);
+    }
+    
     
 }

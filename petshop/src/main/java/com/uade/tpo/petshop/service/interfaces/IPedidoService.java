@@ -1,5 +1,6 @@
 package com.uade.tpo.petshop.service.interfaces;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -30,4 +31,6 @@ public interface IPedidoService {
     public void cancelarPedido(Long id) throws MissingPedidoException;
 
     public void updateEstadoPedido(Long id, PedidoDTO pedido) throws MissingPedidoException, PedidoCanceladoException;
+
+    public List<Pedido> getPedidosFromUsuario(String email) throws MissingUserException, MissingPedidoException;
 }

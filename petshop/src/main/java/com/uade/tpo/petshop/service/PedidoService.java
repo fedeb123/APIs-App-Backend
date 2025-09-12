@@ -1,5 +1,6 @@
 package com.uade.tpo.petshop.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,5 +97,19 @@ public class PedidoService implements IPedidoService {
         pedido.setEstado(EstadoEnum.CANCELADO);
         pedidoRepository.save(pedido);
     }
+
+    @Override
+    public List<Pedido> getPedidosFromUsuario(String email) throws MissingUserException, MissingPedidoException {
+        Usuario usuario = usuarioService.getUsuarioByEmail(email).orElseThrow(MissingUserException::new);
+
+        List<Pedido> pedidos = pedidoRepository.findByCliente(usuario.getId());
+
+        if (pedidos.isEmpty()) {
+            throw new MissingPedidoException();
+        }
+        return pedidos;
+    }
+
+
 
 }

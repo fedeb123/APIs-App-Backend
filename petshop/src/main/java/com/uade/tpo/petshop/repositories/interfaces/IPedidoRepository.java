@@ -15,5 +15,7 @@ public interface IPedidoRepository extends JpaRepository<Pedido, Long>{
     @Query(value="SELECT p FROM Pedido p WHERE p.cliente.id = ?1 AND p.fechaPedido = ?2")
     List<Pedido> findByClienteAndFechaPedido(Long id, Date fechaPedido);
 
+    @Query(value="SELECT p FROM Pedido p WHERE p.cliente.id =?1")
+    List<Pedido> findByCliente(Long id);
 
 }
