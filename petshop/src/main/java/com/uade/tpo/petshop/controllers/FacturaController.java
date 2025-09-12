@@ -26,14 +26,10 @@ import com.uade.tpo.petshop.service.interfaces.IFacturaService;
 public class FacturaController {
 
     @Autowired
-    private IFacturaService facturaService;
+    private final IFacturaService facturaService;
 
     public FacturaController(IFacturaService facturaService){
         this.facturaService = facturaService;
-    }
-
-    public FacturaController(){
-        
     }
 
     @GetMapping

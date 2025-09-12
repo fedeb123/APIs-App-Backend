@@ -50,7 +50,7 @@ public class Factura {
     private Pedido pedido;
 
     public FacturaDTO toDTO(){
-        return new FacturaDTO(this.id, this.fechaEmision, this.total, this.pedido.toDTO().getId(), this.metodoPago);
+        return new FacturaDTO(this.id, this.fechaEmision, this.total, this.pedido.getId(), this.metodoPago);
     }
 
     public void updateFromDTO(FacturaDTO factura, Pedido pedido){

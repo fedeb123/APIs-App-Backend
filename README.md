@@ -1,6 +1,9 @@
 # APIs-App-Backend
 Desarrollo del Backend para la materia Aplicaciones Interactivas (APIs) en UADE
 
+# Ejecutar el Proyecto
+Para correr el proyecto ejecutar dentro de la carpeta `petshop` el comando: `mvn clean spring-boot:run`
+
 # Variables de Entorno
 Es necesario tener un archivo .env con las siguientes clave valor como el .env.example en la raiz del proyecto
 
@@ -30,4 +33,35 @@ Recordar solicitar el access token a las siguientes rutas
 ```POST Auth
 api/v1/auth/register
 api/v1/auth/authenticate
+```
+
+# Pedido - DetallePedido - Factura (Manejo y Control)
+Se opto por un modelo en el cual primero se crea el pedido. Luego se adhieren los productos mediante DetallePedido para la adicion al pedido creado.
+
+PedidoController recibe un POST del tipo: 
+
+``` POST Pedido Body
+{
+    clienteId: INT //que refiere a algun cliente cargado en la BD
+}
+
+```
+
+El controller devolvera el id del pedido creado, sino consultarlo mediante el mismo.
+
+```POST DetallePedido Body
+{
+    "cantidad": INT, //cantidad a llevar del producto (se valida el stock y si se confirma, se resta del stock del producto)
+    "productoId": INT, //que refiere a algun producto cargado en la BD
+    "pedidoId": INT //que refiere a algun pedido cargado en la BD
+}
+```
+
+Para crear una factura de un Pedido. Hacerlo mediante FacturaController que recibe un POST del tipo:
+
+```POST Factura Body
+{
+    "pedidoId": INT, //que refiere a algun pedido cargado en la BD
+    "metodoDePago": "TARJETA_CREDITO" //que refiere al metodo de pago segun MetodoDePagoEnum `(package com.uade.tpo.petshop.entity.enums)`
+}
 ```

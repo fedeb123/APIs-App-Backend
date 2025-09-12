@@ -29,4 +29,11 @@ public class FacturaDTO {
         this.pedidoId = pedidoId;
         this.metodoDePago = metodoDePago;
     }
+
+    public FacturaDTO(Long pedidoId, MetodoDePagoEnum metodoDePagoEnum){
+        this.pedidoId = pedidoId;
+        this.metodoDePago = metodoDePagoEnum;
+    }
+
+    
 }
