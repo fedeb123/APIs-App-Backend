@@ -1,6 +1,5 @@
 package com.uade.tpo.petshop.entity.dtos;
 
-import java.util.List;
 
 import lombok.Data;
 
