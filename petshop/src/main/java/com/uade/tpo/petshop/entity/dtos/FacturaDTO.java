@@ -14,7 +14,7 @@ public class FacturaDTO {
     private Long id;
     private Date fechaEmision;
     private double total;
-    private PedidoDTO pedido;
+    private Long pedidoId;
     @Enumerated(EnumType.STRING)
     private MetodoDePagoEnum metodoDePago;    
     
@@ -22,11 +22,11 @@ public class FacturaDTO {
 
     }
 
-    public FacturaDTO(Long id, Date fechaEmision, double total, PedidoDTO pedido, MetodoDePagoEnum metodoDePago){
+    public FacturaDTO(Long id, Date fechaEmision, double total, Long pedidoId, MetodoDePagoEnum metodoDePago){
         this.id = id;
         this.fechaEmision = fechaEmision;
         this.total = total;
-        this.pedido = pedido;
+        this.pedidoId = pedidoId;
         this.metodoDePago = metodoDePago;
     }
 }
