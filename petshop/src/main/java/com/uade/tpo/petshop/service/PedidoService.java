@@ -78,8 +78,8 @@ public class PedidoService implements IPedidoService {
 
     @Override
     @Transactional
-    public void updateEstadoPedido(PedidoDTO pedidoDTO) throws MissingPedidoException, PedidoCanceladoException {
-        Pedido pedido = pedidoRepository.findById(pedidoDTO.getId()).orElseThrow(MissingPedidoException::new);
+    public void updateEstadoPedido(Long id, PedidoDTO pedidoDTO) throws MissingPedidoException, PedidoCanceladoException {
+        Pedido pedido = pedidoRepository.findById(id).orElseThrow(MissingPedidoException::new);
 
         if (pedido.getEstado() == EstadoEnum.CANCELADO){
             throw new PedidoCanceladoException();

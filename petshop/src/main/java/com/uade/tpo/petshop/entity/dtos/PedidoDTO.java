@@ -38,8 +38,7 @@ public class PedidoDTO {
         this.factura = null;
     }
 
-    public PedidoDTO(Long id, EstadoEnum estado){
-        this.id = id;
+    public PedidoDTO(EstadoEnum estado){
         this.estado = estado;
     }
 

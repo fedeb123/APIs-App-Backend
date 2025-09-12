@@ -18,6 +18,7 @@ import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
 import com.uade.tpo.petshop.entity.exceptions.MissingPedidoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
+import com.uade.tpo.petshop.entity.exceptions.PedidoCanceladoException;
 import com.uade.tpo.petshop.entity.exceptions.PedidoDuplicateException;
 import com.uade.tpo.petshop.service.interfaces.IPedidoService;
 
@@ -55,12 +56,12 @@ public class PedidoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // @PutMapping("/{pedidoId}")/*lo actualizo  */
-    // public ResponseEntity<PedidoDTO> updatePedido(@PathVariable Long pedidoId, @RequestBody PedidoDTO pedidoDTO) throws MissingPedidoException, ProductoDuplicateException {
-    //     Pedido pedido = pedidoService.updatePedido(pedidoDTO, pedidoId);
-    //     return ResponseEntity.ok(pedido.toDTO());
+    @PutMapping("/estado/{pedidoId}")/*Actualizo su estado, solo meto el estado nuevo en el dto  */
+    public ResponseEntity<String> updateEstadoPedido(@PathVariable Long pedidoId, @RequestBody PedidoDTO pedidoDTO) throws MissingPedidoException, PedidoCanceladoException {
+        pedidoService.updateEstadoPedido(pedidoId, pedidoDTO);
+        return ResponseEntity.ok(("Pedido Estado Actualizado Correctamente"));
           
-    // }
+    }
 
     @PutMapping("/cancelar/{pedidoId}")/*En vez de Borrar, actualizo a cancelado, es decir, cambio el estado*/
     public ResponseEntity<String> cancelarPedido(@PathVariable Long pedidoId) throws MissingPedidoException {
