@@ -115,6 +115,16 @@ public class ProductoService implements IProductoService {
         return productoRepository.save(productoAUpdatear);
     }
 
+    @Override
+    @Transactional
+    public void updateStock(Long productoId, ProductoDTO producto) throws MissingProductoException{
+        Producto productoAUpdatear = productoRepository.findById(productoId).orElseThrow(MissingProductoException::new);
+        
+        productoAUpdatear.setStock(producto.getStock());
+        
+        productoRepository.save(productoAUpdatear);
+    }
+
 
 
     //delete
