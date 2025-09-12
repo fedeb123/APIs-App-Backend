@@ -14,14 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.petshop.entity.Pedido;
-import com.uade.tpo.petshop.entity.dtos.DetallePedidoDTO;
-import com.uade.tpo.petshop.entity.dtos.FacturaDTO;
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
 import com.uade.tpo.petshop.entity.exceptions.MissingPedidoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
 import com.uade.tpo.petshop.entity.exceptions.PedidoDuplicateException;
-import com.uade.tpo.petshop.entity.exceptions.ProductoDuplicateException;
 import com.uade.tpo.petshop.service.interfaces.IPedidoService;
 
 
@@ -30,6 +27,7 @@ import com.uade.tpo.petshop.service.interfaces.IPedidoService;
 public class PedidoController {
     @Autowired
     private final IPedidoService pedidoService;
+
 
     public PedidoController(IPedidoService pedidoService) {
         this.pedidoService = pedidoService;
@@ -57,15 +55,15 @@ public class PedidoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{pedidoId}")/*lo actualizo  */
-    public ResponseEntity<PedidoDTO> updatePedido(@PathVariable Long pedidoId, @RequestBody PedidoDTO pedidoDTO) throws MissingPedidoException, ProductoDuplicateException {
-        Pedido pedido = pedidoService.updatePedido(pedidoDTO, pedidoId);
-        return ResponseEntity.ok(pedido.toDTO());
+    // @PutMapping("/{pedidoId}")/*lo actualizo  */
+    // public ResponseEntity<PedidoDTO> updatePedido(@PathVariable Long pedidoId, @RequestBody PedidoDTO pedidoDTO) throws MissingPedidoException, ProductoDuplicateException {
+    //     Pedido pedido = pedidoService.updatePedido(pedidoDTO, pedidoId);
+    //     return ResponseEntity.ok(pedido.toDTO());
           
-    }
+    // }
 
     @PutMapping("/cancelar/{pedidoId}")/*En vez de Borrar, actualizo a cancelado, es decir, cambio el estado*/
-    public ResponseEntity<String> cancelarPedido(@PathVariable Long pedidoId, @RequestBody PedidoDTO pedidoDTO) throws MissingPedidoException {
+    public ResponseEntity<String> cancelarPedido(@PathVariable Long pedidoId) throws MissingPedidoException {
         pedidoService.cancelarPedido(pedidoId);
         return ResponseEntity.ok("Pedido Cancelado Correctamente");
 
@@ -75,18 +73,6 @@ public class PedidoController {
     public ResponseEntity<PedidoDTO> create(@RequestBody PedidoDTO pedidoDTO) throws PedidoDuplicateException, MissingProductoException, MissingUserException {
         Pedido nuevoPedido = pedidoService.crearPedido(pedidoDTO);
         return ResponseEntity.ok(nuevoPedido.toDTO());
-    }
-
-    @PostMapping("/agregarProducto/{pedidoId}")
-    public ResponseEntity<String> agregarProducto(@RequestBody DetallePedidoDTO detallePedidoDTO, Long pedidoID) throws MissingProductoException, MissingPedidoException {
-        pedidoService.agregarDetalleAPedido(detallePedidoDTO, pedidoID);
-        return ResponseEntity.ok("Producto con ID " + detallePedidoDTO.getPedidoId() + " agregado Correctamente");
-    }
-
-    @PostMapping("/agregarFactura/{pedidoId}")
-    public ResponseEntity<String> agregarFactura(@RequestBody FacturaDTO facturaDTO, Long pedidoID) throws MissingProductoException, MissingPedidoException {
-        pedidoService.agregarFacturaAPedido(facturaDTO, pedidoID);
-        return ResponseEntity.ok("Factura: " + facturaDTO.getId() + " agregada Correctamente");
     }
     
 }

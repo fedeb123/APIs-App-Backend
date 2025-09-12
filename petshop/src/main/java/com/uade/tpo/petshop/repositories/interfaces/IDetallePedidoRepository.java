@@ -11,6 +11,6 @@ import com.uade.tpo.petshop.entity.DetallePedido;
 @Repository
 public interface IDetallePedidoRepository extends JpaRepository<DetallePedido, Long> {
     
-    @Query("SELECT d FROM DetallePedido d WHERE d.pedido.id = ?1")
+    @Query(value="SELECT d FROM DetallePedido d WHERE d.pedido.id = ?1")
     List<DetallePedido> findByPedidoId(Long pedidoId);
 }

@@ -16,11 +16,11 @@ public class DetallePedido {
     public DetallePedido() {
     }
 
-    public DetallePedido(Pedido pedido, Producto producto, int cantidad, double precioSubtotal) {
+    public DetallePedido(Pedido pedido, Producto producto, int cantidad) {
         this.pedido = pedido;
         this.producto = producto;
         this.cantidad = cantidad;
-        this.precioSubtotal = precioSubtotal;
+        this.precioSubtotal = producto.getPrecio() * cantidad;
     }
     
     @Id

@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.uade.tpo.petshop.entity.dtos.DetallePedidoDTO;
-import com.uade.tpo.petshop.entity.dtos.FacturaDTO;
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
 import com.uade.tpo.petshop.entity.enums.EstadoEnum;
 
@@ -28,18 +27,18 @@ public class Pedido {
     public Pedido() {
     }
 
-    public Pedido(Usuario cliente, Date fechaPedido, EstadoEnum estado) {
+    public Pedido(Usuario cliente, EstadoEnum estado) {
         this.cliente = cliente;
-        this.fechaPedido = fechaPedido;
+        this.fechaPedido = new Date();
         this.estado = estado;
         this.precioTotal = 0;
         this.detalles = new ArrayList<>();
         this.factura = null;
     }
 
-    public Pedido(Usuario cliente, Date fechaPedido, EstadoEnum estado, float precioTotal,List<DetallePedido> detalles, Factura factura) {
+    public Pedido(Usuario cliente, EstadoEnum estado, float precioTotal,List<DetallePedido> detalles, Factura factura) {
         this.cliente = cliente;
-        this.fechaPedido = fechaPedido;
+        this.fechaPedido = new Date();
         this.estado = estado;
         this.precioTotal = precioTotal;
         this.detalles = detalles;
@@ -91,14 +90,13 @@ public class Pedido {
         );
     }
 
-    public void agregarDetalle(Producto producto, int cantidad) {
-        DetallePedido detalle = new DetallePedido(this, producto, cantidad, producto.getPrecio() * cantidad);
+    public void agregarDetalle(DetallePedido detalle) {
         this.detalles.add(detalle);
         this.precioTotal += detalle.getPrecioSubtotal(); // Actualizar el precio total
     }
 
-    public void agregarFactura(FacturaDTO facturaDTO) {
-        this.factura = new Factura(this, facturaDTO.getFechaEmision(), facturaDTO.getTotal(), facturaDTO.getMetodoDePago());
+    public void agregarFactura(Factura factura) {
+        this.factura = factura;
     }
 
     //calcular precio total del pedido
