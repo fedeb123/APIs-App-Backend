@@ -11,8 +11,9 @@ public class ProductoDTO {
     private int stock;
     private Long categoriaId;
     private Long usuarioId;
+    private String imageUrl;
 
-    public ProductoDTO(Long id, String nombre, String descripcion, double precio, int stock, Long categoriaId, Long usuadioId) {
+    public ProductoDTO(Long id, String nombre, String descripcion, double precio, int stock, Long categoriaId, Long usuadioId, String imageUrl) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -20,6 +21,7 @@ public class ProductoDTO {
         this.stock = stock;
         this.categoriaId = categoriaId;
         this.usuarioId = usuadioId;
+        this.imageUrl = imageUrl;
     }
 
     public ProductoDTO(String nombre){
