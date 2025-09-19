@@ -88,7 +88,7 @@ public class ProductoController {
         return ResponseEntity.ok("Stock Actualizado Correctamente");
     }
 
-    @PostMapping("{productoId}/imagen")
+    @PostMapping(value = "{productoId}/imagen", consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> subirImagen(@PathVariable Long productoId, @RequestParam("file") MultipartFile file) throws java.io.IOException, MissingProductoException {        
         productoService.subirImagen(productoId, file);
         return ResponseEntity.ok("Imagen Subida Correctamente");
