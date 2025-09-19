@@ -57,8 +57,11 @@ public class Producto {
     @OneToMany(mappedBy="producto")
     List<DetallePedido> detallePedidos;
 
+    @Column
+    private String imageUrl;
+
     public ProductoDTO toDTO(){
-        return new ProductoDTO(this.id, this.nombre, this.descripcion, this.precio, this.stock, this.categoria != null ? this.categoria.getId():null, this.usuario_creador != null ? this.usuario_creador.getId():null);
+        return new ProductoDTO(this.id, this.nombre, this.descripcion, this.precio, this.stock, this.categoria != null ? this.categoria.getId():null, this.usuario_creador != null ? this.usuario_creador.getId():null, this.imageUrl);
     }
 
     public void updateFromDTO(ProductoDTO producto, Categoria categoria, Usuario usuario) {
@@ -79,6 +82,9 @@ public class Producto {
         }
         if (usuario != null) {
             this.usuario_creador = usuario;
+        }
+        if (producto.getImageUrl() != null){
+            this.imageUrl = producto.getImageUrl();
         }
     }
 
