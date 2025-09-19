@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.uade.tpo.petshop.entity.Producto;
 import com.uade.tpo.petshop.entity.dtos.ProductoDTO;
@@ -87,5 +88,10 @@ public class ProductoController {
         return ResponseEntity.ok("Stock Actualizado Correctamente");
     }
 
+    @PostMapping("{productoId}/imagen")
+    public ResponseEntity<String> subirImagen(@PathVariable Long productoId, @RequestParam("file") MultipartFile file) throws java.io.IOException, MissingProductoException {        
+        productoService.subirImagen(productoId, file);
+        return ResponseEntity.ok("Imagen Subida Correctamente");
+    }
 
 }

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.uade.tpo.petshop.entity.Producto;
 import com.uade.tpo.petshop.entity.dtos.ProductoDTO;
@@ -21,4 +22,5 @@ public interface IProductoService {
     public Producto createProducto(ProductoDTO producto) throws MissingCategoriaException, ProductoDuplicateException, MissingUserException;
     public void updateStock(Long id, ProductoDTO producto) throws MissingProductoException;
     public Producto updateProducto(Long id, ProductoDTO producto) throws MissingCategoriaException, MissingProductoException, ProductoDuplicateException, MissingUserException;
+    public void subirImagen(Long id, MultipartFile file) throws java.io.IOException, MissingProductoException;
 }
