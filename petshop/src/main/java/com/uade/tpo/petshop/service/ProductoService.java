@@ -133,6 +133,8 @@ public class ProductoService implements IProductoService {
     @Transactional
     public void subirImagen(Long productoId, MultipartFile file) throws MissingProductoException, java.io.IOException {
 
+        Producto producto = this.getProductoById(productoId).orElseThrow(MissingProductoException::new);
+
         String directorioUpload = "uploads/productos/";
         String nombreArchivo = productoId + "_" + file.getOriginalFilename();
         Path ruta = Paths.get(directorioUpload, nombreArchivo);
@@ -141,7 +143,6 @@ public class ProductoService implements IProductoService {
         Files.createDirectories(ruta.getParent());
         Files.write(ruta, file.getBytes());
         
-        Producto producto = this.getProductoById(productoId).orElseThrow(MissingProductoException::new);
         producto.setImageUrl("/" + directorioUpload + nombreArchivo);
         productoRepository.save(producto);
         
