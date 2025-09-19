@@ -22,6 +22,14 @@ public class ProductoDTO {
         this.usuarioId = usuadioId;
     }
 
+    public ProductoDTO(String nombre){
+        this.nombre = nombre;
+    }
+
+    public ProductoDTO(int stock){
+        this.stock = stock;
+    }
+
     public ProductoDTO() {
     }
 }

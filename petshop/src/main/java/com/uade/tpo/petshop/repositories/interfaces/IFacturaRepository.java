@@ -11,7 +11,7 @@ import com.uade.tpo.petshop.entity.Factura;
 @Repository
 public interface IFacturaRepository extends JpaRepository<Factura, Long> {
 
-    @Query("SELECT f FROM Factura f WHERE f.id = ?1")
-    List<Factura> findById(int numero);
+    @Query(value="SELECT f FROM Factura f WHERE f.pedido.id = ?1")
+    List<Factura> findFacturaByPedidoId(Long PedidoId);
 
 }

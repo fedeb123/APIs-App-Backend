@@ -78,6 +78,13 @@ public class ProductoController {
     public ResponseEntity<String> updateProducto(@PathVariable Long productoId, @RequestBody ProductoDTO productoDTO) throws MissingCategoriaException, MissingUserException, MissingProductoException, ProductoDuplicateException {
         productoService.updateProducto(productoId, productoDTO);
         return ResponseEntity.ok("Producto Editado Correctamente");           
+
+    }
+
+    @PutMapping("/actualizarStock/{productoId}")
+    public ResponseEntity<String> updateStock(@PathVariable Long productoId, @RequestBody ProductoDTO productoDTO) throws MissingProductoException {
+        productoService.updateStock(productoId, productoDTO);
+        return ResponseEntity.ok("Stock Actualizado Correctamente");
     }
 
 

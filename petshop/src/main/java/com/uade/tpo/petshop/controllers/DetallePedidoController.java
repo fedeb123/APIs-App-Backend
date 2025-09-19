@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.petshop.entity.DetallePedido;
 import com.uade.tpo.petshop.entity.dtos.DetallePedidoDTO;
+import com.uade.tpo.petshop.entity.exceptions.MissingPedidoException;
+import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
+import com.uade.tpo.petshop.entity.exceptions.MissingStockException;
+import com.uade.tpo.petshop.entity.exceptions.PedidoCanceladoException;
 import com.uade.tpo.petshop.service.interfaces.IDetallePedidoService;
 
 @RestController
@@ -50,7 +54,7 @@ public class DetallePedidoController {
     }
 
     @PostMapping /*devuelve el detalle del pedido recien creado en forma de DTO */
-    public ResponseEntity<DetallePedidoDTO> createDetallePedido(@RequestBody DetallePedidoDTO detallePedidoDTO) {
+    public ResponseEntity<DetallePedidoDTO> createDetallePedido(@RequestBody DetallePedidoDTO detallePedidoDTO) throws MissingProductoException, MissingPedidoException, MissingStockException, PedidoCanceladoException {
         DetallePedido nuevoDetalle = detallePedidoService.save(detallePedidoDTO);
         return ResponseEntity.created(URI.create("/detalle-pedidos/" + nuevoDetalle.getId()))
                              .body(nuevoDetalle.toDTO());

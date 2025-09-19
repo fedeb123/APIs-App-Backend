@@ -19,5 +19,6 @@ public interface IProductoService {
     public Optional<Producto> getProductoById(Long id);
     public List<Producto> getProductoByName(String name);
     public Producto createProducto(ProductoDTO producto) throws MissingCategoriaException, ProductoDuplicateException, MissingUserException;
+    public void updateStock(Long id, ProductoDTO producto) throws MissingProductoException;
     public Producto updateProducto(Long id, ProductoDTO producto) throws MissingCategoriaException, MissingProductoException, ProductoDuplicateException, MissingUserException;
 }

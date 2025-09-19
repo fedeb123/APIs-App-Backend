@@ -1,6 +1,7 @@
 package com.uade.tpo.petshop.entity;
 
 import java.util.Date;
+import java.util.Objects;
 
 import com.uade.tpo.petshop.entity.dtos.FacturaDTO;
 import com.uade.tpo.petshop.entity.enums.MetodoDePagoEnum;
@@ -23,9 +24,9 @@ public class Factura {
     public Factura() {
     }
 
-    public Factura(Pedido pedido, Date fechaEmision, double total, MetodoDePagoEnum metodoPago) {
+    public Factura(Pedido pedido, double total, MetodoDePagoEnum metodoPago) {
         this.pedido = pedido;
-        this.fechaEmision = fechaEmision;
+        this.fechaEmision = new Date();
         this.total = total;
         this.metodoPago = metodoPago;
     }
@@ -49,6 +50,23 @@ public class Factura {
     private Pedido pedido;
 
     public FacturaDTO toDTO(){
-        return new FacturaDTO(this.id, this.fechaEmision, this.total, this.pedido.toDTO(), this.metodoPago);
+        return new FacturaDTO(this.id, this.fechaEmision, this.total, this.pedido.getId(), this.metodoPago);
+    }
+
+    public void updateFromDTO(FacturaDTO factura, Pedido pedido){
+
+        if (!Objects.equals(pedido.getId(), this.getPedido().getId())){
+            this.setPedido(pedido);
+        }
+
+        if (factura.getTotal() != this.getTotal()){
+            this.setTotal(factura.getTotal());
+        }
+
+        if (factura.getMetodoDePago() != this.getMetodoPago()){
+            this.setMetodoPago(factura.getMetodoDePago());
+        }
+
+
     }
 }

@@ -28,6 +28,20 @@ public class PedidoDTO {
         this.factura = factura;
     }
 
+    public PedidoDTO(Long id, Long clienteId, Date fechaPedido, EstadoEnum estado) {
+        this.id = id;
+        this.clienteId = clienteId;
+        this.fechaPedido = fechaPedido;
+        this.estado = estado;
+        this.precioTotal = 0;
+        this.detalles = null;
+        this.factura = null;
+    }
+
+    public PedidoDTO(EstadoEnum estado){
+        this.estado = estado;
+    }
+
     public PedidoDTO(){
 
     }
