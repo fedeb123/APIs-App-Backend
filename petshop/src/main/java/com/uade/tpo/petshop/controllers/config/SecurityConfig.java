@@ -45,7 +45,9 @@ public class SecurityConfig {
                                                 .requestMatchers(HttpMethod.POST, "/api/categorias/**").hasAnyAuthority(RolEnum.ADMIN.name())
                                                 .requestMatchers(HttpMethod.PUT, "/api/categorias/**").hasAnyAuthority(RolEnum.ADMIN.name())                                                
                                                 .requestMatchers(HttpMethod.PUT, "/api/productos/**").hasAnyAuthority(RolEnum.ADMIN.name())
-                                                .requestMatchers(HttpMethod.GET, "/api/pedidos/**").hasAnyAuthority(RolEnum.ADMIN.name())
+                                                .requestMatchers(HttpMethod.GET, "/api/pedidos/usuario").hasAnyAuthority(RolEnum.CLIENTE.name())
+                                                .requestMatchers(HttpMethod.GET, "/api/pedidos").hasAnyAuthority(RolEnum.ADMIN.name())
+                                                .requestMatchers(HttpMethod.GET, "/api/pedidos/{pedidoId}").hasAnyAuthority(RolEnum.ADMIN.name())
                                                 .requestMatchers(HttpMethod.POST, "/api/pedidos/agregarFactura/**").hasAnyAuthority(RolEnum.ADMIN.name())
                                                 .requestMatchers(HttpMethod.DELETE, "/api/detalle-pedidos").authenticated()
 
