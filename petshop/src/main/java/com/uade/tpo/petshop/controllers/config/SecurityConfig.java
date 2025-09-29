@@ -45,13 +45,18 @@ public class SecurityConfig {
                                                 .requestMatchers(HttpMethod.POST, "/api/categorias/**").hasAnyAuthority(RolEnum.ADMIN.name())
                                                 .requestMatchers(HttpMethod.PUT, "/api/categorias/**").hasAnyAuthority(RolEnum.ADMIN.name())                                                
                                                 .requestMatchers(HttpMethod.PUT, "/api/productos/**").hasAnyAuthority(RolEnum.ADMIN.name())
+
+                                                // Rutas de pedidos (orden: mas especificos primero hacia mas generales para que no se pisen)
+                                                // Cliente ve su pedido por email
+                                                .requestMatchers(HttpMethod.GET, "/api/pedidos/usuario").hasAnyAuthority(RolEnum.CLIENTE.name())
+
+                                                .requestMatchers(HttpMethod.GET, "/api/pedidos/*").hasAnyAuthority(RolEnum.ADMIN.name())
+
                                                 .requestMatchers(HttpMethod.GET, "/api/pedidos").hasAnyAuthority(RolEnum.ADMIN.name())
-                                                .requestMatchers(HttpMethod.GET, "/api/pedidos/{pedidoId}").hasAnyAuthority(RolEnum.ADMIN.name())
                                                 .requestMatchers(HttpMethod.POST, "/api/pedidos/agregarFactura/**").hasAnyAuthority(RolEnum.ADMIN.name())
                                                 .requestMatchers(HttpMethod.PUT, "/api/pedidos/**").hasAnyAuthority(RolEnum.ADMIN.name())
 
                                                 //Acciones de cliente
-                                                .requestMatchers(HttpMethod.GET, "/api/pedidos/usuario").hasAnyAuthority(RolEnum.CLIENTE.name())
                                                 .requestMatchers(HttpMethod.POST, "/api/pedidos/**").hasAnyAuthority(RolEnum.CLIENTE.name())
                                                 .requestMatchers(HttpMethod.DELETE, "/api/detalle-pedidos").hasAnyAuthority(RolEnum.CLIENTE.name())
                                                 .requestMatchers(HttpMethod.POST, "/api/detalle-pedidos").hasAnyAuthority(RolEnum.CLIENTE.name())
@@ -60,7 +65,7 @@ public class SecurityConfig {
                                                 //Acciones tanto para Admin como para Cliente
                                                 .requestMatchers(HttpMethod.GET, "/api/productos/**").authenticated()
                                                 .requestMatchers(HttpMethod.GET, "/api/categorias/**").authenticated()                                               
-                                                .requestMatchers(HttpMethod.GET, "/api/detalle-pedidos").authenticated()                                                
+                                                .requestMatchers(HttpMethod.GET, "/api/detalle-pedidos").authenticated()
                                                 .anyRequest().authenticated())
                                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                                 .authenticationProvider(authenticationProvider)
