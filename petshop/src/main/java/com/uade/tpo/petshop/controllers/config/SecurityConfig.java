@@ -45,6 +45,7 @@ public class SecurityConfig {
                                                 .requestMatchers(HttpMethod.POST, "/api/categorias/**").hasAnyAuthority(RolEnum.ADMIN.name())
                                                 .requestMatchers(HttpMethod.PUT, "/api/categorias/**").hasAnyAuthority(RolEnum.ADMIN.name())                                                
                                                 .requestMatchers(HttpMethod.PUT, "/api/productos/**").hasAnyAuthority(RolEnum.ADMIN.name())
+                                                .requestMatchers(HttpMethod.DELETE, "/api/categorias/**").hasAnyAuthority(RolEnum.ADMIN.name())
 
                                                 // Rutas de pedidos (orden: mas especificos primero hacia mas generales para que no se pisen)
                                                 // Cliente ve su pedido por email
