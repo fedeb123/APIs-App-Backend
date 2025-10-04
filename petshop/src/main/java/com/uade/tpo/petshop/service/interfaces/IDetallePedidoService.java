@@ -18,4 +18,5 @@ public interface IDetallePedidoService {
     DetallePedido save(DetallePedidoDTO detallePedidoDTO) throws MissingPedidoException, MissingProductoException, MissingStockException, PedidoCanceladoException;
     DetallePedido update(Long id, DetallePedidoDTO detallePedidoDTO);
     void delete(Long id);
+    Page<DetallePedido> findByUsuarioId(Long id, PageRequest pageRequest);
 }

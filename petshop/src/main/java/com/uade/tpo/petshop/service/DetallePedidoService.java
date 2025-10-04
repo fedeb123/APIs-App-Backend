@@ -57,6 +57,11 @@ public class DetallePedidoService implements IDetallePedidoService {
     }
 
     @Override
+    public Page<DetallePedido> findByUsuarioId(Long clienteId, PageRequest pageRequest){
+        return detallePedidoRepository.findByPedidoClienteId(clienteId, pageRequest);
+    }
+
+    @Override
     @Transactional
     public DetallePedido save(DetallePedidoDTO detallePedidoDTO) throws MissingPedidoException, MissingProductoException, MissingStockException, PedidoCanceladoException {
         Pedido pedido = pedidoService.getPedidoById(detallePedidoDTO.getPedidoId()).orElseThrow(MissingPedidoException::new);
