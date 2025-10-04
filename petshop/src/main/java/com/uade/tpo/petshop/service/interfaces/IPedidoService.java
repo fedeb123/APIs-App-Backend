@@ -22,6 +22,8 @@ public interface IPedidoService {
 
     public Optional<Pedido> getPedidoById(Long id);
 
+    public List<Pedido> getPedidoByCliente(Long clienteId, PageRequest pageRequest);
+
     public Pedido crearPedido(PedidoDTO pedido) throws PedidoDuplicateException, MissingProductoException, MissingUserException;
 
     public void agregarDetalleAPedido(DetallePedido detalle) throws MissingProductoException, MissingPedidoException;

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.petshop.entity.Pedido;
+import com.uade.tpo.petshop.entity.Usuario;
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
 import com.uade.tpo.petshop.entity.exceptions.MissingPedidoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
@@ -79,10 +81,17 @@ public class PedidoController {
     }
 
     @GetMapping("/usuario")
-    public ResponseEntity<List<PedidoDTO>> getPedidosFromUsuario(@RequestParam String usuarioEmail) throws MissingUserException, MissingPedidoException {
-        List<Pedido> pedidos = pedidoService.getPedidosFromUsuario(usuarioEmail);
-        List<PedidoDTO> pedidosDTO = pedidos.stream().map(Pedido::toDTO).toList();
-        return ResponseEntity.ok(pedidosDTO);
+    public ResponseEntity<List<PedidoDTO>> getPedidosFromUsuario(
+                    @RequestParam String usuarioEmail, 
+                    @AuthenticationPrincipal Usuario detalleUsuario) throws MissingUserException, MissingPedidoException {
+
+        if (detalleUsuario.getEmail().equals(usuarioEmail)){
+            List<Pedido> pedidos = pedidoService.getPedidosFromUsuario(usuarioEmail);
+            List<PedidoDTO> pedidosDTO = pedidos.stream().map(Pedido::toDTO).toList();
+            return ResponseEntity.ok(pedidosDTO);
+        }
+        return ResponseEntity.status(403).build(); 
+
     }
     
     

@@ -49,6 +49,11 @@ public class PedidoService implements IPedidoService {
     }
 
     @Override
+    public List<Pedido> getPedidoByCliente(Long clienteId, PageRequest pageRequest){
+        return pedidoRepository.findByCliente(clienteId);
+    }
+
+    @Override
     @Transactional
     public Pedido crearPedido(PedidoDTO pedidoDTO) throws MissingProductoException, MissingUserException {
         Usuario cliente = usuarioService.getUsuarioById(pedidoDTO.getClienteId()).orElseThrow(MissingUserException::new);
