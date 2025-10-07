@@ -22,10 +22,13 @@ import com.uade.tpo.petshop.entity.DetallePedido;
 import com.uade.tpo.petshop.entity.Usuario;
 import com.uade.tpo.petshop.entity.dtos.DetallePedidoDTO;
 import com.uade.tpo.petshop.entity.enums.RolEnum;
+import com.uade.tpo.petshop.entity.exceptions.InvalidDataException;
 import com.uade.tpo.petshop.entity.exceptions.MissingPedidoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingStockException;
+import com.uade.tpo.petshop.entity.exceptions.NotFoundException;
 import com.uade.tpo.petshop.entity.exceptions.PedidoCanceladoException;
+import com.uade.tpo.petshop.entity.exceptions.UnauthorizedException;
 import com.uade.tpo.petshop.service.interfaces.IDetallePedidoService;
 
 @RestController
@@ -77,9 +80,12 @@ public class DetallePedidoController {
     }
 
     @PutMapping("/{id}") /*actualiza el detalle del pedido y lo devuelve en forma de DTO */
-    public ResponseEntity<DetallePedidoDTO> updateDetallePedido(@PathVariable Long id, @RequestBody DetallePedidoDTO detallePedidoDTO) {
-        DetallePedido actualizado = detallePedidoService.update(id, detallePedidoDTO);
-        return ResponseEntity.ok(actualizado.toDTO());
+    public ResponseEntity<DetallePedidoDTO> updateDetallePedido(@PathVariable Long id, @RequestBody DetallePedidoDTO detallePedidoDTO,
+             @AuthenticationPrincipal Usuario detallesUsuario) throws UnauthorizedException, InvalidDataException, NotFoundException {
+        
+            DetallePedido actualizado = detallePedidoService.update(id, detallePedidoDTO, detallesUsuario);
+            return ResponseEntity.ok(actualizado.toDTO());
+          
     }
 
     @DeleteMapping("/{id}") /*misma explicacion que categoria controller, no devuelve datos, solo confirma la eliminacion*/
