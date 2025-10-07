@@ -93,7 +93,7 @@ public class DetallePedidoService implements IDetallePedidoService {
         return detallePedidoRepository.findById(id)
             .map(d -> {
                 d.setCantidad(detallePedidoDTO.getCantidad());
-                d.setPrecioSubtotal(detallePedidoDTO.getPrecioSubtotal());
+                d.setPrecioSubtotal(d.getCantidad()*d.getProducto().getPrecio());
                 // Actualizar producto y pedido si corresponde
                 return detallePedidoRepository.save(d);
             })
