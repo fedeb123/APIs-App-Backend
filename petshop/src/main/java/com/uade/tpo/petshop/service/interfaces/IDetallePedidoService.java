@@ -21,6 +21,6 @@ public interface IDetallePedidoService {
     Optional<DetallePedido> findById(Long id);
     DetallePedido save(DetallePedidoDTO detallePedidoDTO) throws MissingPedidoException, MissingProductoException, MissingStockException, PedidoCanceladoException;
     DetallePedido update(Long id, DetallePedidoDTO detallePedidoDTO, Usuario usuario) throws UnauthorizedException, InvalidDataException, NotFoundException;
-    void delete(Long id);
+    void delete(Long id, Usuario detallesUsuario) throws UnauthorizedException, NotFoundException;
     Page<DetallePedido> findByUsuarioId(Long id, PageRequest pageRequest);
 }

@@ -120,10 +120,14 @@ public class DetallePedidoService implements IDetallePedidoService {
 
     @Override
     @Transactional
-    public void delete(Long id) {
-        if (!detallePedidoRepository.existsById(id)) {
-            throw new RuntimeException("DetallePedido no encontrado con id " + id);
+    public void delete(Long id, Usuario usuarioLogueado) throws UnauthorizedException, NotFoundException {
+        DetallePedido detallePedido = detallePedidoRepository.findById(id)
+            .orElseThrow(NotFoundException::new);
+
+        if (!detallePedido.getPedido().getCliente().getId().equals(usuarioLogueado.getId())) {
+            throw new UnauthorizedException();
         }
-        detallePedidoRepository.deleteById(id);
+
+        detallePedidoRepository.delete(detallePedido);
     }
 }
