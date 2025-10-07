@@ -83,8 +83,21 @@ public class DetallePedidoController {
     }
 
     @DeleteMapping("/{id}") /*misma explicacion que categoria controller, no devuelve datos, solo confirma la eliminacion*/
-    public ResponseEntity<Void> deleteDetallePedido(@PathVariable Long id) {
-        detallePedidoService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deleteDetallePedido(@PathVariable Long id,  @AuthenticationPrincipal Usuario detallesUsuario) {
+        Optional<DetallePedido> detalle=detallePedidoService.findById(id);
+        if (detalle.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+
+        DetallePedido detallePedido = detalle.get();
+        boolean pertenece = detallesUsuario.getPedidos().stream()
+            .anyMatch(p -> p.getId().equals(detallePedido.getPedido().getId()));
+        
+        if (pertenece){
+            detallePedidoService.delete(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.status(403).build();
+
     }
 }
