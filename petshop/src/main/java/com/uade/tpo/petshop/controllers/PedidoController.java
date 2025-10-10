@@ -71,16 +71,23 @@ public class PedidoController {
     @PutMapping("/estado/{pedidoId}")/*Actualizo su estado, solo meto el estado nuevo en el dto  */
     public ResponseEntity<String> updateEstadoPedido(@PathVariable Long pedidoId, @RequestBody PedidoDTO pedidoDTO) throws MissingPedidoException, PedidoCanceladoException {
         pedidoService.updateEstadoPedido(pedidoId, pedidoDTO);
-        return ResponseEntity.ok(("Pedido Estado Actualizado Correctamente"));
+        return ResponseEntity.ok(("Estado del Pedido Actualizado Correctamente"));
           
     }
 
-    @PutMapping("/cancelar/{pedidoId}")/*En vez de Borrar, actualizo a cancelado, es decir, cambio el estado*/
-    public ResponseEntity<String> cancelarPedido(@PathVariable Long pedidoId) throws MissingPedidoException {
-        pedidoService.cancelarPedido(pedidoId);
-        return ResponseEntity.ok("Pedido Cancelado Correctamente");
-
+    @PutMapping("/confirmar/{pedidoId}")/*Actualizo su estado, solo meto el estado nuevo en el dto  */
+    public ResponseEntity<String> updateConfirmarPedido(@PathVariable Long pedidoId, @RequestBody PedidoDTO pedidoDTO) throws MissingPedidoException, PedidoCanceladoException {
+        pedidoService.updateConfirmarPedido(pedidoId, pedidoDTO);
+        return ResponseEntity.ok(("Pedido Confirmado Correctamente. Gracias por su compra!"));
+          
     }
+
+    // @PutMapping("/cancelar/{pedidoId}")/*En vez de Borrar, actualizo a cancelado, es decir, cambio el estado*/
+    // public ResponseEntity<String> cancelarPedido(@PathVariable Long pedidoId) throws MissingPedidoException {
+    //     pedidoService.cancelarPedido(pedidoId);
+    //     return ResponseEntity.ok("Pedido Cancelado Correctamente");
+
+    // }
 
     @PutMapping("/{pedidoId}/agregarProducto")
     public ResponseEntity<PedidoDTO> agregarDetalle(
