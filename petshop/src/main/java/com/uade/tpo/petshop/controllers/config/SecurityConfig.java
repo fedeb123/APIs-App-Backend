@@ -55,6 +55,7 @@ public class SecurityConfig {
 
                                                 .requestMatchers(HttpMethod.GET, "/api/pedidos").hasAnyAuthority(RolEnum.ADMIN.name())
                                                 .requestMatchers(HttpMethod.POST, "/api/pedidos/agregarFactura/**").hasAnyAuthority(RolEnum.ADMIN.name())
+                                                .requestMatchers(HttpMethod.PUT, "/api/pedidos/*/agregarProducto").hasAnyAuthority(RolEnum.CLIENTE.name())
                                                 .requestMatchers(HttpMethod.PUT, "/api/pedidos/**").hasAnyAuthority(RolEnum.ADMIN.name())
 
                                                 //Acciones de cliente
@@ -64,6 +65,7 @@ public class SecurityConfig {
                                                 .requestMatchers(HttpMethod.PUT, "/api/detalle-pedidos").hasAnyAuthority(RolEnum.CLIENTE.name())
                                                 
                                                 //Acciones tanto para Admin como para Cliente
+                                                // @CrossOrigin(localhost del front 5173)
                                                 .requestMatchers(HttpMethod.GET, "/api/productos/**").authenticated()
                                                 .requestMatchers(HttpMethod.GET, "/api/categorias/**").authenticated()                                               
                                                 .requestMatchers(HttpMethod.GET, "/api/detalle-pedidos").authenticated()
