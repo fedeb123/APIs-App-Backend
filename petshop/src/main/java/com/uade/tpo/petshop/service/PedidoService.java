@@ -90,9 +90,9 @@ public class PedidoService implements IPedidoService {
         Pedido pedido = pedidoRepository.findById(detalle.getPedido().getId())
                 .orElseThrow(MissingPedidoException::new);
 
-        if (pedido.getEstado() == EstadoEnum.CANCELADO) {
-            throw new PedidoCanceladoException();
-        }
+        // if (pedido.getEstado() == EstadoEnum.CANCELADO) {
+        //     throw new PedidoCanceladoException();
+        // }
 
         if (detalle.getProducto() == null) {
             throw new MissingProductoException();
@@ -118,9 +118,9 @@ public class PedidoService implements IPedidoService {
     public void updateEstadoPedido(Long id, PedidoDTO pedidoDTO) throws MissingPedidoException, PedidoCanceladoException {
         Pedido pedido = pedidoRepository.findById(id).orElseThrow(MissingPedidoException::new);
 
-        if (pedido.getEstado() == EstadoEnum.CANCELADO){
-            throw new PedidoCanceladoException();
-        }
+        // if (pedido.getEstado() == EstadoEnum.CANCELADO){
+        //     throw new PedidoCanceladoException();
+        // }
         
         pedido.setEstado(pedidoDTO.getEstado());
         pedidoRepository.save(pedido);
@@ -128,9 +128,22 @@ public class PedidoService implements IPedidoService {
 
     @Override
     @Transactional
+    public void updateConfirmarPedido(Long id, PedidoDTO pedidoDTO) throws MissingPedidoException, PedidoCanceladoException {
+        Pedido pedido = pedidoRepository.findById(id).orElseThrow(MissingPedidoException::new);
+
+        // if (pedido.getEstado() == EstadoEnum.CANCELADO){
+        //     throw new PedidoCanceladoException();
+        // }
+        
+        pedido.setEstado(EstadoEnum.CONFIRMADO);
+        pedidoRepository.save(pedido);
+    }
+
+    @Override
+    @Transactional
     public void cancelarPedido(Long id) throws MissingPedidoException {
         Pedido pedido = pedidoRepository.findById(id).orElseThrow(() -> new MissingPedidoException());
-        pedido.setEstado(EstadoEnum.CANCELADO);
+        // pedido.setEstado(EstadoEnum.CANCELADO);
         pedidoRepository.save(pedido);
     }
 

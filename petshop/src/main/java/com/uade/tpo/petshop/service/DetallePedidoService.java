@@ -13,7 +13,6 @@ import com.uade.tpo.petshop.entity.Producto;
 import com.uade.tpo.petshop.entity.Usuario;
 import com.uade.tpo.petshop.entity.dtos.DetallePedidoDTO;
 import com.uade.tpo.petshop.entity.dtos.ProductoDTO;
-import com.uade.tpo.petshop.entity.enums.EstadoEnum;
 import com.uade.tpo.petshop.entity.exceptions.InvalidDataException;
 import com.uade.tpo.petshop.entity.exceptions.MissingPedidoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
@@ -71,9 +70,9 @@ public class DetallePedidoService implements IDetallePedidoService {
         Pedido pedido = pedidoService.getPedidoById(detallePedidoDTO.getPedidoId()).orElseThrow(MissingPedidoException::new);
         
         //Verifica que el pedido no haya sido cancelado
-        if (pedido.getEstado() == EstadoEnum.CANCELADO){
-            throw new PedidoCanceladoException();
-        }
+        // if (pedido.getEstado() == EstadoEnum.CANCELADO){
+        //     throw new PedidoCanceladoException();
+        // }
 
         Producto producto = productoService.getProductoById(detallePedidoDTO.getProductoId()).orElseThrow(MissingProductoException::new);   
 

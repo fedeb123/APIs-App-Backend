@@ -35,4 +35,6 @@ public interface IPedidoService {
     public void updateEstadoPedido(Long id, PedidoDTO pedido) throws MissingPedidoException, PedidoCanceladoException;
 
     public List<Pedido> getPedidosFromUsuario(String email) throws MissingUserException, MissingPedidoException;
+
+    public void updateConfirmarPedido(Long id, PedidoDTO pedidoDTO) throws MissingPedidoException, PedidoCanceladoException;
 }
