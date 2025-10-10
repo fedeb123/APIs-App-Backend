@@ -82,7 +82,7 @@ public class PedidoController {
 
     }
 
-    @PutMapping("/{pedidoId}/detalle")
+    @PutMapping("/{pedidoId}/agregarProducto")
     public ResponseEntity<PedidoDTO> agregarDetalle(
             @PathVariable Long pedidoId,
             @RequestBody DetallePedidoDTO detalleDTO)
