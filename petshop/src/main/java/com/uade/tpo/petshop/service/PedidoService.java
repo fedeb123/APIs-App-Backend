@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import com.uade.tpo.petshop.entity.DetallePedido;
 import com.uade.tpo.petshop.entity.Factura;
 import com.uade.tpo.petshop.entity.Pedido;
+import com.uade.tpo.petshop.entity.Producto;
 import com.uade.tpo.petshop.entity.Usuario;
+import com.uade.tpo.petshop.entity.dtos.DetallePedidoDTO;
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
 import com.uade.tpo.petshop.entity.enums.EstadoEnum;
 import com.uade.tpo.petshop.entity.exceptions.MissingPedidoException;
@@ -19,6 +21,7 @@ import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
 import com.uade.tpo.petshop.entity.exceptions.PedidoCanceladoException;
 import com.uade.tpo.petshop.repositories.interfaces.IPedidoRepository;
+import com.uade.tpo.petshop.repositories.interfaces.IProductoRepository;
 import com.uade.tpo.petshop.service.interfaces.IPedidoService;
 import com.uade.tpo.petshop.service.interfaces.IUsuarioService;
 
@@ -33,9 +36,12 @@ public class PedidoService implements IPedidoService {
     @Autowired
     private final IUsuarioService usuarioService;
 
-    public PedidoService(IPedidoRepository pedidoRepository, IUsuarioService usuarioService) {
+    @Autowired
+    private final IProductoRepository productoRepository;
+    public PedidoService(IPedidoRepository pedidoRepository, IUsuarioService usuarioService,IProductoRepository productoRepository) {
         this.pedidoRepository = pedidoRepository;
         this.usuarioService = usuarioService;
+        this.productoRepository=productoRepository;
     }
 
     @Override
@@ -58,19 +64,44 @@ public class PedidoService implements IPedidoService {
     public Pedido crearPedido(PedidoDTO pedidoDTO) throws MissingProductoException, MissingUserException {
         Usuario cliente = usuarioService.getUsuarioById(pedidoDTO.getClienteId()).orElseThrow(MissingUserException::new);
         Pedido pedido = new Pedido(cliente, EstadoEnum.PENDIENTE);
+        // Si el DTO trae detalles, los agregamos
+        if (pedidoDTO.getDetalles() != null && !pedidoDTO.getDetalles().isEmpty()) {
+            for (DetallePedidoDTO detDTO : pedidoDTO.getDetalles()) {
+                
+                Producto producto = productoRepository.findById(detDTO.getProductoId())
+                        .orElseThrow(MissingProductoException::new);
+
+                DetallePedido detalle = new DetallePedido();
+                detalle.setPedido(pedido);
+                detalle.setProducto(producto);
+                detalle.setCantidad(detDTO.getCantidad());
+                detalle.setPrecioSubtotal(producto.getPrecio() * detDTO.getCantidad());
+                pedido.agregarDetalle(detalle);
+            }
+        }
         return pedidoRepository.save(pedido); // primero guardo el pedido
     }
 
     @Override
     @Transactional
-    public void agregarDetalleAPedido(DetallePedido detalle) throws MissingProductoException, MissingPedidoException {
-        Pedido pedido = pedidoRepository.findById(detalle.getPedido().getId()).orElseThrow(MissingPedidoException::new);
+    public Pedido agregarDetalleAPedido(DetallePedido detalle) 
+            throws MissingProductoException, MissingPedidoException, PedidoCanceladoException {
 
-        // Agrego el detalle al pedido
+        Pedido pedido = pedidoRepository.findById(detalle.getPedido().getId())
+                .orElseThrow(MissingPedidoException::new);
+
+        if (pedido.getEstado() == EstadoEnum.CANCELADO) {
+            throw new PedidoCanceladoException();
+        }
+
+        if (detalle.getProducto() == null) {
+            throw new MissingProductoException();
+        }
+
         pedido.agregarDetalle(detalle);
 
         // Persiste el cambio
-        pedidoRepository.save(pedido);
+        return pedidoRepository.save(pedido);
     }
 
     @Override

@@ -26,7 +26,7 @@ public interface IPedidoService {
 
     public Pedido crearPedido(PedidoDTO pedido) throws PedidoDuplicateException, MissingProductoException, MissingUserException;
 
-    public void agregarDetalleAPedido(DetallePedido detalle) throws MissingProductoException, MissingPedidoException;
+    public Pedido agregarDetalleAPedido(DetallePedido detalle) throws MissingProductoException, MissingPedidoException, PedidoCanceladoException;
 
     public void agregarFacturaAPedido(Factura factura) throws MissingPedidoException;
 
