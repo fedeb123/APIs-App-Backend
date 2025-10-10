@@ -16,14 +16,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.uade.tpo.petshop.entity.DetallePedido;
 import com.uade.tpo.petshop.entity.Pedido;
 import com.uade.tpo.petshop.entity.Usuario;
+import com.uade.tpo.petshop.entity.dtos.DetallePedidoDTO;
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
 import com.uade.tpo.petshop.entity.exceptions.MissingPedidoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
+import com.uade.tpo.petshop.entity.exceptions.MissingStockException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
 import com.uade.tpo.petshop.entity.exceptions.PedidoCanceladoException;
 import com.uade.tpo.petshop.entity.exceptions.PedidoDuplicateException;
+import com.uade.tpo.petshop.service.interfaces.IDetallePedidoService;
 import com.uade.tpo.petshop.service.interfaces.IPedidoService;
 
 
@@ -33,9 +37,13 @@ public class PedidoController {
     @Autowired
     private final IPedidoService pedidoService;
 
+    @Autowired
+    private final IDetallePedidoService detallePedidoService; 
 
-    public PedidoController(IPedidoService pedidoService) {
+
+    public PedidoController(IPedidoService pedidoService, IDetallePedidoService detallePedidoService) {
         this.pedidoService = pedidoService;
+        this.detallePedidoService=detallePedidoService;
     }
 
     @GetMapping /*Traigo todos los pedidos y los transformo en DTO*/
@@ -72,6 +80,20 @@ public class PedidoController {
         pedidoService.cancelarPedido(pedidoId);
         return ResponseEntity.ok("Pedido Cancelado Correctamente");
 
+    }
+
+    @PutMapping("/{pedidoId}/detalle")
+    public ResponseEntity<PedidoDTO> agregarDetalle(
+            @PathVariable Long pedidoId,
+            @RequestBody DetallePedidoDTO detalleDTO)
+            throws MissingPedidoException, MissingProductoException, MissingStockException, PedidoCanceladoException {
+
+        detalleDTO.setPedidoId(pedidoId);
+
+        DetallePedido nuevoDetalle = detallePedidoService.save(detalleDTO);
+        Pedido pedidoActualizado = nuevoDetalle.getPedido();
+
+        return ResponseEntity.ok(pedidoActualizado.toDTO());
     }
 
     @PostMapping /*Crea un nuevo pedido y devuelve sus datos como DTO*/
