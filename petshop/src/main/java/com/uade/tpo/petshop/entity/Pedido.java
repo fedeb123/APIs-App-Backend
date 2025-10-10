@@ -65,7 +65,7 @@ public class Pedido {
     private double precioTotal;
 
     @OneToMany(mappedBy="pedido", cascade=CascadeType.ALL, orphanRemoval=true)
-    List<DetallePedido> detalles;
+    List<DetallePedido> detalles = new ArrayList<>();
 
     @OneToOne(mappedBy="pedido")
     Factura factura;
