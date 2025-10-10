@@ -8,6 +8,7 @@ import com.uade.tpo.petshop.entity.dtos.DetallePedidoDTO;
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
 import com.uade.tpo.petshop.entity.enums.EstadoEnum;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -63,7 +64,7 @@ public class Pedido {
     @Column
     private double precioTotal;
 
-    @OneToMany(mappedBy="pedido")
+    @OneToMany(mappedBy="pedido", cascade=CascadeType.ALL, orphanRemoval=true)
     List<DetallePedido> detalles;
 
     @OneToOne(mappedBy="pedido")
@@ -91,8 +92,12 @@ public class Pedido {
     }
 
     public void agregarDetalle(DetallePedido detalle) {
+        if (this.detalles == null) {
+            this.detalles = new ArrayList<>();
+        }
+        detalle.setPedido(this); // establecer la relación inversa
         this.detalles.add(detalle);
-        this.precioTotal += detalle.getPrecioSubtotal(); // Actualizar el precio total
+        this.precioTotal += detalle.getPrecioSubtotal();    
     }
 
     public void agregarFactura(Factura factura) {
