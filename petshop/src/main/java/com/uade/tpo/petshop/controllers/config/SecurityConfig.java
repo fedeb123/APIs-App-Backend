@@ -88,8 +88,8 @@ public class SecurityConfig {
                                                 
                                                 //Acciones tanto para Admin como para Cliente
                                                 // @CrossOrigin(localhost del front 5173)
-                                                .requestMatchers(HttpMethod.GET, "/api/productos/**").authenticated()
-                                                .requestMatchers(HttpMethod.GET, "/api/categorias/**").authenticated()                                               
+                                                .requestMatchers(HttpMethod.GET, "/api/productos/**").permitAll()
+                                                .requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll()                                              
                                                 .requestMatchers(HttpMethod.GET, "/api/detalle-pedidos").authenticated()
                                                 .anyRequest().authenticated())
                                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
