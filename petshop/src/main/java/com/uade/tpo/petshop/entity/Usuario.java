@@ -112,11 +112,12 @@ public class Usuario implements UserDetails {
         if (usuario.getTelefono() != null && !usuario.getTelefono().isEmpty()) {
             this.setTelefono(usuario.getTelefono());
         }
-        if (usuario.getEmail() != null && !usuario.getEmail().isEmpty()) {
-            this.setEmail(usuario.getEmail());
-        }
+        
         if (usuario.getDireccion() != null && !usuario.getDireccion().isEmpty()) {
             this.setDireccion(usuario.getDireccion());
+        }
+        if (usuario.getPassword() != null && !usuario.getPassword().isEmpty()){
+            this.setPassword(usuario.getPassword());
         }
         
     }
