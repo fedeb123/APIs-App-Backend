@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.petshop.entity.Rol;
@@ -27,6 +28,9 @@ public class UsuarioService implements IUsuarioService {
 
     @Autowired
     private IRolService rolService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public Page<Usuario> getAllUsuarios(PageRequest pageable) {
@@ -70,6 +74,10 @@ public class UsuarioService implements IUsuarioService {
         
         // Actualizar los campos del usuario
         usuarioExistente.updateFromDTO(usuario);
+        // Si la contraseña fue cambiada, la encriptamos
+        if (usuario.getPassword() != null && !usuario.getPassword().isEmpty()) {
+            usuarioExistente.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        }
         return usuarioRepository.save(usuarioExistente);
         
     }
