@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,6 +60,12 @@ public class UsuarioController {
 	public ResponseEntity<UsuarioDTO> createUsuario(@RequestBody UsuarioDTO usuario) throws UsuarioDuplicateException, MissingRolException {
 		Usuario nuevoUsuario = usuarioService.createUsuario(usuario);
 		return ResponseEntity.created(URI.create("/usuarios/" + nuevoUsuario.getId())).body(nuevoUsuario.toDTO());
+	}
+
+	@PutMapping("/{usuarioId}")
+	public ResponseEntity<UsuarioDTO> updateUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO) throws MissingUserException, UsuarioDuplicateException{
+		Usuario usuarioActualizado = usuarioService.updateUsuario(id, usuarioDTO);
+		return ResponseEntity.ok(usuarioActualizado.toDTO());
 	}
 
 	@DeleteMapping("/{usuarioId}")
