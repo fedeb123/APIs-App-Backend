@@ -58,7 +58,6 @@ public class SecurityConfig {
                                                 .requestMatchers("/uploads/**").permitAll()
 
                                                 //Acciones Administrativas (@ADMIN)
-                                                .requestMatchers("/api/usuarios/**").hasAnyAuthority(RolEnum.ADMIN.name())
                                                 .requestMatchers("/api/roles/**").hasAnyAuthority(RolEnum.ADMIN.name())
                                                 .requestMatchers("/api/facturas").hasAnyAuthority(RolEnum.ADMIN.name())
 
@@ -92,6 +91,7 @@ public class SecurityConfig {
                                                 .requestMatchers(HttpMethod.GET, "/api/productos/**").permitAll()
                                                 .requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll()                                              
                                                 .requestMatchers(HttpMethod.GET, "/api/detalle-pedidos").authenticated()
+                                                .requestMatchers("/api/usuarios/**").authenticated()
                                                 .anyRequest().authenticated())
                                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                                 .authenticationProvider(authenticationProvider)
