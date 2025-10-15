@@ -43,6 +43,16 @@ public class UsuarioService implements IUsuarioService {
 
     }
 
+    @Override
+    @Transactional
+    public UsuarioDTO getUsuarioConTodoPorId(Long id) throws MissingUserException {
+        Usuario usuario = usuarioRepository.findById(id).orElseThrow(MissingUserException::new);
+
+        usuario.getPedidos().size();
+        usuario.getProductos_creados().size();
+
+        return usuario.toDTO();
+    }
 
 //comentario a discusion: ver si nos manejamos por email o por id
 
