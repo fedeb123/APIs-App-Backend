@@ -73,10 +73,10 @@ public class Usuario implements UserDetails {
     private String direccion;
 
     @OneToMany(mappedBy="usuario_creador")
-    private List<Producto> productos_creados;
+    private List<Producto> productos_creados = new ArrayList<>();
     
     @OneToMany(mappedBy="cliente")
-    List<Pedido> pedidos;
+    List<Pedido> pedidos = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "rol_id", nullable = false)
