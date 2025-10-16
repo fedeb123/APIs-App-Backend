@@ -85,13 +85,18 @@ public class SecurityConfig {
                                                 .requestMatchers(HttpMethod.DELETE, "/api/detalle-pedidos").hasAnyAuthority(RolEnum.CLIENTE.name())
                                                 .requestMatchers(HttpMethod.POST, "/api/detalle-pedidos").hasAnyAuthority(RolEnum.CLIENTE.name())
                                                 .requestMatchers(HttpMethod.PUT, "/api/detalle-pedidos").hasAnyAuthority(RolEnum.CLIENTE.name())
+
+                                                .requestMatchers(HttpMethod.GET, "/api/usuarios/usuario").hasAnyAuthority(RolEnum.CLIENTE.name())
+                                                .requestMatchers(HttpMethod.GET, "/api/usuarios/**").hasAnyAuthority(RolEnum.ADMIN.name())
+                                                .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()                                 // registro
+                                                .requestMatchers(HttpMethod.PUT, "/api/usuarios/**").hasAnyAuthority(RolEnum.CLIENTE.name(), RolEnum.ADMIN.name())
+                                                .requestMatchers(HttpMethod.DELETE, "/api/usuarios/**").hasAuthority(RolEnum.ADMIN.name()) 
                                                 
                                                 //Acciones tanto para Admin como para Cliente
                                                 // @CrossOrigin(localhost del front 5173)
                                                 .requestMatchers(HttpMethod.GET, "/api/productos/**").permitAll()
                                                 .requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll()                                              
                                                 .requestMatchers(HttpMethod.GET, "/api/detalle-pedidos").authenticated()
-                                                .requestMatchers("/api/usuarios/**").authenticated()
                                                 .anyRequest().authenticated())
                                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                                 .authenticationProvider(authenticationProvider)
