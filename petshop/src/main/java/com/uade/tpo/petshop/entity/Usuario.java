@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
 import com.uade.tpo.petshop.entity.dtos.ProductoDTO;
 import com.uade.tpo.petshop.entity.dtos.UsuarioDTO;
+import com.uade.tpo.petshop.entity.dtos.UsuarioPersonalDataDTO;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -100,6 +101,10 @@ public class Usuario implements UserDetails {
         
 
         return new UsuarioDTO(this.id, this.nombre, this.apellido, this.telefono, this.email, this.password, this.direccion, productosDTOs, pedidosDTOs, this.rol.toDTO());
+    }
+
+    public UsuarioPersonalDataDTO toPesonalDataDTO(){
+        return new UsuarioPersonalDataDTO(this.id,this.nombre, this.apellido, this.telefono, this.email, this.direccion);
     }
 
     public void updateFromDTO(UsuarioDTO usuario){

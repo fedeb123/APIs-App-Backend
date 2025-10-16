@@ -84,9 +84,10 @@ public class UsuarioController {
 	}
 
 	@PutMapping("/{usuarioId}")
-	public ResponseEntity<UsuarioDTO> updateUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO) throws MissingUserException, UsuarioDuplicateException{
-		Usuario usuarioActualizado = usuarioService.updateUsuario(id, usuarioDTO);
-		return ResponseEntity.ok(usuarioActualizado.toDTO());
+	public ResponseEntity<UsuarioPersonalDataDTO> updateUsuario(@RequestBody UsuarioDTO usuarioDTO,
+                                                            @AuthenticationPrincipal Usuario usuarioLogueado) throws MissingUserException, UsuarioDuplicateException{
+		Usuario usuarioActualizado = usuarioService.updateUsuario(usuarioLogueado.getId(), usuarioDTO);
+		return ResponseEntity.ok(usuarioActualizado.toPesonalDataDTO());
 	}
 
 	@DeleteMapping("/{usuarioId}")
