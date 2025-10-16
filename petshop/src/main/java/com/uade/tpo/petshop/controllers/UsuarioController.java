@@ -1,12 +1,12 @@
 package com.uade.tpo.petshop.controllers;
 
 import java.net.URI;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,8 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.petshop.entity.Usuario;
 import com.uade.tpo.petshop.entity.dtos.UsuarioDTO;
+import com.uade.tpo.petshop.entity.dtos.UsuarioPersonalDataDTO;
+import com.uade.tpo.petshop.entity.enums.RolEnum;
 import com.uade.tpo.petshop.entity.exceptions.MissingRolException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
+import com.uade.tpo.petshop.entity.exceptions.UnauthorizedException;
 import com.uade.tpo.petshop.entity.exceptions.UsuarioDuplicateException;
 import com.uade.tpo.petshop.service.interfaces.IUsuarioService;
 
@@ -48,13 +51,31 @@ public class UsuarioController {
 	}
 
 	@GetMapping("/{usuarioId}")
-	public ResponseEntity<UsuarioDTO> getUsuarioById(@PathVariable Long usuarioId) {
-		Optional<Usuario> usuario = usuarioService.getUsuarioById(usuarioId);
-		if (usuario.isPresent()){
-			return ResponseEntity.ok(usuario.get().toDTO());
+	public ResponseEntity<UsuarioDTO> getUsuarioById(
+			@PathVariable Long usuarioId,
+			@AuthenticationPrincipal Usuario usuarioLogueado) 
+			throws UnauthorizedException, MissingUserException {
+
+		Usuario usuario = usuarioService.getUsuarioById(usuarioId)
+				.orElseThrow(MissingUserException::new);
+
+		// Validación de acceso
+		boolean esAdmin = usuarioLogueado.getRol().getNombre() == RolEnum.ADMIN;
+		boolean esSuPropioPerfil = usuario.getId().equals(usuarioLogueado.getId());
+
+		if (!esAdmin && !esSuPropioPerfil) {
+			throw new UnauthorizedException(); 
 		}
-		return ResponseEntity.notFound().build();
+
+		return ResponseEntity.ok(usuario.toDTO());
 	}
+
+	@GetMapping("/usuario")
+	public ResponseEntity<UsuarioPersonalDataDTO> getUsuarioByAccessToken(@AuthenticationPrincipal Usuario usuarioLogueado) throws MissingUserException {
+		UsuarioPersonalDataDTO usuarioPersonalData = usuarioService.getUsuarioPersonalDataByEmail(usuarioLogueado.getEmail());
+    	return ResponseEntity.ok(usuarioPersonalData);
+	}
+	
 
 	@PostMapping
 	public ResponseEntity<UsuarioDTO> createUsuario(@RequestBody UsuarioDTO usuario) throws UsuarioDuplicateException, MissingRolException {
@@ -63,13 +84,14 @@ public class UsuarioController {
 	}
 
 	@PutMapping("/{usuarioId}")
-	public ResponseEntity<UsuarioDTO> updateUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO) throws MissingUserException, UsuarioDuplicateException{
-		Usuario usuarioActualizado = usuarioService.updateUsuario(id, usuarioDTO);
-		return ResponseEntity.ok(usuarioActualizado.toDTO());
+	public ResponseEntity<UsuarioPersonalDataDTO> updateUsuario(@RequestBody UsuarioDTO usuarioDTO,
+                                                            @AuthenticationPrincipal Usuario usuarioLogueado) throws MissingUserException, UsuarioDuplicateException{
+		Usuario usuarioActualizado = usuarioService.updateUsuario(usuarioLogueado.getId(), usuarioDTO);
+		return ResponseEntity.ok(usuarioActualizado.toPesonalDataDTO());
 	}
 
 	@DeleteMapping("/{usuarioId}")
-	public void deleteUsuario(@PathVariable Long usuarioId) throws MissingUserException {
+	public void deleteUsuario(@PathVariable Long usuarioId) throws MissingUserException, UnauthorizedException {
 		usuarioService.deleteUsuarioById(usuarioId);
 	}
 }

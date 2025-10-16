@@ -58,7 +58,6 @@ public class SecurityConfig {
                                                 .requestMatchers("/uploads/**").permitAll()
 
                                                 //Acciones Administrativas (@ADMIN)
-                                                .requestMatchers("/api/usuarios/**").hasAnyAuthority(RolEnum.ADMIN.name())
                                                 .requestMatchers("/api/roles/**").hasAnyAuthority(RolEnum.ADMIN.name())
                                                 .requestMatchers("/api/facturas").hasAnyAuthority(RolEnum.ADMIN.name())
 
@@ -86,6 +85,12 @@ public class SecurityConfig {
                                                 .requestMatchers(HttpMethod.DELETE, "/api/detalle-pedidos").hasAnyAuthority(RolEnum.CLIENTE.name())
                                                 .requestMatchers(HttpMethod.POST, "/api/detalle-pedidos").hasAnyAuthority(RolEnum.CLIENTE.name())
                                                 .requestMatchers(HttpMethod.PUT, "/api/detalle-pedidos").hasAnyAuthority(RolEnum.CLIENTE.name())
+
+                                                .requestMatchers(HttpMethod.GET, "/api/usuarios/usuario").hasAnyAuthority(RolEnum.CLIENTE.name())
+                                                .requestMatchers(HttpMethod.GET, "/api/usuarios/**").hasAnyAuthority(RolEnum.ADMIN.name())
+                                                .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()                                 // registro
+                                                .requestMatchers(HttpMethod.PUT, "/api/usuarios/**").hasAnyAuthority(RolEnum.CLIENTE.name(), RolEnum.ADMIN.name())
+                                                .requestMatchers(HttpMethod.DELETE, "/api/usuarios/**").hasAuthority(RolEnum.ADMIN.name()) 
                                                 
                                                 //Acciones tanto para Admin como para Cliente
                                                 // @CrossOrigin(localhost del front 5173)
