@@ -111,15 +111,14 @@ public class PedidoController {
 
     @GetMapping("/usuario")
     public ResponseEntity<List<PedidoDTO>> getPedidosFromUsuario(
-                    @RequestParam String usuarioEmail, 
+                    
                     @AuthenticationPrincipal Usuario detalleUsuario) throws MissingUserException, MissingPedidoException {
 
-        if (detalleUsuario.getEmail().equals(usuarioEmail)){
-            List<Pedido> pedidos = pedidoService.getPedidosFromUsuario(usuarioEmail);
+        
+            List<Pedido> pedidos = pedidoService.getPedidosFromUsuario(detalleUsuario.getEmail());
             List<PedidoDTO> pedidosDTO = pedidos.stream().map(Pedido::toDTO).toList();
             return ResponseEntity.ok(pedidosDTO);
-        }
-        return ResponseEntity.status(403).build(); 
+        
 
     }
     
