@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.uade.tpo.petshop.entity.Rol;
 import com.uade.tpo.petshop.entity.Usuario;
 import com.uade.tpo.petshop.entity.dtos.UsuarioDTO;
+import com.uade.tpo.petshop.entity.dtos.UsuarioPersonalDataDTO;
 import com.uade.tpo.petshop.entity.exceptions.MissingRolException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
 import com.uade.tpo.petshop.entity.exceptions.UsuarioDuplicateException;
@@ -52,6 +53,14 @@ public class UsuarioService implements IUsuarioService {
         usuario.getProductos_creados().size();
 
         return usuario.toDTO();
+    }
+
+    @Override
+    public UsuarioPersonalDataDTO getUsuarioPersonalDataByEmail(String email) throws MissingUserException{
+        Usuario usuario = usuarioRepository.findByEmailPersonalData(email)
+            .orElseThrow(MissingUserException::new);
+    
+        return new UsuarioPersonalDataDTO(usuario.getId(), usuario.getNombre(),usuario.getApellido(),usuario.getTelefono(),usuario.getEmail(),usuario.getDireccion());
     }
 
 //comentario a discusion: ver si nos manejamos por email o por id

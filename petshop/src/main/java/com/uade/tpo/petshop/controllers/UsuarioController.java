@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.petshop.entity.Usuario;
 import com.uade.tpo.petshop.entity.dtos.UsuarioDTO;
+import com.uade.tpo.petshop.entity.dtos.UsuarioPersonalDataDTO;
 import com.uade.tpo.petshop.entity.enums.RolEnum;
 import com.uade.tpo.petshop.entity.exceptions.MissingRolException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
@@ -69,10 +70,10 @@ public class UsuarioController {
 		return ResponseEntity.ok(usuario.toDTO());
 	}
 
-	@GetMapping("/usuario/logueo")
-	public ResponseEntity<UsuarioDTO> getUsuarioByAccessToken(@AuthenticationPrincipal Usuario usuarioLogueado) throws MissingUserException {
-		UsuarioDTO dto = usuarioService.getUsuarioConTodoPorId(usuarioLogueado.getId());
-    	return ResponseEntity.ok(dto);
+	@GetMapping("/usuario")
+	public ResponseEntity<UsuarioPersonalDataDTO> getUsuarioByAccessToken(@AuthenticationPrincipal Usuario usuarioLogueado) throws MissingUserException {
+		UsuarioPersonalDataDTO usuarioPersonalData = usuarioService.getUsuarioPersonalDataByEmail(usuarioLogueado.getEmail());
+    	return ResponseEntity.ok(usuarioPersonalData);
 	}
 	
 

@@ -20,5 +20,8 @@ public interface IUsuarioRepository extends JpaRepository<Usuario, Long> {
        "LEFT JOIN FETCH u.productos_creados " +
        "LEFT JOIN FETCH u.rol " +
        "WHERE u.id = :id")
-Optional<Usuario> findByIdWithPedidosProductosAndRol(Long id);
+    Optional<Usuario> findByIdWithPedidosProductosAndRol(Long id);
+
+    @Query(value="SELECT u FROM Usuario u WHERE u.email = ?1")
+    Optional<Usuario> findByEmailPersonalData(String email);
 }
