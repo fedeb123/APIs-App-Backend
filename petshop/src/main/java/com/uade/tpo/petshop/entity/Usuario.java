@@ -103,8 +103,8 @@ public class Usuario implements UserDetails {
         return new UsuarioDTO(this.id, this.nombre, this.apellido, this.telefono, this.email, null, this.direccion, productosDTOs, pedidosDTOs, this.rol.toDTO());
     }
 
-    public UsuarioPersonalDataDTO toPesonalDataDTO(){
-        return new UsuarioPersonalDataDTO(this.id,this.nombre, this.apellido, this.telefono, this.email, this.direccion);
+    public UsuarioPersonalDataDTO toPersonalDataDTO(){
+        return new UsuarioPersonalDataDTO(this.id,this.nombre, this.apellido, this.telefono, this.email, this.direccion, this.rol.toDTO());
     }
 
     public void updateFromDTO(UsuarioDTO usuario){

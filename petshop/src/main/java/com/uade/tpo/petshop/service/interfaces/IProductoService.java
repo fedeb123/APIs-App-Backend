@@ -23,4 +23,5 @@ public interface IProductoService {
     public void updateStock(Long id, ProductoDTO producto) throws MissingProductoException;
     public Producto updateProducto(Long id, ProductoDTO producto) throws MissingCategoriaException, MissingProductoException, ProductoDuplicateException, MissingUserException;
     public void subirImagen(Long id, MultipartFile file) throws java.io.IOException, MissingProductoException;
+    public void deleteProducto(Long id) throws MissingProductoException;
 }

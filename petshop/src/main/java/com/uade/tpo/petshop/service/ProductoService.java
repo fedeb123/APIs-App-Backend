@@ -148,6 +148,12 @@ public class ProductoService implements IProductoService {
         
     }
 
-
     //delete
+    @Override
+    @Transactional
+    public void deleteProducto(Long id) throws MissingProductoException {
+        Producto producto = productoRepository.findById(id)
+                .orElseThrow(MissingProductoException::new);
+        productoRepository.delete(producto);
+    }
 }

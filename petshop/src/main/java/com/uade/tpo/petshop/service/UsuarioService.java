@@ -60,7 +60,7 @@ public class UsuarioService implements IUsuarioService {
         Usuario usuario = usuarioRepository.findByEmailPersonalData(email)
             .orElseThrow(MissingUserException::new);
     
-        return new UsuarioPersonalDataDTO(usuario.getId(), usuario.getNombre(),usuario.getApellido(),usuario.getTelefono(),usuario.getEmail(),usuario.getDireccion());
+        return new UsuarioPersonalDataDTO(usuario.getId(), usuario.getNombre(),usuario.getApellido(),usuario.getTelefono(),usuario.getEmail(),usuario.getDireccion(), usuario.getRol().toDTO());
     }
 
 //comentario a discusion: ver si nos manejamos por email o por id

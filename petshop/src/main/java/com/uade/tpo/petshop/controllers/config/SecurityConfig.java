@@ -83,7 +83,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/api/detalle-pedidos").hasAnyAuthority(RolEnum.CLIENTE.name())
 
                 // Reglas de Usuarios
-                .requestMatchers(HttpMethod.GET, "/api/usuarios/usuario").hasAnyAuthority(RolEnum.CLIENTE.name())
+                .requestMatchers(HttpMethod.GET, "/api/usuarios/usuario").hasAnyAuthority(RolEnum.CLIENTE.name(), RolEnum.ADMIN.name())
                 .requestMatchers(HttpMethod.GET, "/api/usuarios/**").hasAnyAuthority(RolEnum.ADMIN.name())
                 .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/api/usuarios/**").hasAnyAuthority(RolEnum.CLIENTE.name(), RolEnum.ADMIN.name())
