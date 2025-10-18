@@ -10,8 +10,11 @@ import com.uade.tpo.petshop.entity.DetallePedido;
 import com.uade.tpo.petshop.entity.Factura;
 import com.uade.tpo.petshop.entity.Pedido;
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
+import com.uade.tpo.petshop.entity.enums.MetodoDePagoEnum;
+import com.uade.tpo.petshop.entity.exceptions.InvalidDataException;
 import com.uade.tpo.petshop.entity.exceptions.MissingPedidoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
+import com.uade.tpo.petshop.entity.exceptions.MissingStockException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
 import com.uade.tpo.petshop.entity.exceptions.PedidoCanceladoException;
 import com.uade.tpo.petshop.entity.exceptions.PedidoDuplicateException;
@@ -37,4 +40,6 @@ public interface IPedidoService {
     public List<Pedido> getPedidosFromUsuario(String email) throws MissingUserException, MissingPedidoException;
 
     public void updateConfirmarPedido(Long id, PedidoDTO pedidoDTO) throws MissingPedidoException, PedidoCanceladoException;
+
+    public Pedido confirmarPedidoConDescuento(Long pedidoId, String codigoDescuento, MetodoDePagoEnum metodoDePago) throws MissingPedidoException, PedidoCanceladoException, InvalidDataException, MissingStockException;
 }
