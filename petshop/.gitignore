@@ -35,3 +35,4 @@ build/
 
 ### Configuraciones ###
 .env
+.venv

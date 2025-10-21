@@ -57,8 +57,8 @@ public class Pedido {
     @Column
     private Date fechaPedido;
     
-    @Column
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)             // <-- guarda el nombre literal del enum
+    @Column(name = "estado", length = 20, nullable = false)
     private EstadoEnum estado; // PENDIENTE, ENVIADO, ENTREGADO, CANCELADO
 
     @Column
