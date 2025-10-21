@@ -74,7 +74,7 @@ public class ProductoController {
         return ResponseEntity.ok(productosDTO);
     }
 
-    @GetMapping("/validos")
+    @GetMapping("/stockeados")
     public ResponseEntity<Page<ProductoDTO>> getAllProductosConStock(@RequestParam(required = false) Integer page,@RequestParam(required = false) Integer size) {
         Page<Producto> productos;
         if (page == null && size == null){
