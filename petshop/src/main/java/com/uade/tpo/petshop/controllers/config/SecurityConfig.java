@@ -62,6 +62,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/api/categorias/**").hasAnyAuthority(RolEnum.ADMIN.name())
                 .requestMatchers(HttpMethod.DELETE, "/api/categorias/**").hasAnyAuthority(RolEnum.ADMIN.name())
                 .requestMatchers(HttpMethod.PUT, "/api/productos/**").hasAnyAuthority(RolEnum.ADMIN.name())
+                .requestMatchers( "/api/productos/descontinuados/**").hasAnyAuthority(RolEnum.ADMIN.name())
 
                 // --- REGLAS DE PEDIDOS ORDENADAS CORRECTAMENTE ---
                 // 1. Rutas específicas para CLIENTE
