@@ -88,6 +88,19 @@ public class ProductoController {
 
     }
 
+    @GetMapping("/descontinuados")
+    public ResponseEntity<Page<ProductoDTO>> getAllDescontinuados(@RequestParam(required = false) Integer page,@RequestParam(required = false) Integer size) {
+        Page<Producto> productos;
+        if (page == null && size == null){
+            productos = productoService.getAllDescontinuados(PageRequest.of(0, Integer.MAX_VALUE));
+            
+        } else {
+            productos = productoService.getAllDescontinuados(PageRequest.of(page, size));
+        }
+        Page<ProductoDTO> productosDTO = productos.map(Producto::toDTO);
+        return ResponseEntity.ok(productosDTO);
+    }
+
     @GetMapping("/{productoId}")
     public ResponseEntity<ProductoDTO> getProductoById(@PathVariable Long productoId) {
         Optional<Producto> producto = productoService.getProductoById(productoId);

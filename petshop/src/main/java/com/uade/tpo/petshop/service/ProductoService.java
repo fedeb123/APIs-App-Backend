@@ -49,6 +49,11 @@ public class ProductoService implements IProductoService {
         return productoRepository.findAll(pageable);
     }
 
+    @Override
+    public Page<Producto> getAllDescontinuados(PageRequest pageable) {
+        return productoRepository.findDescontinuados(pageable);
+    }
+
     @Override // obtiene los productos con stock mayor a cero
     public Page<Producto> getProductosConStock(PageRequest pageable) {
         return productoRepository.findByStockGreaterThan(0, pageable);

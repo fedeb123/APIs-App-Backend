@@ -16,6 +16,7 @@ import com.uade.tpo.petshop.entity.exceptions.ProductoDuplicateException;
 
 public interface IProductoService {
     public Page<Producto> getAllProductos(PageRequest pageable);
+    public Page<Producto> getAllDescontinuados(PageRequest pageable);
     public Page<Producto> getProductosConStock(PageRequest pageable);
     public Optional<Producto> getProductoById(Long id);
     public List<Producto> getProductoByName(String name);

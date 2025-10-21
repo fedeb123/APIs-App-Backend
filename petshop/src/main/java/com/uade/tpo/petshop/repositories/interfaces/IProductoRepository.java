@@ -2,11 +2,11 @@ package com.uade.tpo.petshop.repositories.interfaces;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import com.uade.tpo.petshop.entity.Producto;
 
@@ -18,5 +18,9 @@ public interface IProductoRepository extends JpaRepository<Producto, Long> {
     List<Producto> findByName(String nombre);
 
     Page<Producto> findByStockGreaterThan(int stock, Pageable pageable);
+
+    @Query(value = "SELECT * FROM producto WHERE activo = 0", countQuery = "SELECT COUNT(*) FROM producto WHERE activo = 0",
+    nativeQuery = true)
+    Page<Producto> findDescontinuados(Pageable pageable);
 
 }
