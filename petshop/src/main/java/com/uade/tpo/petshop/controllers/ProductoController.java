@@ -158,4 +158,10 @@ public ResponseEntity<Map<String, String>> updateProductoConImagen(
         productoService.deleteProducto(productoId);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/descontinuados/reactivar/{productoId}")
+    public ResponseEntity<Void> reactivarProducto(@PathVariable Long productoId) throws MissingProductoException{
+        productoService.reactivarProducto(productoId);
+        return ResponseEntity.noContent().build();
+    }
 }

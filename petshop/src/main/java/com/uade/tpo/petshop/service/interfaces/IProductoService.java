@@ -25,6 +25,6 @@ public interface IProductoService {
     public Producto updateProducto(Long id, ProductoDTO producto) throws MissingCategoriaException, MissingProductoException, ProductoDuplicateException, MissingUserException;
     public void subirImagen(Long id, MultipartFile file) throws java.io.IOException, MissingProductoException;
     public void deleteProducto(Long id) throws MissingProductoException;
-    public Producto createProductoConImagen(ProductoDTO productoDTO, MultipartFile imagen)
-            throws MissingCategoriaException, ProductoDuplicateException, MissingUserException, java.io.IOException;
+    public void reactivarProducto(Long id) throws MissingProductoException;
+    public Producto createProductoConImagen(ProductoDTO productoDTO, MultipartFile imagen) throws MissingCategoriaException, ProductoDuplicateException, MissingUserException, java.io.IOException;
 }

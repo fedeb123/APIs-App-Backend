@@ -26,5 +26,5 @@ public interface IProductoRepository extends JpaRepository<Producto, Long> {
 
     @Modifying(clearAutomatically=true, flushAutomatically=true)
     @Query(value = "UPDATE producto SET activo = 1, fechaBaja = NULL WHERE id = :id", nativeQuery = true)
-    void reactivarById(@Param("id") Long id);
+    int reactivarById(@Param("id") Long id);
 }

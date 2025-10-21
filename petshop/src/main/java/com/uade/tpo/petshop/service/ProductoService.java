@@ -185,4 +185,13 @@ public class ProductoService implements IProductoService {
                 .orElseThrow(MissingProductoException::new);
         productoRepository.delete(producto);
     }
+
+    @Override
+    @Transactional
+    public void reactivarProducto(Long id) throws MissingProductoException {
+        int filasAfectadas = productoRepository.reactivarById(id);
+        if (filasAfectadas == 0) {
+            throw new MissingProductoException();
+        }
+    }
 }
