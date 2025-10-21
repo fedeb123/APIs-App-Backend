@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
 import com.uade.tpo.petshop.entity.dtos.ProductoDTO;
 import com.uade.tpo.petshop.entity.dtos.UsuarioDTO;
+import com.uade.tpo.petshop.entity.dtos.UsuarioPersonalDataDTO;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -73,10 +74,10 @@ public class Usuario implements UserDetails {
     private String direccion;
 
     @OneToMany(mappedBy="usuario_creador")
-    private List<Producto> productos_creados;
+    private List<Producto> productos_creados = new ArrayList<>();
     
     @OneToMany(mappedBy="cliente")
-    List<Pedido> pedidos;
+    List<Pedido> pedidos = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "rol_id", nullable = false)
@@ -102,6 +103,10 @@ public class Usuario implements UserDetails {
         return new UsuarioDTO(this.id, this.nombre, this.apellido, this.telefono, this.email, this.password, this.direccion, productosDTOs, pedidosDTOs, this.rol.toDTO());
     }
 
+    public UsuarioPersonalDataDTO toPersonalDataDTO(){
+        return new UsuarioPersonalDataDTO(this.id,this.nombre, this.apellido, this.telefono, this.email, this.direccion, this.rol.toDTO());
+    }
+
     public void updateFromDTO(UsuarioDTO usuario){
         if (usuario.getNombre() != null && !usuario.getNombre().isEmpty()) {
             this.setNombre(usuario.getNombre());
@@ -112,11 +117,12 @@ public class Usuario implements UserDetails {
         if (usuario.getTelefono() != null && !usuario.getTelefono().isEmpty()) {
             this.setTelefono(usuario.getTelefono());
         }
-        if (usuario.getEmail() != null && !usuario.getEmail().isEmpty()) {
-            this.setEmail(usuario.getEmail());
-        }
+        
         if (usuario.getDireccion() != null && !usuario.getDireccion().isEmpty()) {
             this.setDireccion(usuario.getDireccion());
+        }
+        if (usuario.getPassword() != null && !usuario.getPassword().isEmpty()){
+            this.setPassword(usuario.getPassword());
         }
         
     }

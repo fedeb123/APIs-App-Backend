@@ -10,13 +10,16 @@ import org.springframework.stereotype.Service;
 import com.uade.tpo.petshop.entity.DetallePedido;
 import com.uade.tpo.petshop.entity.Pedido;
 import com.uade.tpo.petshop.entity.Producto;
+import com.uade.tpo.petshop.entity.Usuario;
 import com.uade.tpo.petshop.entity.dtos.DetallePedidoDTO;
 import com.uade.tpo.petshop.entity.dtos.ProductoDTO;
-import com.uade.tpo.petshop.entity.enums.EstadoEnum;
+import com.uade.tpo.petshop.entity.exceptions.InvalidDataException;
 import com.uade.tpo.petshop.entity.exceptions.MissingPedidoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingStockException;
+import com.uade.tpo.petshop.entity.exceptions.NotFoundException;
 import com.uade.tpo.petshop.entity.exceptions.PedidoCanceladoException;
+import com.uade.tpo.petshop.entity.exceptions.UnauthorizedException;
 import com.uade.tpo.petshop.repositories.interfaces.IDetallePedidoRepository;
 import com.uade.tpo.petshop.service.interfaces.IDetallePedidoService;
 import com.uade.tpo.petshop.service.interfaces.IPedidoService;
@@ -57,14 +60,19 @@ public class DetallePedidoService implements IDetallePedidoService {
     }
 
     @Override
+    public Page<DetallePedido> findByUsuarioId(Long clienteId, PageRequest pageRequest){
+        return detallePedidoRepository.findByPedidoClienteId(clienteId, pageRequest);
+    }
+
+    @Override
     @Transactional
     public DetallePedido save(DetallePedidoDTO detallePedidoDTO) throws MissingPedidoException, MissingProductoException, MissingStockException, PedidoCanceladoException {
         Pedido pedido = pedidoService.getPedidoById(detallePedidoDTO.getPedidoId()).orElseThrow(MissingPedidoException::new);
         
         //Verifica que el pedido no haya sido cancelado
-        if (pedido.getEstado() == EstadoEnum.CANCELADO){
-            throw new PedidoCanceladoException();
-        }
+        // if (pedido.getEstado() == EstadoEnum.CANCELADO){
+        //     throw new PedidoCanceladoException();
+        // }
 
         Producto producto = productoService.getProductoById(detallePedidoDTO.getProductoId()).orElseThrow(MissingProductoException::new);   
 
@@ -84,23 +92,41 @@ public class DetallePedidoService implements IDetallePedidoService {
 
     @Override
     @Transactional
-    public DetallePedido update(Long id, DetallePedidoDTO detallePedidoDTO) {
-        return detallePedidoRepository.findById(id)
-            .map(d -> {
-                d.setCantidad(detallePedidoDTO.getCantidad());
-                d.setPrecioSubtotal(detallePedidoDTO.getPrecioSubtotal());
-                // Actualizar producto y pedido si corresponde
-                return detallePedidoRepository.save(d);
-            })
-            .orElseThrow(() -> new RuntimeException("DetallePedido no encontrado con id " + id));
+    public DetallePedido update(Long id, DetallePedidoDTO detallePedidoDTO, Usuario usuario) //Le paso la sesion del usuario logueado junto con el id del detalle a modificar y el/los campo/s
+            throws UnauthorizedException, InvalidDataException, NotFoundException {
+        DetallePedido detallePedido= detallePedidoRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException());
+    
+        boolean pertenece=detallePedido.getPedido().getCliente().getId().equals(usuario.getId());
+        if (!pertenece){
+            throw new UnauthorizedException();
+        }
+
+        if (detallePedidoDTO.getCantidad()<=0){
+            throw new InvalidDataException();
+        }
+
+        int stockDisponible = detallePedido.getProducto().getStock();
+        if (detallePedidoDTO.getCantidad()>stockDisponible){
+            throw new InvalidDataException();
+        }
+
+        detallePedido.setCantidad(detallePedidoDTO.getCantidad());
+        detallePedido.setPrecioSubtotal(detallePedido.getCantidad()*detallePedido.getProducto().getPrecio());
+    
+        return detallePedidoRepository.save(detallePedido);
     }
 
     @Override
     @Transactional
-    public void delete(Long id) {
-        if (!detallePedidoRepository.existsById(id)) {
-            throw new RuntimeException("DetallePedido no encontrado con id " + id);
+    public void delete(Long id, Usuario usuarioLogueado) throws UnauthorizedException, NotFoundException {
+        DetallePedido detallePedido = detallePedidoRepository.findById(id)
+            .orElseThrow(NotFoundException::new);
+
+        if (!detallePedido.getPedido().getCliente().getId().equals(usuarioLogueado.getId())) {
+            throw new UnauthorizedException();
         }
-        detallePedidoRepository.deleteById(id);
+
+        detallePedidoRepository.delete(detallePedido);
     }
 }

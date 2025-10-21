@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 
 import com.uade.tpo.petshop.entity.Usuario;
 import com.uade.tpo.petshop.entity.dtos.UsuarioDTO;
+import com.uade.tpo.petshop.entity.dtos.UsuarioPersonalDataDTO;
 import com.uade.tpo.petshop.entity.exceptions.MissingRolException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
 import com.uade.tpo.petshop.entity.exceptions.UsuarioDuplicateException;
@@ -18,6 +19,8 @@ public interface IUsuarioService {
     public Optional<Usuario> getUsuarioByEmail(String email);
     public void deleteUsuarioById(Long id) throws MissingUserException; 
     public Usuario updateUsuario(Long id, UsuarioDTO usuario) throws UsuarioDuplicateException, MissingUserException; //aca agrego la U del crud (actualizar usuario)
+    public UsuarioDTO getUsuarioConTodoPorId(Long id) throws MissingUserException;
+    public UsuarioPersonalDataDTO getUsuarioPersonalDataByEmail(String email) throws MissingUserException;
 }
 
 

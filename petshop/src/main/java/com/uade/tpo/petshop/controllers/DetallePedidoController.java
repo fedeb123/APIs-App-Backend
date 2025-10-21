@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,11 +19,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.petshop.entity.DetallePedido;
+import com.uade.tpo.petshop.entity.Usuario;
 import com.uade.tpo.petshop.entity.dtos.DetallePedidoDTO;
+import com.uade.tpo.petshop.entity.enums.RolEnum;
+import com.uade.tpo.petshop.entity.exceptions.InvalidDataException;
 import com.uade.tpo.petshop.entity.exceptions.MissingPedidoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingStockException;
+import com.uade.tpo.petshop.entity.exceptions.NotFoundException;
 import com.uade.tpo.petshop.entity.exceptions.PedidoCanceladoException;
+import com.uade.tpo.petshop.entity.exceptions.UnauthorizedException;
 import com.uade.tpo.petshop.service.interfaces.IDetallePedidoService;
 
 @RestController
@@ -33,17 +39,30 @@ public class DetallePedidoController {
 
     @GetMapping /*agarro todos los detalles de pedido y los transf en DTO */
     public ResponseEntity<Page<DetallePedidoDTO>> getAllDetallePedidos(
+            @AuthenticationPrincipal Usuario detallesUsuario,
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size) {
 
-        Page<DetallePedido> detalles;
-        if (page == null || size == null) {
-            detalles = detallePedidoService.findAll(PageRequest.of(0, Integer.MAX_VALUE));
-        } else {
-            detalles = detallePedidoService.findAll(PageRequest.of(page, size));
+        if (detallesUsuario.getRol().equals(RolEnum.ADMIN)){
+            Page<DetallePedido> detalles;
+            if (page == null || size == null) {
+                detalles = detallePedidoService.findAll(PageRequest.of(0, Integer.MAX_VALUE));
+            } else {
+                detalles = detallePedidoService.findAll(PageRequest.of(page, size));
+            }
+            Page<DetallePedidoDTO> detallesDTO = detalles.map(DetallePedido::toDTO);
+            return ResponseEntity.ok(detallesDTO);
         }
-        Page<DetallePedidoDTO> detallesDTO = detalles.map(DetallePedido::toDTO);
-        return ResponseEntity.ok(detallesDTO);
+        else{
+            Page<DetallePedido> detalles;
+            if (page == null || size == null) {
+                detalles = detallePedidoService.findByUsuarioId(detallesUsuario.getId(), PageRequest.of(0,Integer.MAX_VALUE));
+            } else {
+                detalles = detallePedidoService.findByUsuarioId(detallesUsuario.getId(), PageRequest.of(page,size));
+            }
+            Page<DetallePedidoDTO> detallesDTO = detalles.map(DetallePedido::toDTO);
+            return ResponseEntity.ok(detallesDTO);
+        }
     }
 
     @GetMapping("/{id}") /*busco detalle del pedido por ID y lo transf en DTO */
@@ -61,14 +80,21 @@ public class DetallePedidoController {
     }
 
     @PutMapping("/{id}") /*actualiza el detalle del pedido y lo devuelve en forma de DTO */
-    public ResponseEntity<DetallePedidoDTO> updateDetallePedido(@PathVariable Long id, @RequestBody DetallePedidoDTO detallePedidoDTO) {
-        DetallePedido actualizado = detallePedidoService.update(id, detallePedidoDTO);
-        return ResponseEntity.ok(actualizado.toDTO());
+    public ResponseEntity<DetallePedidoDTO> updateDetallePedido(@PathVariable Long id, @RequestBody DetallePedidoDTO detallePedidoDTO,
+             @AuthenticationPrincipal Usuario detallesUsuario) throws UnauthorizedException, InvalidDataException, NotFoundException {
+        
+            DetallePedido actualizado = detallePedidoService.update(id, detallePedidoDTO, detallesUsuario);
+            return ResponseEntity.ok(actualizado.toDTO());
+          
     }
 
     @DeleteMapping("/{id}") /*misma explicacion que categoria controller, no devuelve datos, solo confirma la eliminacion*/
-    public ResponseEntity<Void> deleteDetallePedido(@PathVariable Long id) {
-        detallePedidoService.delete(id);
+    public ResponseEntity<Void> deleteDetallePedido(@PathVariable Long id,  @AuthenticationPrincipal Usuario detallesUsuario) 
+            throws UnauthorizedException, NotFoundException{
+        
+        detallePedidoService.delete(id, detallesUsuario);
         return ResponseEntity.noContent().build();
+        
+
     }
 }

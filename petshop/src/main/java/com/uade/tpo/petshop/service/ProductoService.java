@@ -66,6 +66,30 @@ public class ProductoService implements IProductoService {
 
     @Override
     @Transactional
+    public Producto createProductoConImagen(ProductoDTO productoDTO, MultipartFile imagen)
+            throws MissingCategoriaException, ProductoDuplicateException, MissingUserException, java.io.IOException {
+
+        // 1. Crear producto sin imagen
+        Producto productoNuevo = createProducto(productoDTO);
+
+        // 2. Subir imagen si existe
+        if (imagen != null && !imagen.isEmpty()) {
+            String directorioUpload = "uploads/productos/";
+            String nombreArchivo = productoNuevo.getId() + "_" + imagen.getOriginalFilename();
+            Path ruta = Paths.get(directorioUpload, nombreArchivo);
+
+            Files.createDirectories(ruta.getParent());
+            Files.write(ruta, imagen.getBytes());
+
+            productoNuevo.setImageUrl("/" + directorioUpload + nombreArchivo);
+            productoRepository.save(productoNuevo);
+        }
+
+        return productoNuevo;
+    }
+
+    @Override
+    @Transactional
     public Producto createProducto(ProductoDTO producto) throws MissingCategoriaException, ProductoDuplicateException, MissingUserException {
         // Validar nombre duplicado
         List<Producto> productos = productoRepository.findByName(producto.getNombre());
@@ -148,6 +172,12 @@ public class ProductoService implements IProductoService {
         
     }
 
-
     //delete
+    @Override
+    @Transactional
+    public void deleteProducto(Long id) throws MissingProductoException {
+        Producto producto = productoRepository.findById(id)
+                .orElseThrow(MissingProductoException::new);
+        productoRepository.delete(producto);
+    }
 }

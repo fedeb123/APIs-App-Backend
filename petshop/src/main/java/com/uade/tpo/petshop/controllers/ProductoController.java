@@ -1,11 +1,15 @@
 package com.uade.tpo.petshop.controllers;
 
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.uade.tpo.petshop.entity.Producto;
+import com.uade.tpo.petshop.entity.Usuario;
 import com.uade.tpo.petshop.entity.dtos.ProductoDTO;
 import com.uade.tpo.petshop.entity.exceptions.MissingCategoriaException;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
@@ -33,12 +38,29 @@ public class ProductoController {
     @Autowired
     private IProductoService productoService;
 
-    @PostMapping
-    public ResponseEntity<ProductoDTO> crearProducto(@RequestBody ProductoDTO producto) throws MissingCategoriaException, MissingUserException, MissingProductoException, ProductoDuplicateException {
-        Producto productoNuevo = productoService.createProducto(producto);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ProductoDTO> crearProductoConImagen(
+            @RequestParam("nombre") String nombre,
+            @RequestParam("descripcion") String descripcion,
+            @RequestParam("precio") Double precio,
+            @RequestParam("stock") Integer stock,
+            @RequestParam("categoriaId") Long categoriaId,
+            @AuthenticationPrincipal Usuario detallesUsuario,
+            @RequestParam(value = "imagen", required = false) MultipartFile imagen
+    ) throws MissingCategoriaException, MissingUserException, MissingProductoException, ProductoDuplicateException, java.io.IOException {
+
+        ProductoDTO productoDTO = new ProductoDTO();
+        productoDTO.setNombre(nombre);
+        productoDTO.setDescripcion(descripcion);
+        productoDTO.setPrecio(precio);
+        productoDTO.setStock(stock);
+        productoDTO.setCategoriaId(categoriaId);
+        productoDTO.setUsuarioId(detallesUsuario.getId());
+
+        Producto productoNuevo = productoService.createProductoConImagen(productoDTO, imagen);
+
         return ResponseEntity.ok(productoNuevo.toDTO());
     }
-
     @GetMapping
     public ResponseEntity<Page<ProductoDTO>> getAllProductos(@RequestParam(required = false) Integer page,@RequestParam(required = false) Integer size) {
         Page<Producto> productos;
@@ -75,12 +97,36 @@ public class ProductoController {
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/{productoId}")
-    public ResponseEntity<String> updateProducto(@PathVariable Long productoId, @RequestBody ProductoDTO productoDTO) throws MissingCategoriaException, MissingUserException, MissingProductoException, ProductoDuplicateException {
-        productoService.updateProducto(productoId, productoDTO);
-        return ResponseEntity.ok("Producto Editado Correctamente");           
+@PutMapping(value = "/{productoId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+public ResponseEntity<Map<String, String>> updateProductoConImagen(
+    @PathVariable Long productoId,
+    @RequestParam("nombre") String nombre,
+    @RequestParam("descripcion") String descripcion,
+    @RequestParam("precio") Double precio,
+    @RequestParam("stock") Integer stock,
+    @RequestParam("categoriaId") Long categoriaId,
+    @AuthenticationPrincipal Usuario detallesUsuario,
+    @RequestParam(value = "imagen", required = false) MultipartFile imagen
+) throws Exception {
+    // Traer y actualizar producto
+    ProductoDTO dto = new ProductoDTO();
+    dto.setNombre(nombre);
+    dto.setDescripcion(descripcion);
+    dto.setPrecio(precio);
+    dto.setStock(stock);
+    dto.setCategoriaId(categoriaId);
+    dto.setUsuarioId(detallesUsuario.getId());
 
+    productoService.updateProducto(productoId, dto);
+
+    // Subir imagen si existe
+    if (imagen != null && !imagen.isEmpty()) {
+        productoService.subirImagen(productoId, imagen);
     }
+
+    return ResponseEntity.ok(Map.of("message", "Producto actualizado correctamente"));
+}
+
 
     @PutMapping("/actualizarStock/{productoId}")
     public ResponseEntity<String> updateStock(@PathVariable Long productoId, @RequestBody ProductoDTO productoDTO) throws MissingProductoException {
@@ -94,4 +140,9 @@ public class ProductoController {
         return ResponseEntity.ok("Imagen Subida Correctamente");
     }
 
+    @DeleteMapping("/{productoId}")
+    public ResponseEntity<Void> deleteProducto(@PathVariable Long productoId) throws MissingProductoException {
+        productoService.deleteProducto(productoId);
+        return ResponseEntity.noContent().build();
+    }
 }
