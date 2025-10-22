@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.uade.tpo.petshop.entity.Producto;
 import com.uade.tpo.petshop.entity.dtos.ProductoDTO;
+import com.uade.tpo.petshop.entity.exceptions.CategoriaDescontinuadaException;
 import com.uade.tpo.petshop.entity.exceptions.MissingCategoriaException;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
@@ -25,6 +26,6 @@ public interface IProductoService {
     public Producto updateProducto(Long id, ProductoDTO producto) throws MissingCategoriaException, MissingProductoException, ProductoDuplicateException, MissingUserException;
     public void subirImagen(Long id, MultipartFile file) throws java.io.IOException, MissingProductoException;
     public void deleteProducto(Long id) throws MissingProductoException;
-    public void reactivarProducto(Long id) throws MissingProductoException;
+    public void reactivarProducto(Long id) throws MissingProductoException, CategoriaDescontinuadaException;
     public Producto createProductoConImagen(ProductoDTO productoDTO, MultipartFile imagen) throws MissingCategoriaException, ProductoDuplicateException, MissingUserException, java.io.IOException;
 }

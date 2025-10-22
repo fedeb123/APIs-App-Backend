@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.uade.tpo.petshop.entity.Producto;
 import com.uade.tpo.petshop.entity.Usuario;
 import com.uade.tpo.petshop.entity.dtos.ProductoDTO;
+import com.uade.tpo.petshop.entity.exceptions.CategoriaDescontinuadaException;
 import com.uade.tpo.petshop.entity.exceptions.MissingCategoriaException;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
@@ -165,7 +166,7 @@ public ResponseEntity<Map<String, String>> updateProductoConImagen(
     }
 
     @PutMapping("/descontinuados/reactivar/{productoId}")
-    public ResponseEntity<Map<String, Object>> reactivarProducto(@PathVariable Long productoId) throws MissingProductoException {
+    public ResponseEntity<Map<String, Object>> reactivarProducto(@PathVariable Long productoId) throws MissingProductoException, CategoriaDescontinuadaException {
         productoService.reactivarProducto(productoId);
         return ResponseEntity.ok(Map.of(
             "message", "Producto Reactivado Correctamente",
