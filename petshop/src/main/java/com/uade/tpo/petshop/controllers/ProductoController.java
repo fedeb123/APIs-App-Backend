@@ -164,7 +164,7 @@ public ResponseEntity<Map<String, String>> updateProductoConImagen(
         ));
     }
 
-    @PostMapping("/descontinuados/reactivar/{productoId}")
+    @PutMapping("/descontinuados/reactivar/{productoId}")
     public ResponseEntity<Map<String, Object>> reactivarProducto(@PathVariable Long productoId) throws MissingProductoException {
         productoService.reactivarProducto(productoId);
         return ResponseEntity.ok(Map.of(
