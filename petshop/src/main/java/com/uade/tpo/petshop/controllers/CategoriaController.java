@@ -100,7 +100,7 @@ public class CategoriaController {
         ));
     }
 
-    @PutMapping("/descontinuadas/reactivar/{categoriaId}")
+    @PostMapping("/descontinuadas/reactivar/{categoriaId}")
     public ResponseEntity<Map<String, Object>> reactivarProducto(@PathVariable Long categoriaId) throws MissingCategoriaException {
         categoriaService.reactivarCategoria(categoriaId);
         return ResponseEntity.ok(Map.of(
