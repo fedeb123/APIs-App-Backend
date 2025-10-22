@@ -129,6 +129,8 @@ public ResponseEntity<Map<String, String>> updateProductoConImagen(
     dto.setStock(stock);
     dto.setCategoriaId(categoriaId);
     dto.setUsuarioId(detallesUsuario.getId());
+    dto.setActivo(true);
+    dto.setFechaBaja(null);
 
     productoService.updateProducto(productoId, dto);
 
@@ -154,14 +156,20 @@ public ResponseEntity<Map<String, String>> updateProductoConImagen(
     }
 
     @DeleteMapping("/{productoId}")
-    public ResponseEntity<Void> deleteProducto(@PathVariable Long productoId) throws MissingProductoException {
+    public ResponseEntity<Map<String, Object>> deleteProducto(@PathVariable Long productoId) throws MissingProductoException {
         productoService.deleteProducto(productoId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(Map.of(
+            "message", "Producto Borrado Correctamente",
+            "id", productoId
+        ));
     }
 
-    @DeleteMapping("/descontinuados/reactivar/{productoId}")
-    public ResponseEntity<Void> reactivarProducto(@PathVariable Long productoId) throws MissingProductoException{
+    @PutMapping("/descontinuados/reactivar/{productoId}")
+    public ResponseEntity<Map<String, Object>> reactivarProducto(@PathVariable Long productoId) throws MissingProductoException {
         productoService.reactivarProducto(productoId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(Map.of(
+            "message", "Producto Reactivado Correctamente",
+            "id", productoId
+        ));
     }
 }

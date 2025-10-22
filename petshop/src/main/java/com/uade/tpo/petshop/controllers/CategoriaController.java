@@ -1,6 +1,7 @@
 package com.uade.tpo.petshop.controllers;
 
 import java.net.URI;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,16 +91,22 @@ public class CategoriaController {
         return ResponseEntity.ok(categoriaActualizada.toDTO());
     }
 
-    @DeleteMapping("/{categoriaId}") /*elimino una categoria segun el id, sin DTO, solo confitma la eliminaciòn */
-    public ResponseEntity<Void> deleteCategoria(@PathVariable Long categoriaId) throws MissingCategoriaException, CategoriaEnUsoException {
+    @DeleteMapping("/{categoriaId}")
+    public ResponseEntity<Map<String, Object>> deleteCategoria(@PathVariable Long categoriaId) throws MissingCategoriaException, CategoriaEnUsoException {
         categoriaService.deleteCategoriaById(categoriaId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(Map.of(
+            "message", "Categoria Borrada Correctamente",
+            "id", categoriaId
+        ));
     }
 
-    @DeleteMapping("/descontinuadas/reactivar/{categoriaId}")
-    public ResponseEntity<Void> reactivarProducto(@PathVariable Long categoriaId) throws MissingCategoriaException{
+    @PutMapping("/descontinuadas/reactivar/{categoriaId}")
+    public ResponseEntity<Map<String, Object>> reactivarProducto(@PathVariable Long categoriaId) throws MissingCategoriaException {
         categoriaService.reactivarCategoria(categoriaId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(Map.of(
+            "message", "Categoria Reactivada Correctamente",
+            "id", categoriaId
+        ));
     }
 }
 
