@@ -59,9 +59,9 @@ public class DetallePedido {
     private double precioUnitario;
 
     public DetallePedidoDTO toDTO(){
-        Long productoId = (producto != null ? producto.getId() : null);
+        Long productoId = (this.producto != null ? this.producto.getId() : null);
         // En primer lugar usamos Producto; si no está, intentamos levantar del snapshot
-        String nombreProd = (this.nombreProducto != null ? this.nombreProducto : (producto != null ? producto.getNombre() : null));
+        String nombreProd = (this.nombreProducto != null ? this.nombreProducto : (this.producto != null ? producto.getNombre() : null));
         return new DetallePedidoDTO(this.id, this.cantidad, this.precioSubtotal, productoId, this.pedido.getId(), nombreProd);
     }
 }
