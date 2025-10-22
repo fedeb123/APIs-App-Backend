@@ -84,6 +84,8 @@ public class CategoriaService implements ICategoriaService{
         List<Categoria> categorias = categoriaRepository.findByNombreCategoria(categoria.getNombreCategoria());
         if (categorias.isEmpty()){
             categoriaAUpdatear.updateFromDTO(categoria);
+            categoriaAUpdatear.setActivo(true);
+            categoriaAUpdatear.setFechaBaja(null);
             return categoriaRepository.save(categoriaAUpdatear);
         }
         throw new CategoriaDuplicateException();
