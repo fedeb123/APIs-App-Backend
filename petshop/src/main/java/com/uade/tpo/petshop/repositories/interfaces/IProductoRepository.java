@@ -24,13 +24,10 @@ public interface IProductoRepository extends JpaRepository<Producto, Long> {
     @Query(value = "SELECT * FROM producto WHERE activo = 0", countQuery = "SELECT COUNT(*) FROM producto WHERE activo = 0", nativeQuery = true)
     Page<Producto> findDescontinuados(Pageable pageable);
 
-    // Reactiva solo si la categoría está activa
+    @Query(value = "SELECT COUNT(*) FROM producto WHERE categoria_id = :categoriaId", nativeQuery = true)
+    long countAllByCategoriaId(@Param("categoriaId") Long categoriaId);
+
     @Modifying(clearAutomatically=true, flushAutomatically=true)
-    @Query(value = "UPDATE producto p JOIN categoria c ON c.id = p.categoria_id SET p.activo = 1, p.fechaBaja = NULL WHERE p.id = :id AND c.activo = 1", nativeQuery = true)
+    @Query(value = "UPDATE producto SET activo = 1, fecha_baja = NULL WHERE id = :id", nativeQuery = true)
     int reactivarById(@Param("id") Long id);
-
-    @Query(value = "SELECT COUNT(*) FROM producto WHERE id = :id", nativeQuery = true)
-    long countByIdNative(@Param("id") Long id);
-
-    boolean existsByCategoriaIdAndActivoTrue(Long categoriaId);
 }

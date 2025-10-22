@@ -16,7 +16,6 @@ import com.uade.tpo.petshop.entity.Categoria;
 import com.uade.tpo.petshop.entity.Producto;
 import com.uade.tpo.petshop.entity.Usuario;
 import com.uade.tpo.petshop.entity.dtos.ProductoDTO;
-import com.uade.tpo.petshop.entity.exceptions.CategoriaDescontinuadaException;
 import com.uade.tpo.petshop.entity.exceptions.MissingCategoriaException;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
@@ -189,19 +188,10 @@ public class ProductoService implements IProductoService {
 
     @Override
     @Transactional
-    public void reactivarProducto(Long id) throws MissingProductoException, CategoriaDescontinuadaException {
+    public void reactivarProducto(Long id) throws MissingProductoException {
         int filasAfectadas = productoRepository.reactivarById(id);
-        if (filasAfectadas > 0) {
-            return;
-        }
-
-        long existe = productoRepository.countByIdNative(id);
-        if (existe == 0) {
+        if (filasAfectadas == 0) {
             throw new MissingProductoException();
-        } else {
-            throw new CategoriaDescontinuadaException();
         }
-
-
     }
 }

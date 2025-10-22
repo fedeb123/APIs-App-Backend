@@ -68,9 +68,9 @@ public class CategoriaService implements ICategoriaService{
     public void deleteCategoriaById(Long id) throws MissingCategoriaException, CategoriaEnUsoException {
         Categoria categoria = categoriaRepository.findById(id).orElseThrow(() -> new MissingCategoriaException());
         
-        boolean categoriaEnUso = productoRepository.existsByCategoriaIdAndActivoTrue(id);
+        long totalProductos = productoRepository.countAllByCategoriaId(id);
 
-        if (categoriaEnUso) {
+        if (totalProductos > 0) {
             throw new CategoriaEnUsoException();
         }
 
