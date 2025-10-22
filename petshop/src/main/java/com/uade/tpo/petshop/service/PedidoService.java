@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -29,8 +30,6 @@ import com.uade.tpo.petshop.repositories.interfaces.IProductoRepository;
 import com.uade.tpo.petshop.service.interfaces.IFacturaService;
 import com.uade.tpo.petshop.service.interfaces.IPedidoService;
 import com.uade.tpo.petshop.service.interfaces.IUsuarioService;
-
-import org.springframework.context.annotation.Lazy;
 
 import jakarta.transaction.Transactional;
 
@@ -88,6 +87,7 @@ public class PedidoService implements IPedidoService {
                 detalle.setProducto(producto);
                 detalle.setCantidad(detDTO.getCantidad());
                 detalle.setPrecioSubtotal(producto.getPrecio() * detDTO.getCantidad());
+                detalle.setNombreProducto(producto.getNombre());
                 pedido.agregarDetalle(detalle);
             }
         }

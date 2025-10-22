@@ -49,6 +49,11 @@ public class ProductoService implements IProductoService {
         return productoRepository.findAll(pageable);
     }
 
+    @Override
+    public Page<Producto> getAllDescontinuados(PageRequest pageable) {
+        return productoRepository.findDescontinuados(pageable);
+    }
+
     @Override // obtiene los productos con stock mayor a cero
     public Page<Producto> getProductosConStock(PageRequest pageable) {
         return productoRepository.findByStockGreaterThan(0, pageable);
@@ -179,5 +184,14 @@ public class ProductoService implements IProductoService {
         Producto producto = productoRepository.findById(id)
                 .orElseThrow(MissingProductoException::new);
         productoRepository.delete(producto);
+    }
+
+    @Override
+    @Transactional
+    public void reactivarProducto(Long id) throws MissingProductoException {
+        int filasAfectadas = productoRepository.reactivarById(id);
+        if (filasAfectadas == 0) {
+            throw new MissingProductoException();
+        }
     }
 }

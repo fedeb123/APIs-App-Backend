@@ -1,6 +1,9 @@
 package com.uade.tpo.petshop.entity;
 
+import java.util.Date;
 import java.util.List;
+
+import org.hibernate.annotations.SQLDelete;
 
 import com.uade.tpo.petshop.entity.dtos.ProductoDTO;
 
@@ -15,6 +18,10 @@ import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 @Data
+//SQl Delete intercepta la instruccion de delete del entity manager del JPA y reemplaza el delete
+@SQLDelete(sql = "UPDATE producto SET activo = false, fecha_baja = NOW() WHERE id = ?")
+//SQL Restriction tambien intercepta instrucciones del JPA y les agrega una condicion al where
+@org.hibernate.annotations.SQLRestriction("activo = true")
 @Entity
 public class Producto {
 
@@ -27,6 +34,7 @@ public class Producto {
         this.precio = precio;
         this.stock = stock;
         this.categoria = categoria;
+        this.activo = true;    
     }
 
     @Id
@@ -35,7 +43,6 @@ public class Producto {
 
     @Column(nullable=false, unique=true)
     private String nombre;
-
 
     @Column
     private String descripcion;
@@ -60,8 +67,14 @@ public class Producto {
     @Column
     private String imageUrl;
 
+    @Column
+    private boolean activo;
+    
+    @Column
+    private Date fechaBaja;
+
     public ProductoDTO toDTO(){
-        return new ProductoDTO(this.id, this.nombre, this.descripcion, this.precio, this.stock, this.categoria != null ? this.categoria.getId():null, this.usuario_creador != null ? this.usuario_creador.getId():null, this.imageUrl);
+        return new ProductoDTO(this.id, this.nombre, this.descripcion, this.precio, this.stock, this.categoria != null ? this.categoria.getId():null, this.usuario_creador != null ? this.usuario_creador.getId():null, this.imageUrl, this.activo, this.fechaBaja);
     }
 
     public void updateFromDTO(ProductoDTO producto, Categoria categoria, Usuario usuario) {
@@ -86,6 +99,13 @@ public class Producto {
         if (producto.getImageUrl() != null){
             this.imageUrl = producto.getImageUrl();
         }
+
+        this.activo = producto.isActivo();
+        
+        if (producto.getFechaBaja() != null) {
+            this.fechaBaja = producto.getFechaBaja();
+        }
+
     }
 
 }

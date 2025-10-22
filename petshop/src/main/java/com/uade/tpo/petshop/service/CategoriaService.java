@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 import com.uade.tpo.petshop.entity.Categoria;
 import com.uade.tpo.petshop.entity.dtos.CategoriaDTO;
 import com.uade.tpo.petshop.entity.exceptions.CategoriaDuplicateException;
+import com.uade.tpo.petshop.entity.exceptions.CategoriaEnUsoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingCategoriaException;
 import com.uade.tpo.petshop.repositories.interfaces.ICategoriaRepository;
+import com.uade.tpo.petshop.repositories.interfaces.IProductoRepository;
 import com.uade.tpo.petshop.service.interfaces.ICategoriaService;
 
 import jakarta.transaction.Transactional;
@@ -22,8 +24,12 @@ public class CategoriaService implements ICategoriaService{
     @Autowired
     private final ICategoriaRepository categoriaRepository;
 
-    public CategoriaService(ICategoriaRepository categoriaRepository){
-        this.categoriaRepository=categoriaRepository;
+    @Autowired
+    private final IProductoRepository productoRepository;
+
+    public CategoriaService(ICategoriaRepository categoriaRepository, IProductoRepository productoRepository){
+        this.categoriaRepository = categoriaRepository;
+        this.productoRepository = productoRepository;
     }
     
     @Override
@@ -34,6 +40,11 @@ public class CategoriaService implements ICategoriaService{
     @Override
     public Page<Categoria> getAllCategorias(PageRequest pageRequest){
         return categoriaRepository.findAll(pageRequest);
+    }
+
+    @Override
+    public Page<Categoria> getDescontinuadas(PageRequest pageRequest){
+        return categoriaRepository.findDescontinuadas(pageRequest);
     }
 
     @Override
@@ -54,8 +65,15 @@ public class CategoriaService implements ICategoriaService{
 
     @Override
     @Transactional
-    public void deleteCategoriaById(Long id) throws MissingCategoriaException {
+    public void deleteCategoriaById(Long id) throws MissingCategoriaException, CategoriaEnUsoException {
         Categoria categoria = categoriaRepository.findById(id).orElseThrow(() -> new MissingCategoriaException());
+        
+        long totalProductos = productoRepository.countAllByCategoriaId(id);
+
+        if (totalProductos > 0) {
+            throw new CategoriaEnUsoException();
+        }
+
         categoriaRepository.deleteById(categoria.getId());
     }
 
@@ -66,8 +84,19 @@ public class CategoriaService implements ICategoriaService{
         List<Categoria> categorias = categoriaRepository.findByNombreCategoria(categoria.getNombreCategoria());
         if (categorias.isEmpty()){
             categoriaAUpdatear.updateFromDTO(categoria);
+            categoriaAUpdatear.setActivo(true);
+            categoriaAUpdatear.setFechaBaja(null);
             return categoriaRepository.save(categoriaAUpdatear);
         }
         throw new CategoriaDuplicateException();
+    }
+
+    @Override
+    @Transactional
+    public void reactivarCategoria(Long id) throws MissingCategoriaException {
+        int filasAfectadas = categoriaRepository.reactivarById(id);
+        if (filasAfectadas == 0) {
+            throw new MissingCategoriaException();
+        }
     }
 }

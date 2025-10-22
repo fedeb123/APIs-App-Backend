@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.uade.tpo.petshop.entity.Producto;
 import com.uade.tpo.petshop.entity.Usuario;
 import com.uade.tpo.petshop.entity.dtos.ProductoDTO;
+import com.uade.tpo.petshop.entity.exceptions.CategoriaDescontinuadaException;
 import com.uade.tpo.petshop.entity.exceptions.MissingCategoriaException;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingUserException;
@@ -74,7 +75,7 @@ public class ProductoController {
         return ResponseEntity.ok(productosDTO);
     }
 
-    @GetMapping("/validos")
+    @GetMapping("/stockeados")
     public ResponseEntity<Page<ProductoDTO>> getAllProductosConStock(@RequestParam(required = false) Integer page,@RequestParam(required = false) Integer size) {
         Page<Producto> productos;
         if (page == null && size == null){
@@ -86,6 +87,19 @@ public class ProductoController {
         Page<ProductoDTO> productosDTO = productos.map(Producto::toDTO);
         return ResponseEntity.ok(productosDTO);
 
+    }
+
+    @GetMapping("/descontinuados")
+    public ResponseEntity<Page<ProductoDTO>> getAllDescontinuados(@RequestParam(required = false) Integer page,@RequestParam(required = false) Integer size) {
+        Page<Producto> productos;
+        if (page == null && size == null){
+            productos = productoService.getAllDescontinuados(PageRequest.of(0, Integer.MAX_VALUE));
+            
+        } else {
+            productos = productoService.getAllDescontinuados(PageRequest.of(page, size));
+        }
+        Page<ProductoDTO> productosDTO = productos.map(Producto::toDTO);
+        return ResponseEntity.ok(productosDTO);
     }
 
     @GetMapping("/{productoId}")
@@ -116,6 +130,8 @@ public ResponseEntity<Map<String, String>> updateProductoConImagen(
     dto.setStock(stock);
     dto.setCategoriaId(categoriaId);
     dto.setUsuarioId(detallesUsuario.getId());
+    dto.setActivo(true);
+    dto.setFechaBaja(null);
 
     productoService.updateProducto(productoId, dto);
 
@@ -141,8 +157,20 @@ public ResponseEntity<Map<String, String>> updateProductoConImagen(
     }
 
     @DeleteMapping("/{productoId}")
-    public ResponseEntity<Void> deleteProducto(@PathVariable Long productoId) throws MissingProductoException {
+    public ResponseEntity<Map<String, Object>> deleteProducto(@PathVariable Long productoId) throws MissingProductoException {
         productoService.deleteProducto(productoId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(Map.of(
+            "message", "Producto Borrado Correctamente",
+            "id", productoId
+        ));
+    }
+
+    @PutMapping("/descontinuados/reactivar/{productoId}")
+    public ResponseEntity<Map<String, Object>> reactivarProducto(@PathVariable Long productoId) throws MissingProductoException, CategoriaDescontinuadaException {
+        productoService.reactivarProducto(productoId);
+        return ResponseEntity.ok(Map.of(
+            "message", "Producto Reactivado Correctamente",
+            "id", productoId
+        ));
     }
 }

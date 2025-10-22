@@ -1,6 +1,7 @@
 package com.uade.tpo.petshop.controllers;
 
 import java.net.URI;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.petshop.entity.Categoria;
 import com.uade.tpo.petshop.entity.dtos.CategoriaDTO;
 import com.uade.tpo.petshop.entity.exceptions.CategoriaDuplicateException;
+import com.uade.tpo.petshop.entity.exceptions.CategoriaEnUsoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingCategoriaException;
 import com.uade.tpo.petshop.service.interfaces.ICategoriaService;
-
-
-
 
 @RestController
 @RequestMapping("api/categorias")
@@ -55,6 +54,21 @@ public class CategoriaController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/descontinuadas")
+    public ResponseEntity<Page<CategoriaDTO>> getDescontinuadas(
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size) {
+
+        Page<Categoria> categorias;
+        if (page == null || size == null) {
+            categorias = categoriaService.getDescontinuadas(PageRequest.of(0, Integer.MAX_VALUE));
+        } else {
+            categorias = categoriaService.getDescontinuadas(PageRequest.of(page, size));
+        }
+        Page<CategoriaDTO> categoriasDTO = categorias.map(Categoria::toDTO);
+        return ResponseEntity.ok(categoriasDTO);
+    }
     
     @GetMapping("/nombre/{nombre}")
     public ResponseEntity<CategoriaDTO> getCategoriaByNombre(@PathVariable String nombre) {
@@ -77,12 +91,23 @@ public class CategoriaController {
         return ResponseEntity.ok(categoriaActualizada.toDTO());
     }
 
-    @DeleteMapping("/{categoriaId}") /*elimino una categoria segun el id, sin DTO, solo confitma la eliminaciòn */
-    public ResponseEntity<Void> deleteCategoria(@PathVariable Long categoriaId) throws MissingCategoriaException {
+    @DeleteMapping("/{categoriaId}")
+    public ResponseEntity<Map<String, Object>> deleteCategoria(@PathVariable Long categoriaId) throws MissingCategoriaException, CategoriaEnUsoException {
         categoriaService.deleteCategoriaById(categoriaId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(Map.of(
+            "message", "Categoria Borrada Correctamente",
+            "id", categoriaId
+        ));
     }
-    
+
+    @PutMapping("/descontinuadas/reactivar/{categoriaId}")
+    public ResponseEntity<Map<String, Object>> reactivarProducto(@PathVariable Long categoriaId) throws MissingCategoriaException {
+        categoriaService.reactivarCategoria(categoriaId);
+        return ResponseEntity.ok(Map.of(
+            "message", "Categoria Reactivada Correctamente",
+            "id", categoriaId
+        ));
+    }
 }
 
 /*@kiki EXPLICACION -> deleteCategoria no devuelve un Data Transfer Object ya que solo

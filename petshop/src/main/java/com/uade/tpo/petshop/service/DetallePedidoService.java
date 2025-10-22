@@ -112,7 +112,8 @@ public class DetallePedidoService implements IDetallePedidoService {
         }
 
         detallePedido.setCantidad(detallePedidoDTO.getCantidad());
-        detallePedido.setPrecioSubtotal(detallePedido.getCantidad()*detallePedido.getProducto().getPrecio());
+        //calculo segun campos snapshot
+        detallePedido.setPrecioSubtotal(detallePedido.getCantidad() * detallePedido.getPrecioUnitario());
     
         return detallePedidoRepository.save(detallePedido);
     }
