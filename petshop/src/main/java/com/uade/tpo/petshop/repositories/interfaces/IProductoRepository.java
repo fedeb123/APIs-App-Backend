@@ -25,7 +25,7 @@ public interface IProductoRepository extends JpaRepository<Producto, Long> {
     Page<Producto> findDescontinuados(Pageable pageable);
 
     @Modifying(clearAutomatically=true, flushAutomatically=true)
-    @Query(value = "UPDATE producto SET activo = 1, fechaBaja = NULL WHERE id = :id", nativeQuery = true)
+    @Query(value = "UPDATE producto SET activo = 1, fecha_baja = NULL WHERE id = :id", nativeQuery = true)
     int reactivarById(@Param("id") Long id);
 
     boolean existsByCategoriaIdAndActivoTrue(Long categoriaId);

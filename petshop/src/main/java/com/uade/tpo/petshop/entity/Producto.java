@@ -19,7 +19,7 @@ import lombok.Data;
 
 @Data
 //SQl Delete intercepta la instruccion de delete del entity manager del JPA y reemplaza el delete
-@SQLDelete(sql = "UPDATE producto SET activo = false, fechaBaja = NOW() WHERE id = ?")
+@SQLDelete(sql = "UPDATE producto SET activo = false, fecha_baja = NOW() WHERE id = ?")
 //SQL Restriction tambien intercepta instrucciones del JPA y les agrega una condicion al where
 @org.hibernate.annotations.SQLRestriction("activo = true")
 @Entity

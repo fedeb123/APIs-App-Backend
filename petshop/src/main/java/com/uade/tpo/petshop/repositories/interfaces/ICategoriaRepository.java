@@ -26,7 +26,7 @@ public interface ICategoriaRepository extends JpaRepository<Categoria,Long>{
     Page<Categoria> findDescontinuadas(Pageable pageable);
 
     @Modifying(clearAutomatically=true, flushAutomatically=true)
-    @Query(value = "UPDATE categoria SET activo = 1, fechaBaja = NULL WHERE id = :id", nativeQuery = true)
+    @Query(value = "UPDATE categoria SET activo = 1, fecha_baja = NULL WHERE id = :id", nativeQuery = true)
     int reactivarById(@Param("id") Long id);
     
 }
