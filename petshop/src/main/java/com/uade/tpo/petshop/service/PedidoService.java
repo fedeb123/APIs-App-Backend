@@ -88,6 +88,7 @@ public class PedidoService implements IPedidoService {
                 detalle.setCantidad(detDTO.getCantidad());
                 detalle.setPrecioSubtotal(producto.getPrecio() * detDTO.getCantidad());
                 detalle.setNombreProducto(producto.getNombre());
+                detalle.setPrecioUnitario(producto.getPrecio());
                 pedido.agregarDetalle(detalle);
             }
         }
