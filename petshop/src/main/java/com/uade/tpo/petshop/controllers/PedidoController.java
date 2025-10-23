@@ -22,6 +22,8 @@ import com.uade.tpo.petshop.entity.Usuario;
 import com.uade.tpo.petshop.entity.dtos.ConfirmacionPedidoDTO;
 import com.uade.tpo.petshop.entity.dtos.DetallePedidoDTO;
 import com.uade.tpo.petshop.entity.dtos.PedidoDTO;
+import com.uade.tpo.petshop.entity.enums.EstadoEnum;
+import com.uade.tpo.petshop.entity.exceptions.EstadoIlegalException;
 import com.uade.tpo.petshop.entity.exceptions.InvalidDataException;
 import com.uade.tpo.petshop.entity.exceptions.MissingPedidoException;
 import com.uade.tpo.petshop.entity.exceptions.MissingProductoException;
@@ -112,5 +114,18 @@ public class PedidoController {
             confirmacionDTO.getMetodoDePago()
         );
         return ResponseEntity.ok(pedidoConfirmado.toDTO());
+    }
+
+    @PutMapping("/{pedidoId}/enviar")
+    public ResponseEntity<PedidoDTO> enviarPedido(@PathVariable Long pedidoId) throws MissingPedidoException, EstadoIlegalException {
+        PedidoDTO pedido = pedidoService.getPedidoById(pedidoId).orElseThrow(MissingPedidoException::new).toDTO();
+
+        if (pedido.getEstado() != EstadoEnum.CONFIRMADO) {
+            throw new EstadoIlegalException();
+        }
+
+        pedido.setEstado(EstadoEnum.ENVIADO);
+        pedidoService.updateEstadoPedido(pedidoId, pedido);
+        return ResponseEntity.ok(pedido);
     }
 }
