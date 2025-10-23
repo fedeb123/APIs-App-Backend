@@ -36,39 +36,39 @@ usuarios_plain = [
 ]
 
 categorias = [
-    (1, "Perros", "Productos para perros: alimento, juguetes, camas y más."),
-    (2, "Gatos", "Productos para gatos: rascadores, comida, accesorios y más."),
+    (1, "Perros", "Productos para perros: alimento, juguetes, camas y más.", True, None),
+    (2, "Gatos", "Productos para gatos: rascadores, comida, accesorios y más.", True, None),
 ]
 
 # Productos ampliados (id, nombre, descripcion, precio, stock, categoria_id, usuario_id, image_url)
 productos = [
-    (1, "Alimento Premium Perro 15kg", "Bolsa de 15kg para perros adultos", 25000, 40, 1, 2, "https://example.com/perro_alimento.jpg"),
-    (2, "Cama Suave para Perro M", "Cama acolchada lavable tamaño mediano", 18000, 15, 1, 2, "https://example.com/cama_perro.jpg"),
-    (3, "Pelota de Goma", "Juguete resistente para perros medianos", 4500, 60, 1, 2, "https://example.com/pelota_perro.jpg"),
-    (4, "Correa Nylon 2m", "Correa resistente para paseos", 3500, 50, 1, 2, "https://example.com/correa_perro.jpg"),
-    (5, "Shampoo Antipulgas", "Shampoo para perros antipulgas 500ml", 4200, 30, 1, 2, "https://example.com/shampoo_perro.jpg"),
-    (6, "Rascador Deluxe 1.5m", "Rascador con hamaca para gatos", 23000, 10, 2, 2, "https://example.com/rascador_gato.jpg"),
-    (7, "Arena Sanitaria 10kg", "Arena aglutinante para gatos", 9000, 30, 2, 2, "https://example.com/arena_gato.jpg"),
-    (8, "Comedero Doble Acero", "Comedero de acero inoxidable antideslizante", 7500, 25, 2, 2, "https://example.com/comedero_gato.jpg"),
-    (9, "Rueda Interactiva", "Juguete interactivo para gatos", 3200, 40, 2, 2, "https://example.com/juguete_gato.jpg"),
-    (10, "Transportadora M", "Transportadora con ventilación mediana", 15500, 8, 2, 2, "https://example.com/transportadora.jpg"),
-    (11, "Snack Saludable Perro", "Pack 30 snacks bajos en grasa", 2800, 100, 1, 2, "https://example.com/snack_perro.jpg"),
-    (12, "Cuchillo para Uñas", "Corta uñas para mascotas con protección", 1200, 75, 1, 2, "https://example.com/cortauñas.jpg"),
+    (1, "Alimento Premium Perro 15kg", "Bolsa de 15kg para perros adultos", 25000, 40, 1, 2, "/uploads/productos/1_Dog-Chow-adultos-MG.png",True, None),
+    (2, "Cama Suave para Perro M", "Cama acolchada lavable tamaño mediano", 18000, 15, 1, 2, "/uploads/productos/camaSuavePerro.png",True, None),
+    (3, "Pelota de Goma", "Juguete resistente para perros medianos", 4500, 60, 1, 2, "/uploads/productos/pelotaGoma.png",True, None),
+    (4, "Correa Nylon 2m", "Correa resistente para paseos", 3500, 50, 1, 2, "/uploads/productos/Correa-Mystic-Lilac.png",True, None),
+    (5, "Shampoo Antipulgas", "Shampoo para perros antipulgas 500ml", 4200, 30, 1, 2, "/uploads/productos/Shampoo_insecticida.png",True, None),
+    (6, "Rascador Deluxe 1.5m", "Rascador con hamaca para gatos", 23000, 10, 2, 2, "/uploads/productos/6_rascador.png",True, None),
+    (7, "Arena Sanitaria 10kg", "Arena aglutinante para gatos", 9000, 30, 2, 2, "/uploads/productos/7_arenero-economico.png",True, None),
+    (8, "Comedero Doble Acero", "Comedero de acero inoxidable antideslizante", 7500, 25, 2, 2, "/uploads/productos/8_comederoDoble.png",True, None),
+    (9, "Rueda Interactiva", "Juguete interactivo para gatos", 3200, 40, 2, 2, "/uploads/productos/9_ruedaInteractiva.jpg",True, None),
+    (10, "Transportadora M", "Transportadora con ventilación mediana", 15500, 8, 2, 2, "/uploads/productos/10_transportadora.png",True, None),
+    (11, "Snack Saludable Perro", "Pack 30 snacks bajos en grasa", 2800, 100, 1, 2, "/uploads/productos/11_snackSalu.png",True, None),
+    (12, "Cuchillo para Uñas", "Corta uñas para mascotas con protección", 1200, 75, 1, 2, "/uploads/productos/12_cortaUñas.png",True, None),
 ]
 
 # Pedidos ampliados: (id, estado, fecha_pedido_literal, precio_total, usuario_id)
 pedidos = [
     (1, "PENDIENTE", "NOW() - INTERVAL 5 DAY", 32000, 2),
-    (2, "ENTREGADO", "NOW() - INTERVAL 2 DAY",  4500, 3),
-    (3, "ENVIADO", "NOW() - INTERVAL 1 DAY",  2800, 5),
+    (2, "PENDIENTE", "NOW() - INTERVAL 2 DAY",  4500, 3),
+    (3, "PENDIENTE", "NOW() - INTERVAL 1 DAY",  2800, 5),
 ]
 
 # Detalles ampliados: (id, cantidad, precio_subtotal, pedido_id, producto_id)
 detalles = [
-    (1, 1, 25000, 1, 1),
-    (2, 1, 7000, 1, 8),
-    (3, 1, 4500, 2, 3),
-    (4, 2, 5600, 3, 11),  # 2 x snack
+    (1, 1, 25000, 1, 1, "Alimento Premium Perro 15kg", 25000),
+    (2, 1, 7000, 1, 8, "Comedero Doble Acero", 7000),
+    (3, 1, 4500, 2, 3, "Pelota de Goma", 4500),
+    (4, 2, 5600, 3, 11, "Snack Saludable Perro", 2800),
 ]
 
 # Facturas ampliadas: (id, fecha_emision_literal, metodo_pago, total, pedido_id)
@@ -147,11 +147,11 @@ def main():
             usuarios
         )
         inserted["categoria"] = insert_rows(cur, "categoria",
-            ["id", "nombre_categoria", "descripcion"],
+            ["id", "nombre_categoria", "descripcion", "activo", "fecha_baja"],
             categorias
         )
         inserted["producto"] = insert_rows(cur, "producto",
-            ["id", "nombre", "descripcion", "precio", "stock", "categoria_id", "usuario_id", "image_url"],
+            ["id", "nombre", "descripcion", "precio", "stock", "categoria_id", "usuario_id", "image_url", "activo", "fecha_baja"],
             productos
         )
         inserted["pedido"] = insert_rows(cur, "pedido",
@@ -160,7 +160,7 @@ def main():
             literal_cols={"fecha_pedido"}
         )
         inserted["detalle_pedido"] = insert_rows(cur, "detalle_pedido",
-            ["id", "cantidad", "precio_subtotal", "pedido_id", "producto_id"],
+            ["id", "cantidad", "precio_subtotal", "pedido_id", "producto_id", "nombre_producto", "precio_unitario"],
             detalles
         )
         inserted["factura"] = insert_rows(cur, "factura",
