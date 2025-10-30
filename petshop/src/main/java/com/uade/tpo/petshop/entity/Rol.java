@@ -1,0 +1,52 @@
+package com.uade.tpo.petshop.entity;
+
+import java.util.List;
+
+import com.uade.tpo.petshop.entity.dtos.RolDTO;
+import com.uade.tpo.petshop.entity.enums.RolEnum;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import lombok.Data;
+
+@Data
+@Entity
+public class Rol {
+
+    public Rol(RolEnum nombre) {
+        this.nombre = nombre;
+    }
+
+    public Rol() {
+    }
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private long id;
+
+    @Column(nullable = false, length = 20)
+    @Enumerated(EnumType.STRING)
+    private RolEnum nombre;
+
+    @OneToMany(mappedBy = "rol")
+    private List<Usuario> usuarios;
+
+    public RolDTO toDTO(){
+        return new RolDTO(this.id, this.nombre);
+    }
+
+    public void updateFromDTO(RolDTO rolDTO) {
+        if (rolDTO.getNombre() != null) {
+            this.setNombre(rolDTO.getNombre());
+        }
+        // De querer actualizar la lista de usuarios, meterlo aca.
+        // if (rolDTO.getUsuarios() != null) { ... }
+    }
+}
+
