@@ -46,7 +46,7 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(req -> req
-                // Rutas Públicas
+                // Rutas Publicas
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers("/error/**").permitAll()
@@ -58,6 +58,8 @@ public class SecurityConfig {
                 // Reglas de Admin
                 .requestMatchers("/api/roles/**").hasAnyAuthority(RolEnum.ADMIN.name())
                 .requestMatchers("/api/facturas").hasAnyAuthority(RolEnum.ADMIN.name())
+                .requestMatchers(HttpMethod.POST, "/api/productos/**").hasAnyAuthority(RolEnum.ADMIN.name())
+                .requestMatchers(HttpMethod.DELETE, "/api/productos/**").hasAnyAuthority(RolEnum.ADMIN.name())
                 .requestMatchers(HttpMethod.POST, "/api/categorias/**").hasAnyAuthority(RolEnum.ADMIN.name())
                 .requestMatchers(HttpMethod.PUT, "/api/categorias/**").hasAnyAuthority(RolEnum.ADMIN.name())
                 .requestMatchers(HttpMethod.DELETE, "/api/categorias/**").hasAnyAuthority(RolEnum.ADMIN.name())
@@ -66,13 +68,13 @@ public class SecurityConfig {
                 .requestMatchers( "/api/categorias/descontinuados/**").hasAnyAuthority(RolEnum.ADMIN.name())
 
                 // --- REGLAS DE PEDIDOS ORDENADAS CORRECTAMENTE ---
-                // 1. Rutas específicas para CLIENTE
+                // 1. Rutas especificas para CLIENTE
                 .requestMatchers(HttpMethod.GET, "/api/pedidos/usuario").hasAnyAuthority(RolEnum.CLIENTE.name())
                 .requestMatchers(HttpMethod.PUT, "/api/pedidos/*/agregarProducto").hasAnyAuthority(RolEnum.CLIENTE.name())
-                .requestMatchers(HttpMethod.PUT, "/api/pedidos/*/confirmar").hasAnyAuthority(RolEnum.CLIENTE.name(), RolEnum.ADMIN.name()) // Movida aquí arriba y permite ADMIN también
+                .requestMatchers(HttpMethod.PUT, "/api/pedidos/*/confirmar").hasAnyAuthority(RolEnum.CLIENTE.name(), RolEnum.ADMIN.name()) // permite ADMIN tambien
                 .requestMatchers(HttpMethod.POST, "/api/pedidos/**").hasAnyAuthority(RolEnum.CLIENTE.name())
                 
-                // 2. Rutas generales para ADMIN (después de las específicas)
+                // 2. Rutas generales para ADMIN (despues de las especificas)
                 .requestMatchers(HttpMethod.GET, "/api/pedidos/*").hasAnyAuthority(RolEnum.ADMIN.name())
                 .requestMatchers(HttpMethod.GET, "/api/pedidos").hasAnyAuthority(RolEnum.ADMIN.name())
                 .requestMatchers(HttpMethod.POST, "/api/pedidos/agregarFactura/**").hasAnyAuthority(RolEnum.ADMIN.name())
@@ -91,7 +93,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/api/usuarios/**").hasAnyAuthority(RolEnum.CLIENTE.name(), RolEnum.ADMIN.name())
                 .requestMatchers(HttpMethod.DELETE, "/api/usuarios/**").hasAuthority(RolEnum.ADMIN.name())
                 
-                // Denegar todo lo demás si no está autenticado
+                // Denegar todo lo demas si no está autenticado
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
