@@ -155,7 +155,6 @@ public class PedidoService implements IPedidoService {
         Usuario usuario = usuarioService.getUsuarioByEmail(email)
                 .orElseThrow(MissingUserException::new);
 
-        // Si el usuario no tiene pedidos, esto devuelve lista vacía y está perfecto
         return pedidoRepository.findByCliente(usuario.getId());
     }
 
