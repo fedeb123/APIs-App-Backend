@@ -151,15 +151,12 @@ public class PedidoService implements IPedidoService {
     }
 
     @Override
-    public List<Pedido> getPedidosFromUsuario(String email) throws MissingUserException, MissingPedidoException {
-        Usuario usuario = usuarioService.getUsuarioByEmail(email).orElseThrow(MissingUserException::new);
+    public List<Pedido> getPedidosFromUsuario(String email) throws MissingUserException {
+        Usuario usuario = usuarioService.getUsuarioByEmail(email)
+                .orElseThrow(MissingUserException::new);
 
-        List<Pedido> pedidos = pedidoRepository.findByCliente(usuario.getId());
-
-        if (pedidos.isEmpty()) {
-            throw new MissingPedidoException();
-        }
-        return pedidos;
+        // Si el usuario no tiene pedidos, esto devuelve lista vacía y está perfecto
+        return pedidoRepository.findByCliente(usuario.getId());
     }
 
     @Override
